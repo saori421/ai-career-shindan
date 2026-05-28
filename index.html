@@ -1,0 +1,823 @@
+<!-- 最終更新 2026.5.28 -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIレベル＆キャリア出口診断｜レバンス</title>
+<style>
+  :root{
+    --navy:#0e2a47;
+    --navy2:#15395f;
+    --teal:#14a6a0;
+    --gold:#c8a24a;
+    --ink:#1c2733;
+    --sub:#5b6b7b;
+    --line:#e3e8ee;
+    --bg:#f4f7fa;
+    --card:#ffffff;
+    --good:#14a6a0;
+    --warn:#d98a2b;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;font-family:"Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.75;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 18px 80px;}
+  /* ヘッダー */
+  header{
+    background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);
+    color:#fff;padding:38px 18px 30px;text-align:center;
+  }
+  header .badge{
+    display:inline-block;font-size:12px;letter-spacing:.18em;color:var(--gold);
+    border:1px solid rgba(200,162,74,.6);border-radius:30px;padding:5px 16px;margin-bottom:16px;
+  }
+  header h1{font-size:27px;margin:0 0 10px;letter-spacing:.02em;}
+  header p.sub{font-size:14px;color:#c5d4e3;margin:0;line-height:1.7;}
+  header p.frame{font-size:13px;color:var(--gold);margin:14px 0 0;font-weight:600;}
+  /* セクション */
+  .section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 22px;margin-top:22px;box-shadow:0 1px 3px rgba(14,42,71,.05);}
+  .lead{font-size:14px;color:var(--sub);margin:0 0 20px;}
+  .name-row{margin:0 0 6px;}
+  .name-row label{font-size:13px;color:var(--sub);display:block;margin-bottom:6px;font-weight:600;}
+  .name-row input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font-size:15px;}
+  .name-row input:focus{outline:none;border-color:var(--teal);}
+  /* 質問 */
+  .q{padding:18px 0;border-top:1px solid var(--line);}
+  .q:first-of-type{border-top:none;}
+  .q .qnum{display:inline-block;background:var(--navy);color:#fff;font-size:12px;font-weight:700;border-radius:6px;padding:2px 9px;margin-right:8px;}
+  .q .qtitle{font-size:15.5px;font-weight:700;color:var(--ink);}
+  .q .opts{margin-top:13px;display:flex;flex-direction:column;gap:9px;}
+  .opt{position:relative;}
+  .opt input{position:absolute;opacity:0;width:0;height:0;}
+  .opt label{
+    display:block;padding:11px 15px;border:1.5px solid var(--line);border-radius:10px;
+    font-size:14.5px;cursor:pointer;transition:all .12s;background:#fff;color:var(--ink);
+  }
+  .opt label:hover{border-color:#bcd0e2;background:#f7fafd;}
+  .opt input:checked + label{
+    border-color:var(--teal);background:#e8f7f6;color:var(--navy);font-weight:600;
+    box-shadow:0 0 0 2px rgba(20,166,160,.12);
+  }
+  .qnum.alt{background:var(--teal);}
+  .probe-intro{font-size:13.5px;color:var(--sub);margin:0 0 4px;font-weight:600;line-height:1.7;}
+  .probe-sec{font-size:13px;font-weight:800;color:var(--teal);letter-spacing:.04em;margin:20px 0 0;padding:14px 0 0;border-top:2px solid #e8f7f6;}
+  .probe-sec:first-of-type{border-top:none;padding-top:4px;}
+  /* 結果：あなたの現状 */
+  .reality-box{background:#fff;border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;padding:16px 17px;margin:6px 0 2px;}
+  .reality-box .rb-title{font-size:11.5px;letter-spacing:.12em;color:var(--teal);font-weight:700;margin-bottom:7px;}
+  .reality-box .empathy{font-size:14.5px;color:var(--ink);margin:0 0 11px;line-height:1.75;font-weight:600;}
+  .reality-box .rb-tags{display:flex;flex-wrap:wrap;gap:8px;}
+  .reality-box .rb-tags span{font-size:12px;background:#f4f7fa;border:1px solid var(--line);border-radius:20px;padding:4px 12px;color:var(--sub);}
+  /* 結果：あなたが描く理想 */
+  .ideal-box{background:linear-gradient(180deg,#fbf8ef 0%,#fff 70%);border:1px solid #ece0c4;border-radius:12px;padding:18px 18px;}
+  .ideal-time{font-size:14.5px;margin-bottom:9px;color:var(--ink);line-height:1.6;}
+  .ideal-time span{display:inline-block;width:54px;flex:none;font-size:11.5px;font-weight:700;color:#b08a2e;vertical-align:top;}
+  .ideal-routes{margin:13px 0 11px;border-top:1px dashed #e3d6b8;padding-top:12px;}
+  .ideal-routes .ir{font-size:13.5px;margin:7px 0;color:var(--ink);line-height:1.6;}
+  .ideal-routes .ir b{color:var(--navy);}
+  .ideal-bridge{font-size:13.5px;color:var(--navy);font-weight:700;margin:0;line-height:1.7;}
+  .q.unanswered .qtitle{color:#c0392b;}
+  .q.unanswered .opts{box-shadow:0 0 0 2px rgba(192,57,43,.15);border-radius:10px;padding:6px;margin-left:-6px;margin-right:-6px;}
+  /* ボタン */
+  .btn{
+    display:block;width:100%;border:none;border-radius:12px;padding:17px;font-size:17px;font-weight:700;
+    color:#fff;background:linear-gradient(135deg,var(--teal) 0%,#0d8a85 100%);cursor:pointer;margin-top:26px;
+    letter-spacing:.04em;box-shadow:0 4px 14px rgba(20,166,160,.3);transition:transform .1s;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn.secondary{background:#fff;color:var(--navy);border:1.5px solid var(--line);box-shadow:none;font-size:15px;padding:13px;}
+  /* 結果 */
+  #result{display:none;}
+  .result-head{text-align:center;padding:6px 0 4px;}
+  .result-head .frame{font-size:13px;color:var(--teal);font-weight:700;letter-spacing:.04em;margin:0 0 8px;}
+  .result-head h2{font-size:23px;margin:0 0 4px;color:var(--navy);}
+  .result-head .who{font-size:14px;color:var(--sub);}
+  .stage-box{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;border-radius:14px;padding:24px 22px;margin-top:8px;}
+  .stage-box .label{font-size:12px;letter-spacing:.16em;color:var(--gold);}
+  .stage-box .lv{font-size:26px;font-weight:800;margin:6px 0 2px;}
+  .stage-box .lvname{font-size:15px;color:#cddbe9;margin-bottom:14px;}
+  .stage-bar{display:flex;gap:5px;margin:4px 0 14px;}
+  .stage-bar .seg{flex:1;height:7px;border-radius:4px;background:rgba(255,255,255,.18);}
+  .stage-bar .seg.on{background:var(--gold);}
+  .stage-box p{font-size:13.5px;color:#dde7f0;margin:0;line-height:1.7;}
+  .block-title{font-size:16px;font-weight:800;color:var(--navy);margin:26px 0 4px;display:flex;align-items:center;gap:8px;}
+  .block-title::before{content:"";width:4px;height:18px;background:var(--gold);border-radius:3px;}
+  .block-note{font-size:12.5px;color:var(--sub);margin:0 0 14px;}
+  /* 出口カード */
+  .exit{border:1px solid var(--line);border-radius:12px;padding:16px 17px;margin-top:12px;background:#fff;}
+  .exit.rank1{border:2px solid var(--gold);background:linear-gradient(180deg,#fffdf6 0%,#fff 60%);}
+  .exit-top{display:flex;align-items:center;gap:11px;}
+  .rankbadge{flex:none;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;background:var(--navy);}
+  .exit.rank1 .rankbadge{background:linear-gradient(135deg,var(--gold),#a9842f);}
+  .exit-name{font-size:16px;font-weight:700;color:var(--ink);flex:1;}
+  /* 到達目安チップ（現状） */
+  .exit-status{display:inline-block;margin-top:11px;font-size:12.5px;font-weight:700;color:var(--navy);background:#eef3f8;border:1px solid var(--line);border-radius:20px;padding:4px 13px;}
+  .exit-status.far{color:var(--warn);background:#fcf3e6;border-color:#f0dcc0;}
+  .exit-body{font-size:14px;color:var(--ink);margin:11px 0 0;line-height:1.7;}
+  .exit-note{font-size:12.5px;color:var(--sub);margin:9px 0 0;padding-top:8px;border-top:1px dashed var(--line);}
+  /* レバンスでの引き上げバナー（トップ3直後に1回だけ） */
+  .uplift{margin-top:18px;background:linear-gradient(135deg,var(--navy) 0%,#13506b 100%);color:#fff;border-radius:14px;padding:22px 21px;}
+  .uplift .ut{font-size:11.5px;letter-spacing:.16em;color:var(--gold);font-weight:700;margin-bottom:9px;}
+  .uplift h4{font-size:17px;margin:0 0 11px;color:#fff;line-height:1.55;}
+  .uplift p{font-size:13.5px;color:#d7e3ef;margin:0;line-height:1.85;}
+  .uplift .hl{color:var(--gold);font-weight:700;}
+  /* 足りないもの */
+  ul.gap{margin:6px 0 0;padding:0;list-style:none;}
+  ul.gap li{position:relative;padding:8px 0 8px 26px;font-size:14px;border-bottom:1px solid var(--line);}
+  ul.gap li:last-child{border-bottom:none;}
+  ul.gap li::before{content:"→";position:absolute;left:4px;color:var(--teal);font-weight:700;}
+  /* ロードマップ */
+  .roadmap{background:#f7fafd;border-radius:11px;padding:16px 17px;font-size:14px;line-height:1.8;}
+  /* スコア */
+  .scores{margin-top:10px;}
+  .score-row{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:13px;}
+  .score-row .sl{width:88px;flex:none;color:var(--sub);}
+  .score-track{flex:1;height:9px;background:var(--line);border-radius:5px;overflow:hidden;}
+  .score-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--navy2));border-radius:5px;}
+  .score-val{width:30px;text-align:right;font-weight:700;color:var(--navy);}
+  details{margin-top:14px;}
+  summary{cursor:pointer;font-size:13.5px;color:var(--teal);font-weight:600;}
+  /* CTA */
+  .cta{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;border-radius:14px;padding:26px 22px;margin-top:26px;text-align:center;}
+  .cta h3{font-size:18px;margin:0 0 10px;color:#fff;}
+  .cta p{font-size:14px;color:#d4e0ec;margin:0;line-height:1.8;}
+  .cta .gold{color:var(--gold);font-weight:700;}
+  footer{text-align:center;font-size:11.5px;color:#9aa9b8;margin-top:30px;}
+  @media print{
+    header,.btn,details,footer{display:none!important;}
+    body{background:#fff;}
+    .section{box-shadow:none;border:1px solid #ccc;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <span class="badge">LEVANCE｜AI CAREER DIAGNOSIS</span>
+  <h1>AIレベル＆キャリア出口診断</h1>
+  <p class="sub">今の仕事・AI活用度・会社環境から、<br>あなたが狙いやすい7つのキャリアルートを可視化します。</p>
+  <p class="frame">会社に選ばれる側から、自分でキャリアを選ぶ側へ。</p>
+</header>
+
+<div class="wrap">
+
+  <!-- 質問エリア -->
+  <div id="quiz">
+    <div class="section">
+      <p class="lead">10問に答えると、あなたの「AI活用ステージ」「狙いやすい出口トップ3」「到達目安」「今足りないもの」「3ヶ月で作るべき実績」が出ます。所要2分です。</p>
+      <div class="name-row">
+        <label for="uname">お名前（任意・結果に表示されます）</label>
+        <input type="text" id="uname" placeholder="例：山田">
+      </div>
+    </div>
+
+    <div class="section" id="questions"></div>
+
+    <div class="section">
+      <p class="probe-intro">ここからは、あなたの現在地と、これから取りにいく状態を整理します。<br>結果を、あなた専用のキャリア戦略に落とし込むための質問です。</p>
+      <div id="probe-questions"></div>
+    </div>
+
+    <button class="btn" id="diagnose">診断する</button>
+  </div>
+
+  <!-- 結果エリア -->
+  <div id="result">
+    <div class="section">
+      <div class="result-head">
+        <p class="frame">あなたの診断結果</p>
+        <h2 id="resultTitle">AIレベル＆キャリア出口診断</h2>
+        <p class="who" id="resultWho"></p>
+      </div>
+
+      <div class="stage-box">
+        <div class="label">あなたの現在地</div>
+        <div class="lv" id="stageLv"></div>
+        <div class="lvname" id="stageName"></div>
+        <div class="stage-bar" id="stageBar"></div>
+        <p id="stageText"></p>
+      </div>
+
+      <div id="reality"></div>
+
+      <div class="block-title">狙いやすい出口トップ3</div>
+      <p class="block-note">今のあなたの状況と相性が良い順に並べました。</p>
+      <div id="exitsTop"></div>
+      <div id="uplift"></div>
+      <div id="ideal"></div>
+
+      <details>
+        <summary>7つの出口すべての相性を見る</summary>
+        <div id="exitsAll" style="margin-top:12px;"></div>
+      </details>
+
+      <div class="block-title">今、足りないもの</div>
+      <p class="block-note">AIスキルそのものではなく、それを評価・年収・転職に変える材料です。</p>
+      <ul class="gap" id="gapList"></ul>
+
+      <div class="block-title">3ヶ月で作るべき実績</div>
+      <div class="roadmap" id="roadmap"></div>
+
+      <div class="block-title">8つのスコア</div>
+      <p class="block-note">回答から算出した、あなたのキャリア資産バランスです。</p>
+      <div class="scores" id="scoreList"></div>
+
+      <div class="cta">
+        <h3>ここから、どう動くか。</h3>
+        <p>レバンスでは、AIを学ぶだけで終わらせません。<br>あなたの今の業務をもとに、<span class="gold">3ヶ月でキャリアに使える実績</span>へ変えていきます。<br>今日見えた「足りないもの」を、一緒に埋めていきましょう。</p>
+      </div>
+
+      <button class="btn secondary" id="reset">もう一度診断する</button>
+    </div>
+  </div>
+
+  <footer>AIレベル＆キャリア出口診断 ｜ レバンス（LEVANCE）<br>※結果は現時点の目安です。実際の到達はご本人の取り組みで変わります。</footer>
+</div>
+
+<script>
+/* ============================================================
+   AIレベル＆キャリア出口診断ロジック
+   8スコア（A〜H）→ 7ルート重み付け → ブレーキ補正 → 結果生成
+   ============================================================ */
+
+/* --- 質問定義（選択肢ごとにスコア寄与 d、方向 dir、フラグ meta を持つ） --- */
+const QUESTIONS = [
+  { id:"gyoshu", title:"現在の業種を教えてください", opts:[
+      {t:"IT・通信", d:{E:1,C:0.5}},
+      {t:"メーカー", d:{}},
+      {t:"金融・保険", d:{C:0.5}},
+      {t:"商社・流通", d:{}},
+      {t:"サービス・コンサル", d:{E:0.5}},
+      {t:"フリーランス・個人事業主", d:{F:1}, meta:"notEmployee"},
+      {t:"その他", d:{}},
+  ]},
+  { id:"shokushu", title:"現在の職種を教えてください", opts:[
+      {t:"企画", d:{E:3}},
+      {t:"営業", d:{E:3}},
+      {t:"マーケティング", d:{E:4}},
+      {t:"経営企画／事業企画", d:{E:3}},
+      {t:"IT企画／DX推進", d:{E:4}},
+      {t:"管理部門（人事・総務・経理など）", d:{E:2}},
+      {t:"カスタマーサクセス", d:{E:3}},
+      {t:"その他", d:{E:2}},
+  ]},
+  { id:"yakushoku", title:"現在の役職・立場を教えてください", opts:[
+      {t:"一般職", d:{D:0}, meta:"ippan"},
+      {t:"リーダー・主任クラス", d:{D:1}},
+      {t:"中間管理職手前", d:{D:2}},
+      {t:"課長候補", d:{D:3}},
+      {t:"課長以上", d:{D:4}},
+      {t:"会社員ではない", d:{D:2}, meta:"notEmployee"},
+  ]},
+  { id:"nenshu", title:"現在の年収レンジを教えてください", opts:[
+      {t:"〜400万円", d:{}, income:"〜400万円"},
+      {t:"400〜600万円", d:{}, income:"400〜600万円"},
+      {t:"600〜800万円", d:{}, income:"600〜800万円"},
+      {t:"800〜1,000万円", d:{D:0.5}, income:"800〜1,000万円"},
+      {t:"1,000万円〜", d:{D:0.5}, income:"1,000万円〜"},
+  ]},
+  { id:"katsuyo", title:"現在のAI活用度を教えてください", opts:[
+      {t:"ほとんど使っていない", d:{A:0}},
+      {t:"個人の時短・調べ物で使っている", d:{A:1}},
+      {t:"資料作成・壁打ちで使っている", d:{A:2}},
+      {t:"業務の一部に組み込んでいる", d:{A:3}},
+      {t:"チームで活用を進めている", d:{A:4}},
+  ]},
+  { id:"kankyo", title:"会社のAI活用環境を教えてください", opts:[
+      {t:"制約がある／使いにくい", d:{C:0}, meta:"constraint"},
+      {t:"個人の判断で使える", d:{C:2}},
+      {t:"一部の部署で活用が進んでいる", d:{C:3}},
+      {t:"全面的にAI活用が推奨されている", d:{C:4}},
+      {t:"会社員ではない", d:{C:2}, meta:"notEmployee"},
+  ]},
+  { id:"seika", title:"AIを使って出せている成果に近いものを選んでください", opts:[
+      {t:"まだ成果はない", d:{B:0}},
+      {t:"自分の作業時間が少し減った", d:{B:1}},
+      {t:"資料・調査・整理の質が上がった", d:{B:2}},
+      {t:"業務フローを改善できた", d:{B:3}},
+      {t:"チームや部署で成果が出ている", d:{B:4}},
+  ]},
+  { id:"kibo", title:"今後、一番近い希望を教えてください", opts:[
+      {t:"今の会社で評価・昇進を上げたい", d:{G:1}, dir:"shoshin"},
+      {t:"社内でAI・DXの専門ポジションを作りたい", d:{G:2}, dir:"dx"},
+      {t:"部署異動・職種転換したい", d:{G:2}, dir:"idou"},
+      {t:"転職して市場価値を上げたい", d:{G:3}, dir:"tenshoku"},
+      {t:"副業で収入の柱を増やしたい", d:{G:3,F:1}, dir:"fukugyo"},
+      {t:"独立・フリーランス・起業したい", d:{G:4,F:2}, dir:"dokuritsu"},
+  ]},
+  { id:"jikan", title:"週にどれくらい、学習・実践に時間を使えますか？", opts:[
+      {t:"週5時間未満", d:{H:1}},
+      {t:"週5〜10時間", d:{H:2}},
+      {t:"週10〜20時間", d:{H:3}},
+      {t:"20時間以上", d:{H:4}},
+  ]},
+  { id:"shagai", title:"副業・転職・独立など、社外への展開を、どれくらい視野に入れていますか？", opts:[
+      {t:"まったく視野にない（今の会社で長く働きたい）", d:{F:0,G:0}},
+      {t:"あまり考えていない", d:{F:1,G:0}},
+      {t:"どちらとも言えない", d:{F:2,G:1}},
+      {t:"視野に入れている（機会があれば動きたい）", d:{F:3,G:1}},
+      {t:"強く視野に入れている（すでに動いている）", d:{F:4,G:2}},
+  ]},
+];
+
+/* --- 悩み・理想の質問（スコアには使わず、結果の「自分ごと化」表示に使う） --- */
+const PROBE_QUESTIONS=[
+  { id:"moyamoya", section:"現在地と課題", title:"今のキャリアで、一番の課題だと感じているのは？", opts:[
+    "実力に対して、正当に評価されていない",
+    "成長スピードが、頭打ちになっている",
+    "AIは使えるのに、成果・評価に変換できていない",
+    "収入が、自分の市場価値に見合っていない",
+    "裁量がなく、やりたい打ち手を実行できない",
+    "今のままでは、市場価値が上がっていかない",
+  ]},
+  { id:"ai_feel", section:"現在地と課題", title:"AIを使っていて感じることに、一番近いのは？", opts:[
+    "時短はできるが、成果としては見えていない",
+    "使いこなせている実感が、まだない",
+    "もっと活かせるはずなのに、機会がない",
+    "頑張って使っても、職場で評価されない",
+    "そもそも、業務で使う場面が少ない",
+  ]},
+  { id:"change_most", section:"現在地と課題", title:"今の働き方で、一番変えたいのは？", opts:[
+    "年収・収入","役割・ポジション","働く環境・会社","時間の自由","自分の市場価値",
+  ]},
+  { id:"ideal_naibu", section:"出口ごとの理想", title:"もし【社内でポジションを上げる】なら、理想に近いのは？", opts:[
+    "AI・DX推進の中心メンバーになる",
+    "昇進して、裁量を持って動ける",
+    "専門性で頼られる存在になる",
+    "チーム・部署を率いる立場になる",
+    "社内で上げることは、あまり考えていない",
+  ]},
+  { id:"ideal_tenshoku", section:"出口ごとの理想", title:"もし【転職する】なら、理想に近いのは？", opts:[
+    "年収レンジを一段引き上げる",
+    "AI活用が進んだ環境に移る",
+    "より裁量のあるポジションに就く",
+    "職種そのものを変える",
+    "転職は、あまり考えていない",
+  ]},
+  { id:"ideal_dokuritsu", section:"出口ごとの理想", title:"もし【副業・独立する】なら、理想に近いのは？", opts:[
+    "本業＋月数万円の副収入をつくる",
+    "フリーランスとして自由に働く",
+    "AIスキルで起業・事業をつくる",
+    "複数の収入源を持つ",
+    "副業・独立は、あまり考えていない",
+  ]},
+  { id:"year1", section:"目指す姿", title:"1年後、どうなっていたい？", opts:[
+    "AIで成果を出し、社内で評価されている",
+    "転職・昇進して、ポジションが上がっている",
+    "副業など、本業以外の収入ができている",
+    "市場価値の高いAI人材になっている",
+    "まだ、模索している段階かもしれない",
+  ]},
+  { id:"year3", section:"目指す姿", title:"ゆくゆく、どんな状態になっていたい？", opts:[
+    "市場価値の高いAI・DX人材として活躍している",
+    "管理職・幹部として、組織を動かしている",
+    "独立して、自由に働いている",
+    "今の延長線上で、安定している",
+  ]},
+  { id:"honki", section:"目指す姿", title:"キャリアを変えることへの、今の本気度は？", opts:[
+    "今すぐ動きたい","1ヶ月以内には動きたい","半年以内には動きたい","いずれは動きたい",
+  ]},
+  { id:"kabe", section:"目指す姿", title:"AIでキャリアアップしていく上で、壁に感じることがあるとすれば？", opts:[
+    "まとまった時間の確保","何から手をつけるべきかの判断","語れる実績がまだないこと","動き出すきっかけ","今の環境・会社の制約",
+  ]},
+];
+// 一番の課題(moyamoya)に応じた共感メッセージ
+const EMPATHY=[
+  "正当に評価されていない。それは、AIの成果をまだ“評価される言語”に変換できていないサインです。",
+  "成長が頭打ち。「AIを使う」段階から「AIで成果を出す」段階へ移ると、伸びしろが一気に開きます。",
+  "AIは使える。だが、成果・評価には変換できていない。ここを埋められるかが、これからの分かれ目です。",
+  "収入が、市場価値に追いついていない。AIの実績を“評価・年収に変える言語化”が、これを動かします。",
+  "裁量がない。自分の業務をAIで再設計し、成果を出せば、任される範囲は変わります。",
+  "今のままでは市場価値が上がらない。狙える出口を複数持てば、キャリアの主導権はあなたに移ります。",
+];
+// 出口id → 対応する理想質問のインデックス（PROBE_QUESTIONS内）
+const IDEAL_MAP={shoshin:3,dx:3,idou:3,venture:3,tenshoku:4,fukugyo:5,freelance:5};
+
+/* --- 8スコアの表示ラベル --- */
+const SCORE_LABELS = {
+  A:"AI活用度", B:"成果実績", C:"会社環境", D:"影響範囲",
+  E:"職種親和性", F:"社外展開力", G:"変化意欲", H:"稼働時間"
+};
+
+/* --- 7つの出口と重み（合計1.0） --- */
+const ROUTES = [
+  { id:"shoshin",  name:"昇進・昇給",                       w:{B:0.30,C:0.25,D:0.25,A:0.15,E:0.05} },
+  { id:"dx",       name:"DX人材としての社内ポジション確立",  w:{A:0.25,B:0.25,C:0.25,D:0.15,E:0.10} },
+  { id:"idou",     name:"社内異動・職種転換",               w:{E:0.30,A:0.25,B:0.25,G:0.20} },
+  { id:"tenshoku", name:"転職（年収レンジを引き上げる）",    w:{E:0.30,B:0.30,A:0.15,G:0.15,D:0.10} },
+  { id:"venture",  name:"ベンチャー・新規事業の幹部参画",    w:{D:0.30,B:0.25,E:0.25,G:0.20} },
+  { id:"fukugyo",  name:"副業",                            w:{F:0.25,H:0.20,A:0.20,E:0.20,B:0.15} },
+  { id:"freelance",name:"フリーランス・起業",               w:{F:0.30,B:0.25,H:0.25,G:0.20} },
+];
+
+/* --- 出口×スコア帯ごとの結果文 --- */
+const EXIT_TEXT = {
+  shoshin:{
+    high:"今の会社でAI活用を成果に変えれば、評価と役割が上がります。社内で勝負するのが一番の近道です。",
+    mid:"昇進の土台はあります。あとはAIで出した成果を、評価面談で語れる形に言語化してください。",
+    low:"昇進につなげるには、まずAIを使った業務改善の実績を1つ作るところから始めてください。"},
+  dx:{
+    high:"社内のAI・DX推進ポジションを取りにいける状態です。部署横断の改善提案まで踏み込んでください。",
+    mid:"DX人材として認知される一歩手前です。チームを巻き込む活用事例を作れば届きます。",
+    low:"まず自分の業務でAI活用を成果化し、社内で「AIに強い人」と認知される実績を積んでください。"},
+  idou:{
+    high:"AIを軸に職種を移れる素地があります。希望部署で通用する成果を1つ見せられると動きます。",
+    mid:"異動・職種転換は十分狙えます。移りたい職種でAIが効く型を言語化してください。",
+    low:"まず今の職種でAI実績を作り、異動先でも再現できると示せる材料を揃えてください。"},
+  tenshoku:{
+    high:"AI活用を実績化できれば、半年から1年で市場価値の高いポジションを狙えます。",
+    mid:"転職市場で戦える素地はあります。職務経歴書に書けるAI実績を、あと1つ作ってください。",
+    low:"いきなり転職に動くより、まず3ヶ月で職務経歴書に書けるAI実績を作るのが現実的です。"},
+  venture:{
+    high:"周囲を動かす影響力と成果があります。事業を一段大きく動かす場に挑む準備が整っています。",
+    mid:"幹部参画の芽はあります。チーム規模の成果を作り、人を動かした実績を重ねてください。",
+    low:"まずは自分の影響範囲を広げ、チーム単位で成果を出した経験を積むのが先です。"},
+  fukugyo:{
+    high:"AIスキルを社外に展開できる状態です。小さく副業を始めて、実績を作っていけます。",
+    mid:"副業の可能性はあります。まずは本業のAI実績を、社外でも語れる形に整えてください。",
+    low:"副業に広げる前に、本業で語れるAI実績と、社外で通用する型作りを優先するのが現実的です。"},
+  freelance:{
+    high:"独立を視野に入れられる土台があります。案件で再現できる実績を積み上げてください。",
+    mid:"将来的に独立は狙えます。まずは副業で小さく試し、外で通用する実績を作ってください。",
+    low:"独立はこれからの選択肢です。まず本業と副業で、外で売れるAI実績を作るところから始めてください。"},
+};
+
+/* --- ステージ（現在地）定義 --- */
+const STAGES = [
+  {lv:1, name:"AI興味・お試しステージ", text:"AIに興味を持ち、少し触り始めた段階です。ここから個人の時短や壁打ちで毎日使う習慣を作ると、一気に景色が変わります。"},
+  {lv:2, name:"個人活用ステージ", text:"AIを個人の時短や調べ物に活用し始めている段階です。次は、便利ツールで終わらせず、業務改善や成果につながる形で実装していきます。"},
+  {lv:3, name:"業務補助ステージ", text:"資料作成・調査・整理にAIを使いこなしている段階です。次は、自分の業務フロー全体をAIで再設計し、数字で語れる成果に変えていきます。"},
+  {lv:4, name:"業務実装ステージ", text:"業務フローの一部にAIを組み込めている段階です。ここまで来たら、チーム・部署へ活用を広げ、評価や役割アップにつなげる実績を作っていきます。"},
+  {lv:5, name:"組織展開ステージ", text:"チーム・部署でAI活用を広げられている段階です。あなたはすでに、社内DX推進や市場価値の高いポジションを狙える側にいます。"},
+];
+
+const $ = (s)=>document.querySelector(s);
+const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+
+/* --- 質問描画 --- */
+function renderQuestions(){
+  const box = $("#questions");
+  box.innerHTML = QUESTIONS.map((q,qi)=>{
+    const opts = q.opts.map((o,oi)=>`
+      <div class="opt">
+        <input type="radio" name="q${qi}" id="q${qi}_${oi}" value="${oi}">
+        <label for="q${qi}_${oi}">${o.t}</label>
+      </div>`).join("");
+    return `<div class="q" id="qrow${qi}">
+        <div><span class="qnum">Q${qi+1}</span><span class="qtitle">${q.title}</span></div>
+        <div class="opts">${opts}</div>
+      </div>`;
+  }).join("");
+  box.addEventListener("change",(e)=>{
+    if(e.target.name && e.target.name.startsWith("q")){
+      const qi = e.target.name.slice(1);
+      $("#qrow"+qi).classList.remove("unanswered");
+    }
+  });
+}
+
+/* --- 悩み・理想の質問描画（セクション見出し付き） --- */
+function renderProbeQuestions(){
+  const box=$("#probe-questions");
+  let html=""; let lastSec="";
+  PROBE_QUESTIONS.forEach((q,qi)=>{
+    if(q.section!==lastSec){ html+=`<div class="probe-sec">${q.section}</div>`; lastSec=q.section; }
+    const opts=q.opts.map((o,oi)=>`
+      <div class="opt">
+        <input type="radio" name="p${qi}" id="p${qi}_${oi}" value="${oi}">
+        <label for="p${qi}_${oi}">${o}</label>
+      </div>`).join("");
+    html+=`<div class="q probe-q" id="prow${qi}">
+        <div><span class="qnum alt">Q${QUESTIONS.length+qi+1}</span><span class="qtitle">${q.title}</span></div>
+        <div class="opts">${opts}</div>
+      </div>`;
+  });
+  box.innerHTML=html;
+  box.addEventListener("change",(e)=>{
+    if(e.target.name && e.target.name.startsWith("p")){
+      $("#prow"+e.target.name.slice(1)).classList.remove("unanswered");
+    }
+  });
+}
+
+/* --- 悩み・理想の回答収集 --- */
+function collectProbe(){
+  const ans=[]; let firstMissing=-1;
+  PROBE_QUESTIONS.forEach((q,qi)=>{
+    const sel=document.querySelector(`input[name="p${qi}"]:checked`);
+    if(!sel){ if(firstMissing<0)firstMissing=qi; ans.push(null); $("#prow"+qi).classList.add("unanswered"); }
+    else ans.push(parseInt(sel.value,10));
+  });
+  return {ans, firstMissing};
+}
+
+/* --- 回答収集 --- */
+function collectAnswers(){
+  const answers=[]; let firstMissing=-1;
+  QUESTIONS.forEach((q,qi)=>{
+    const sel=document.querySelector(`input[name="q${qi}"]:checked`);
+    if(!sel){ if(firstMissing<0)firstMissing=qi; answers.push(null);
+      $("#qrow"+qi).classList.add("unanswered");
+    }else{ answers.push(parseInt(sel.value,10)); }
+  });
+  return {answers, firstMissing};
+}
+
+/* --- スコア算出 --- */
+function computeScores(answers){
+  const s={A:0,B:0,C:0,D:0,E:0,F:0,G:0,H:0};
+  const flags={notEmployee:false, constraint:false, ippan:false};
+  let dir="shoshin", income="";
+  QUESTIONS.forEach((q,qi)=>{
+    const o=q.opts[answers[qi]];
+    if(o.d) for(const k in o.d) s[k]+=o.d[k];
+    if(o.meta) flags[o.meta]=true;
+    if(o.dir) dir=o.dir;
+    if(o.income) income=o.income;
+  });
+  for(const k in s) s[k]=clamp(s[k],0,4);
+  return {s, flags, dir, income};
+}
+
+/* --- 到達目安 --- */
+// カードのチップ用（現状の到達目安を1つだけ・淡々と示す）
+const STATUS_LABELS=["現状でも3〜6ヶ月で狙えます","現状だと1年ほど先","現状だと1年以上先","現状の延長では遠い出口です"];
+// 引き上げバナー用の短語（今の延長 → レバンスで）
+const CUR_LABELS=["3〜6ヶ月","1年ほど先","1年以上先","かなり先"];
+const LEV_LABELS=["3〜6ヶ月で視野に","半年で視野に","半年〜1年で視野に","半年〜1年で射程に"];
+function strictTier(score){ // 今のまま（厳しめ）
+  if(score>=3.4)return 0;
+  if(score>=2.8)return 1;
+  if(score>=2.2)return 2;
+  return 3;
+}
+function softTier(score){ // レバンスで（必ず strict 以上に近づく）
+  if(score>=3.0)return 0;
+  if(score>=2.2)return 1;
+  if(score>=1.5)return 2;
+  return 3;
+}
+
+/* --- ルート評価＋ブレーキ補正 --- */
+function evaluateRoutes(s, flags, dir){
+  const social=["tenshoku","fukugyo","freelance"];
+  return ROUTES.map(r=>{
+    // 生スコア（0〜4）
+    let raw=0;
+    for(const k in r.w) raw+=r.w[k]*s[k];
+    // curTier=今のまま（厳しめ）／levTier=レバンスで（短縮後）
+    let pen=1, curTier=strictTier(raw), levTier=softTier(raw), note="";
+    const farther=(n)=>Math.min(3,n+1); // 1段遠ざける
+
+    // 希望方向と一致する出口は後押し（本人の向かいたい先を尊重）
+    if(dir===r.id || (dir==="dokuritsu" && r.id==="freelance")){ pen*=1.12; }
+
+    // ── ブレーキ条件 ──
+    // ① 成果実績が0点 → 転職・副業・独立は将来候補へ（ただしレバンスなら実績を作れる前提で射程に残す）
+    if(s.B===0 && social.includes(r.id)){
+      pen*=0.6; curTier=3; levTier=Math.max(levTier,2);
+      note="AIでの成果実績がまだないため、まず3ヶ月で実績を作るのが先です。";
+    }
+    // ② 会社環境に制約あり → 社内DXポジションの優先度を下げる
+    if(flags.constraint && r.id==="dx"){
+      pen*=0.8; curTier=farther(curTier); levTier=farther(levTier);
+      note="会社のAI活用に制約があるため、社内DXは環境づくりから時間がかかります。";
+    }
+    // ③ 週の稼働時間が3時間未満 → 副業・独立の到達期間を長めに
+    if(s.H<=1 && (r.id==="fukugyo"||r.id==="freelance")){
+      curTier=farther(curTier); levTier=farther(levTier);
+      if(!note) note="確保できる時間が少なめのため、到達期間は長めの目安にしています。";
+    }
+    // ④ ベンチャー幹部参画は、影響範囲(D)とチーム規模の成果(B)が揃って初めて現実的
+    if(r.id==="venture"){
+      if(flags.ippan && s.D<1.5){
+        pen*=0.55; curTier=3; levTier=Math.max(levTier,2);
+        note="まずチーム単位で人を動かした実績を作るのが先です。";
+      }else if(s.D<3 || s.B<3){
+        pen*=0.6; curTier=farther(curTier);
+        if(!note) note="幹部参画は、影響範囲とチーム規模の成果が揃ってから現実的になります。";
+      }
+    }
+    // ⑤ 社外展開力ゼロ → フリーランス・起業を出しすぎない
+    if(s.F===0 && (r.id==="freelance"||r.id==="fukugyo")){
+      pen*=(r.id==="freelance"?0.6:0.75);
+      if(!note) note="社外での経験がこれからのため、まず外で通用する実績づくりから始めます。";
+    }
+    // ⑥ 転職意欲が低い → 転職は「可能性あり」程度に
+    if(s.G<=1 && r.id==="tenshoku"){
+      pen*=0.85;
+      if(!note) note="今は社外への関心が高くないため、可能性ありとして見ておきましょう。";
+    }
+    // 会社員でない場合 → 社内系ルートの優先度を下げる
+    if(flags.notEmployee && (r.id==="shoshin"||r.id==="dx"||r.id==="idou")){
+      pen*=(r.id==="idou"?0.5:0.4); curTier=farther(curTier); levTier=farther(levTier);
+      if(!note) note="現在は会社に所属していないため、社内ルートの優先度は下げています。";
+    }
+    // 会社員の場合 → まず現実的な社内ルートを優先する
+    // 副業・独立は意欲だけで上がりやすいので、成果実績(B)が育つほど解禁する
+    if(!flags.notEmployee){
+      if(r.id==="shoshin"||r.id==="dx"||r.id==="idou") pen*=1.12;
+      if(r.id==="fukugyo"||r.id==="freelance"){
+        pen*=((r.id==="freelance"?0.45:0.55)+0.1*s.B);
+        if(s.B<=2 && !note) note="会社員のうちは、まず本業でAI実績を作るのが現実的です。副業・独立はその先の選択肢になります。";
+      }
+    }
+    // レバンスは必ず「今のまま」より近い射程にする
+    levTier=Math.min(levTier,curTier);
+
+    const adjusted=raw*pen;
+    const band = adjusted>=2.8 ? "high" : (adjusted>=2.0 ? "mid" : "low");
+    return {...r, raw, adjusted, curTier, levTier, band, note};
+  }).sort((a,b)=> b.adjusted-a.adjusted);
+}
+
+/* --- ステージ算出 --- */
+function computeStage(s){
+  let lv=clamp(Math.round(s.A)+1,1,5);
+  // 成果実績が高ければ実装ステージ以上に引き上げる
+  if(s.B>=3 && lv<4) lv=4;
+  if(s.B>=4 && lv<5) lv=5;
+  return STAGES[lv-1];
+}
+
+/* --- 足りないもの生成 --- */
+function buildGaps(s, dir){
+  const social=(dir==="tenshoku"||dir==="fukugyo"||dir==="dokuritsu");
+  const cands=[];
+  // 伸びしろが大きい順に課題を出す
+  if(s.B<=1) cands.push("AIを使った成果を、数字や具体例で語れる形に見える化する");
+  if(s.A<=2) cands.push("個人活用から、業務フローへの組み込みへ一段引き上げる");
+  if(s.D<=1) cands.push("自分の業務を超えて、チームや周囲を動かす視点を持つ");
+  if(s.E<=2) cands.push("あなたの職種でAIが成果になる「型」を言語化する");
+  if(social && s.F<=1) cands.push("社外で通用する実績と、人とのつながりを蓄積する");
+  // 上級者向けの次の課題
+  if(s.D>=3) cands.push("組織横断でAI活用を広げる、旗振り役のポジションを取る");
+  if(s.F<=2) cands.push("社外でも通用する形で、自分の実績を見せられるようにする");
+  // 汎用（全員に効く）
+  cands.push("AI活用を、誰でも再現できる仕組み（型・テンプレ）に落とす");
+  cands.push("上司や転職市場に伝わる形で、実績を言語化する");
+  cands.push("AIの成果を、単価・年収・ポジションに変える交渉材料として磨く");
+  // 重複除去・3〜4件に絞る
+  const seen=new Set(); const out=[];
+  for(const c of cands){ if(!seen.has(c)){ seen.add(c); out.push(c);} if(out.length>=4)break; }
+  return out;
+}
+
+/* --- あなたの現状（共感）生成 --- */
+function buildReality(pa){
+  const empathy=EMPATHY[pa[0]];
+  const change=PROBE_QUESTIONS[2].opts[pa[2]];
+  const kabe=PROBE_QUESTIONS[9].opts[pa[9]];
+  return `<div class="reality-box">
+      <div class="rb-title">あなたの現状</div>
+      <p class="empathy">${empathy}</p>
+      <div class="rb-tags">
+        <span>変えたいのは「${change}」</span>
+        <span>壁に感じるのは「${kabe}」</span>
+      </div>
+    </div>`;
+}
+
+/* --- あなたが描く理想 生成（トップ3の出口に紐づけて表示） --- */
+function buildIdeal(pa, top3){
+  // トップ3に出た出口に対応する理想を、重複なく表示（「考えていない」は除外）
+  const seen=new Set(); const rows=[];
+  top3.forEach(r=>{
+    const qi=IDEAL_MAP[r.id]; if(qi===undefined||seen.has(qi))return; seen.add(qi);
+    const q=PROBE_QUESTIONS[qi]; const ans=pa[qi];
+    if(ans===q.opts.length-1)return; // 「あまり考えていない」は出さない
+    rows.push(`<div class="ir"><b>${r.name}</b> での理想：${q.opts[ans]}</div>`);
+  });
+  const routesHtml = rows.length ? `<div class="ideal-routes">${rows.join("")}</div>` : "";
+  // 本気度で締めの一文を出し分け
+  const bridge = pa[8]<=1
+    ? "動き出すなら、今が最適なタイミングです。この理想と現在地の距離を、レバンスで縮めていきます。"
+    : "いきなり大きく動かなくて大丈夫。まず3ヶ月の実績づくりから、この理想に近づけます。";
+  return `<div class="block-title">あなたが描く理想</div>
+    <div class="ideal-box">
+      <div class="ideal-time"><span>1年後</span>${PROBE_QUESTIONS[6].opts[pa[6]]}</div>
+      <div class="ideal-time"><span>ゆくゆく</span>${PROBE_QUESTIONS[7].opts[pa[7]]}</div>
+      ${routesHtml}
+      <p class="ideal-bridge">${bridge}</p>
+    </div>`;
+}
+
+/* --- 3ヶ月ロードマップ生成 --- */
+function buildRoadmap(s, answers){
+  const shokushu=QUESTIONS[1].opts[answers[1]].t.replace(/（.*?）/,"");
+  let head;
+  if(s.B<=1){
+    head=`まず、今の${shokushu}業務の中から、AIで改善しやすいテーマを1つ選びます。`;
+  }else{
+    head=`すでにAIで手応えが出ています。次は、その成果を「再現できる仕組み」に広げます。`;
+  }
+  return `${head}<br>そのテーマで、<b>業務時間・作業品質・アウトプット量</b>のどれかを、数字や具体例で語れる成果に変えてください。<br>3ヶ月後、評価面談や職務経歴書で「<b>どの業務を、どれくらい改善したか</b>」を語れる状態を目指します。AI知識ではなく、評価される実務実績がここで手に入ります。`;
+}
+
+/* --- 出口カード描画（現状の到達目安だけをシンプルに） --- */
+function exitCard(r, rank){
+  const badge = rank ? `<div class="rankbadge">${rank}位</div>` : "";
+  const noteHtml = r.note ? `<div class="exit-note">${r.note}</div>` : "";
+  const statusCls = r.curTier>=2 ? "exit-status far" : "exit-status";
+  return `<div class="exit ${rank===1?'rank1':''}">
+      <div class="exit-top">
+        ${badge}
+        <div class="exit-name">${r.name}</div>
+      </div>
+      <span class="${statusCls}">${STATUS_LABELS[r.curTier]}</span>
+      <div class="exit-body">${EXIT_TEXT[r.id][r.band]}</div>
+      ${noteHtml}
+    </div>`;
+}
+
+/* --- 引き上げバナー（トップ3直後に1回・レバンスで“高く・早く”到達できることを集約） --- */
+function upliftBanner(top3){
+  const lead=top3[0];
+  if(lead.curTier>=1){
+    return `<div class="uplift">
+      <div class="ut">AI実践コーチングなら</div>
+      <h4>今は時間がかかる出口も、<span class="hl">もっと高く・もっと早く引き上げられます。</span></h4>
+      <p>あなたの1位「${lead.name}」は、今の延長だと到達まで<span class="hl">${CUR_LABELS[lead.curTier]}</span>。でも、まず3ヶ月でAIの実績を作れば、<span class="hl">${LEV_LABELS[lead.levTier]}</span>入ります。レバンスがやるのは、この到達までの距離を縮め、狙える出口そのものを増やすことです。</p>
+    </div>`;
+  }
+  return `<div class="uplift">
+    <div class="ut">AI実践コーチングなら</div>
+    <h4>すでに射程内。<span class="hl">さらに上の出口まで引き上げます。</span></h4>
+    <p>あなたは「${lead.name}」がすでに視野に入っています。レバンスでAIの実績を積み上げれば、転職での年収レンジアップや、より責任あるポジションまで、一気に狙える状態に引き上げられます。</p>
+  </div>`;
+}
+
+/* --- スコアバー描画 --- */
+function scoreBars(s){
+  return Object.keys(SCORE_LABELS).map(k=>{
+    const pct=(s[k]/4)*100;
+    const val=Math.round(s[k]*10)/10;
+    return `<div class="score-row">
+        <div class="sl">${SCORE_LABELS[k]}</div>
+        <div class="score-track"><div class="score-fill" style="width:${pct}%"></div></div>
+        <div class="score-val">${val}</div>
+      </div>`;
+  }).join("");
+}
+
+/* --- 診断実行 --- */
+function runDiagnosis(){
+  const {answers, firstMissing}=collectAnswers();
+  if(firstMissing>=0){
+    $("#qrow"+firstMissing).scrollIntoView({behavior:"smooth",block:"center"});
+    return;
+  }
+  const probe=collectProbe();
+  if(probe.firstMissing>=0){
+    $("#prow"+probe.firstMissing).scrollIntoView({behavior:"smooth",block:"center"});
+    return;
+  }
+  const pa=probe.ans;
+  const {s, flags, dir}=computeScores(answers);
+  const stage=computeStage(s);
+  const routes=evaluateRoutes(s, flags, dir);
+  const top3=routes.slice(0,3);
+  const gaps=buildGaps(s, dir);
+  const roadmap=buildRoadmap(s, answers);
+  const name=$("#uname").value.trim();
+
+  // 描画
+  $("#resultWho").textContent = name ? `${name} さんの結果` : "";
+  $("#stageLv").textContent = `AI活用ステージ：Lv.${stage.lv}`;
+  $("#stageName").textContent = stage.name;
+  $("#stageBar").innerHTML = [1,2,3,4,5].map(i=>`<div class="seg ${i<=stage.lv?'on':''}"></div>`).join("");
+  $("#stageText").textContent = stage.text;
+
+  $("#reality").innerHTML = buildReality(pa);
+  $("#exitsTop").innerHTML = top3.map((r,i)=>exitCard(r, i+1)).join("");
+  $("#uplift").innerHTML = upliftBanner(top3);
+  $("#ideal").innerHTML = buildIdeal(pa, top3);
+  $("#exitsAll").innerHTML = routes.map((r,i)=>exitCard(r, i+1)).join("");
+  $("#gapList").innerHTML = gaps.map(g=>`<li>${g}</li>`).join("");
+  $("#roadmap").innerHTML = roadmap;
+  $("#scoreList").innerHTML = scoreBars(s);
+
+  $("#quiz").style.display="none";
+  $("#result").style.display="block";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* --- リセット --- */
+function reset(){
+  document.querySelectorAll('input[type="radio"]').forEach(r=>r.checked=false);
+  document.querySelectorAll('.q.unanswered').forEach(q=>q.classList.remove('unanswered'));
+  $("#result").style.display="none";
+  $("#quiz").style.display="block";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* --- 初期化 --- */
+renderQuestions();
+renderProbeQuestions();
+$("#diagnose").addEventListener("click", runDiagnosis);
+$("#reset").addEventListener("click", reset);
+</script>
+</body>
+</html>

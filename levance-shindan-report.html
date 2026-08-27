@@ -1,0 +1,643 @@
+<!doctype html>
+<!-- 最終更新 2026.8.27 -->
+<!-- AI人材レベル＆キャリアタイプ診断 レポート管理ページ（運営専用・非公開運用） -->
+<!-- 正本。公開は repo saori421/ai-career-shindan に levance-shindan-report.html としてコピーしてpush -->
+<!-- 診断ページからはリンクしない。データ表示には合言葉キー（Worker側REPORT_KEY）が必要 -->
+<!-- レポートはA4×4枚・スマホ閲覧前提の大きめ文字（1=表紙と総合診断/2=スキルバランス/3=タイプ/4=道筋とご案内） -->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>診断レポート管理｜LEVANCE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0B1D3A; --navy2:#143A6B; --navy3:#1D4E8F;
+  --gold:#C9A24B; --gold-soft:#E3D3A8; --gold-deep:#B08A2E;
+  --ink:#1C2733; --sub:#5B6B7B; --line:#E6EBF2; --bg:#EEF1F5;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.7;font-size:14px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+
+/* ---------- 管理UI ---------- */
+.adminbar{
+  background:linear-gradient(150deg,var(--navy),var(--navy2));color:#fff;
+  border-radius:12px;padding:20px 22px;margin-bottom:18px;
+}
+.adminbar .b{font-size:10px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
+.adminbar h1{font-size:18px;font-weight:900;margin-top:4px}
+.adminbar p{font-size:12px;color:#C6D2E2;margin-top:4px}
+.keybox{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px}
+.keybox label{font-size:13px;font-weight:700;color:var(--navy);display:block;margin-bottom:8px}
+.keybox input{width:100%;border:1px solid var(--line);border-radius:8px;padding:11px 13px;font-size:15px;font-family:inherit}
+.keybox button{margin-top:10px;background:var(--navy);color:#fff;border:none;border-radius:8px;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.keybox .err{color:#C0392B;font-size:12.5px;margin-top:8px}
+.listcard{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.listhead{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.listhead b{font-size:14px;color:var(--navy)}
+.listhead button{background:none;border:1px solid var(--line);border-radius:6px;color:var(--sub);font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit}
+.rowitem{display:flex;gap:12px;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.rowitem:last-child{border-bottom:none}
+.rowitem .d{font-size:11.5px;color:var(--sub);flex:0 0 118px}
+.rowitem .nm{font-size:14px;font-weight:900;color:var(--navy);flex:1;min-width:100px}
+.rowitem .meta{font-size:11.5px;color:var(--sub)}
+.rowitem .lvchip{font-size:11px;font-weight:700;color:var(--gold-deep);border:1px solid var(--gold);border-radius:4px;padding:1px 8px}
+.rowitem a{
+  margin-left:auto;background:var(--navy);color:#fff;text-decoration:none;
+  font-size:12px;font-weight:700;border-radius:6px;padding:8px 16px;border:1px solid var(--gold);
+}
+.loading{padding:30px;text-align:center;color:var(--sub);font-size:13px}
+
+/* ---------- レポート画面 ---------- */
+#reportView{display:none}
+.report-actions{max-width:794px;margin:0 auto 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.report-actions button{
+  border-radius:8px;padding:11px 22px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;
+}
+#printBtn{background:#FF7A00;color:#fff;border:1px solid var(--gold)}
+#backBtn{background:#fff;color:var(--sub);border:1px solid var(--line)}
+.report-actions .hint{font-size:11.5px;color:var(--sub)}
+
+/* A4本体（794×1123px ≒ A4 96dpi）×4枚・スマホ閲覧前提の大きめ文字 */
+.a4{
+  width:794px;height:1123px;margin:0 auto 26px;background:#fff;position:relative;
+  box-shadow:0 10px 40px rgba(11,29,58,.18);overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.a4 *{line-height:1.65}
+.pgnum{position:absolute;right:36px;bottom:12px;font-size:11px;color:#9AA7B6;letter-spacing:.1em;z-index:5}
+.on-navy .pgnum{color:#8FA0B8}
+
+.bp{position:relative;overflow:hidden}
+.bp::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 46px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 46px);
+}
+.bp > *{position:relative;z-index:2}
+
+/* ----- 1枚目（表紙＋総合診断） ----- */
+.cv-head{
+  background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 100%);
+  color:#fff;padding:30px 44px 24px;flex:0 0 auto;
+}
+.cv-toprow{display:flex;justify-content:space-between;align-items:center}
+.cv-brand{font-size:13px;letter-spacing:.26em;color:var(--gold-soft);font-weight:500;border:1px solid rgba(201,162,75,.55);padding:6px 16px;border-radius:2px}
+.cv-date{font-size:13px;color:#A9B7CB;letter-spacing:.06em}
+.cv-sub{font-size:16px;color:#C6D2E2;margin-top:16px;letter-spacing:.04em}
+.cv-name{font-size:41px;font-weight:900;margin-top:2px;line-height:1.3}
+.cv-name span{font-size:21px;font-weight:700;color:#C6D2E2;margin-left:8px}
+.cv-main{display:flex;gap:30px;align-items:center;margin-top:16px}
+.cv-ring{position:relative;width:152px;height:152px;flex:0 0 152px}
+.cv-ring svg{transform:rotate(-90deg)}
+.cv-ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.cv-ring-c .p{font-size:11px;letter-spacing:.26em;color:var(--gold-soft);font-weight:700}
+.cv-ring-c .n{font-size:47px;font-weight:900}
+.cv-ring-c .d{font-size:12px;color:#A9B7CB}
+.cv-lvtext .l{font-size:14px;color:#A9B7CB;letter-spacing:.08em}
+.cv-lvtext .s{font-size:31px;font-weight:900;margin-top:2px}
+.cv-phase{display:inline-block;margin-top:10px;font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--gold-soft);border:1px solid rgba(201,162,75,.55);border-radius:4px;padding:5px 13px}
+.cv-typebar{
+  margin-top:16px;background:rgba(255,255,255,.07);border:1px solid rgba(201,162,75,.45);
+  border-radius:12px;padding:12px 20px;
+}
+.cv-typebar .lb{font-size:11.5px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
+.cv-typebar .tn{font-size:27px;font-weight:900;margin-top:1px}
+.cv-typebar .tt{font-size:14.5px;color:#C6D2E2;margin-top:1px}
+.cv-body{padding:20px 44px 0;flex:1 1 auto;min-height:0}
+
+.rp-k{font-size:13px;letter-spacing:.2em;color:var(--gold-deep);font-weight:700;margin-bottom:5px}
+.rp-h{font-size:22px;font-weight:900;color:var(--navy);border-left:4px solid var(--gold);padding-left:12px;margin-bottom:11px;line-height:1.45}
+.rp-msg{
+  border:1px solid var(--gold-soft);border-radius:12px;background:#FDFBF5;
+  padding:18px 22px;
+}
+.rp-msg p{font-size:15.8px;line-height:1.85;color:#26313E;margin-bottom:11px}
+.rp-msg p:last-child{margin-bottom:0}
+.rp-msg b{color:var(--navy)}
+.rp-msg .gold{color:var(--gold-deep);font-weight:700}
+
+/* ----- 2〜4枚目共通ヘッダー ----- */
+.pg-head{
+  background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 100%);
+  color:#fff;padding:16px 44px;display:flex;justify-content:space-between;align-items:center;flex:0 0 auto;
+}
+.pg-head .t{font-size:19px;font-weight:900}
+.pg-head .t span{color:var(--gold-soft);font-size:12px;letter-spacing:.22em;display:block;font-weight:700;margin-bottom:2px}
+.pg-head .nm{font-size:14px;color:#C6D2E2}
+.pg-body{padding:20px 44px 0;flex:1 1 auto;min-height:0}
+.rp-sec{margin-bottom:17px}
+
+/* 2枚目：スキルバランス */
+.rp-radarwrap{text-align:center;margin:4px 0 8px}
+.rp-bars .br{display:flex;align-items:center;gap:14px;padding:8px 0}
+.rp-bars .bn{flex:0 0 108px;font-size:16.5px;font-weight:700;color:var(--navy)}
+.rp-bars .bt{flex:1;height:12px;background:#EDF1F6;border-radius:6px;overflow:hidden}
+.rp-bars .bt i{display:block;height:100%;background:linear-gradient(90deg,var(--navy2),var(--navy3));border-radius:6px}
+.rp-bars .br.weak .bt i{background:linear-gradient(90deg,var(--gold-deep),var(--gold))}
+.rp-bars .bv{flex:0 0 42px;text-align:right;font-size:16.5px;font-weight:900;color:var(--navy)}
+.rp-focus{border:1px solid var(--gold-soft);background:#FCF9F0;border-radius:12px;padding:18px 22px;font-size:15.8px;line-height:1.85;margin-top:16px}
+.rp-focus b{color:var(--navy)}
+
+/* 3枚目：タイプ */
+.tp-name{font-size:31px;font-weight:900;color:var(--navy);line-height:1.4}
+.tp-tag{font-size:15px;color:var(--sub);margin-top:2px;margin-bottom:14px}
+.rp-list{list-style:none}
+.rp-list li{position:relative;padding:4px 0 4px 26px;font-size:15.5px;line-height:1.65}
+.rp-list li::before{content:"";position:absolute;left:2px;top:13px;width:9px;height:9px;border:2px solid var(--gold);border-radius:50%}
+.rp-mind{border:1px solid var(--line);border-radius:12px;padding:13px 18px;margin-bottom:9px;background:#FBFCFE}
+.rp-mind .mh{font-size:16.5px;font-weight:900;color:var(--navy);line-height:1.5}
+.rp-mind .mh::before{content:attr(data-n);color:var(--gold-deep);font-size:12.5px;margin-right:9px;letter-spacing:.08em}
+.rp-mind p{font-size:14px;color:#3D4B5C;margin-top:4px;line-height:1.7}
+
+/* 4枚目：出口・90日・CTA */
+.rp-exit{
+  border:1px solid var(--line);border-radius:12px;padding:10px 16px;background:#FBFCFE;
+  margin-bottom:8px;display:flex;align-items:center;gap:14px;
+}
+.rp-exit.first{border:1.5px solid var(--gold);background:#FFFDF6}
+.rp-exit .rk{flex:0 0 auto;font-size:12px;font-weight:900;letter-spacing:.05em;color:var(--navy2);border:1px solid var(--navy2);border-radius:4px;padding:3px 10px}
+.rp-exit.first .rk{background:var(--navy);color:var(--gold-soft);border-color:var(--navy)}
+.rp-exit .en{font-size:17px;font-weight:900;color:var(--navy);line-height:1.5}
+.rp-rstep{border:1px solid var(--line);border-radius:12px;padding:10px 16px;background:#FBFCFE;margin-bottom:8px}
+.rp-rstep .rm{font-size:11.5px;letter-spacing:.16em;color:var(--gold-deep);font-weight:700}
+.rp-rstep .rh{font-size:16px;font-weight:900;color:var(--navy);margin-top:1px;line-height:1.5}
+.rp-rstep p{font-size:13.5px;color:#3D4B5C;margin-top:2px;line-height:1.6}
+.rp-roadextra{margin-top:2px;background:#F2F6FB;border-radius:10px;padding:10px 16px;font-size:13.5px;color:#33455C;line-height:1.65}
+
+.rp-cta{
+  position:relative;margin-top:auto;flex:0 0 auto;
+  background:linear-gradient(150deg,var(--navy) 0%,#123D63 100%);color:#fff;
+  padding:18px 44px 20px;overflow:hidden;
+}
+.rp-cta-in{position:relative;z-index:2}
+.rp-cta .ck{font-size:12px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
+.rp-cta .ch{font-size:19.5px;font-weight:900;margin-top:4px;line-height:1.5}
+.rp-cta .ch span{color:var(--gold-soft)}
+.rp-cta .cp{font-size:13.6px;color:#DCE4EF;margin-top:6px;line-height:1.7}
+.rp-cta .cp b{color:#fff}
+.rp-cta-meta{margin-top:9px;font-size:14.5px;color:#E4EAF3;font-weight:700}
+.rp-cta-meta span{color:var(--gold-soft)}
+.rp-cta-cap{font-size:12.5px;color:#C6D2E2;margin-top:3px}
+.rp-cta-link{margin-top:7px;font-size:13.5px;color:#DCE4EF}
+.rp-cta-link a{color:var(--gold-soft);font-weight:700;text-decoration:none}
+.rp-cta .dis{font-size:10px;color:#8FA0B8;margin-top:9px;border-top:1px solid rgba(255,255,255,.14);padding-top:7px;line-height:1.55;max-width:66%}
+
+/* ---------- 印刷 ---------- */
+@media print{
+  @page{size:A4;margin:0}
+  body{background:#fff}
+  .noprint{display:none !important}
+  .wrap{max-width:none;padding:0}
+  .a4{width:210mm;height:296mm;box-shadow:none;margin:0;transform:none !important;page-break-after:always}
+  .a4:last-child{page-break-after:auto}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media screen and (max-width:820px){
+  .a4{transform-origin:top left;transform:scale(0.44);margin-bottom:-600px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="adminbar noprint" id="adminBar">
+    <span class="b">LEVANCE｜ADMIN</span>
+    <h1>診断レポート管理</h1>
+    <p>回答一覧からレポートを開き、「PDFとして保存」でA4・4枚のレポート（スマホ閲覧向け・大きめ文字）を出力できます。このページは運営専用です。</p>
+  </div>
+
+  <div class="keybox noprint" id="keyBox" style="display:none">
+    <label for="keyInput">アクセスキーを入力してください（初回のみ・この端末に保存されます）</label>
+    <input type="password" id="keyInput" placeholder="アクセスキー" autocomplete="off">
+    <button type="button" id="keySubmit">表示する</button>
+    <p class="err" id="keyErr" style="display:none">キーが違うようです。もう一度確認してください。</p>
+  </div>
+
+  <div class="listcard noprint" id="listCard" style="display:none">
+    <div class="listhead"><b>回答一覧（新しい順）</b><button type="button" id="reloadBtn">再読み込み</button></div>
+    <div id="listBody"><div class="loading">読み込み中...</div></div>
+  </div>
+
+  <div id="reportView">
+    <div class="report-actions noprint">
+      <button type="button" id="backBtn">← 一覧に戻る</button>
+      <button type="button" id="printBtn">PDFとして保存（印刷）</button>
+      <span class="hint">A4・4枚で出力されます。印刷画面で「PDFとして保存」を選択</span>
+    </div>
+    <div id="pages"></div>
+  </div>
+
+</div>
+
+<script>
+"use strict";
+
+var WORKER = "https://levance-shindan-collect.saori421work.workers.dev";
+var KEY_STORE = "lv_report_key";
+var CONSULT_URL = "https://sb.levance-inc.jp/page/clQkfO8D87rd";
+
+/* 診断本体と同じ静的コンテンツ */
+var PHASES_BY_LV = [
+  {en:"PHASE 1｜AI PLAYER", ja:"AIを使いこなす"},
+  {en:"PHASE 1｜AI PLAYER", ja:"AIを使いこなす"},
+  {en:"PHASE 2｜WORK DESIGNER", ja:"業務を設計し直す"},
+  {en:"PHASE 2｜WORK DESIGNER", ja:"業務を設計し直す"},
+  {en:"PHASE 3｜ORG DRIVER", ja:"組織を動かす"}
+];
+var AXES = ["設計力","AI活用力","実装力","巻き込み力","変換力","環境・時間"];
+var AX_SUB = ["業務を分解し言語化する力","AIを日常的に使う力","業務フローに組み込む力","チーム・組織を動かす力","成果を評価の言葉に変える力","続けられる環境の力"];
+
+var TYPE_DATA = {
+  "サイレント準備型": {
+    tag:"静かに備える、堅実タイプ",
+    redefine:"知識を増やすことよりも、毎日の業務の中に小さな実践を置くこと。そこから、すべてが動き始めます。",
+    strengths:["危機になる前に備えようとする、先読みの視点","堅実に積み上げられる継続力","長年の実務経験という、AI活用のいちばんの土台"],
+    stumbles:["「きちんと理解してから」で最初の一歩が遅れる","何から手をつけるかが決まらず、情報収集で止まる","教えてくれる人がいないまま、独学で遠回りする"],
+    minds:[
+      {h:"学んでから、ではなく「自分の業務」から始める", t:"AIの勉強から入ると、多くの人が途中で止まります。毎日やっている業務を1つ選び、そこにAIを当てるのが最短です。"},
+      {h:"1日15分の実践で、十分に変わる", t:"まとまった時間は要りません。15分しかできない日は、15分進んだと考える。続けられる設計が結果を分けます。"},
+      {h:"不安なままで、始めていい", t:"この不安は、同じタイプのほぼ全員が持っています。これまで新しい仕事を身につけたときも、最初は同じだったはずです。"}
+    ],
+    road:"備えとして始めるあなたは、90日の実績1本がそのまま「いざという時の名刺」になります。小さくても、外に見せられる形で残してください。"
+  },
+  "実務エンジン型": {
+    tag:"現場で成果を作る、実践タイプ",
+    redefine:"AIスキルは、もう足りています。足りないのは、成果を「評価される言葉」に変換する工程だけです。",
+    strengths:["日常的にAIを使いこなす実践力","業務の中の改善ポイントを見つける現場感覚","すでに手元にある「実績の種」"],
+    stumbles:["時短で満足し、業務フローの再設計まで踏み込めていない","成果が「なんとなく楽になった」で止まっている","個人の工夫で終わり、チーム・組織に広がっていない"],
+    minds:[
+      {h:"「速くなった」で止めない。成果を評価の言葉に変換する", t:"「資料作成の工数を月◯時間削減し、浮いた時間で◯◯を実行した」。この変換ができた瞬間、同じ仕事が実績に変わります。"},
+      {h:"個人の時短から、業務フローの再設計へ", t:"業務の流れ全体を分解して、AIに任せる部分と人が判断する部分を設計し直す。ここから先が、周りと差がつく領域です。"},
+      {h:"実績は、磨かれた1本でいい", t:"あれこれ手を広げるより、「どの業務を、どれくらい改善したか」を語れる1本を作る。評価面談でも職務経歴書でも、効くのはこの1本です。"}
+    ],
+    road:"すでにAIで手応えのあるあなたは、いま使っている場面の中から「フローごと変えられる業務」を選ぶと、実績の質が一段上がります。"
+  },
+  "組織ドライバー型": {
+    tag:"組織を動かす、推進タイプ",
+    redefine:"自分が使い込むことよりも、任せる業務・判断する業務・展開する業務を見分ける設計。それが、推進する立場の仕事です。",
+    strengths:["組織・チームという、個人より大きなレバレッジを動かせる立場","現場と経営のあいだをつなげる視点","「AIが分かって業務を再設計できる人」という空いている椅子への最短距離"],
+    stumbles:["自分で全部触って検証しようとして、時間切れになる","「何ができるか」から入り、「どの業務を変えるか」が後回しになる","現場の温度差・費用対効果の説明に消耗する"],
+    minds:[
+      {h:"AIを「道具」ではなく「優秀な新人」として扱う", t:"優秀な新人に仕事を任せるつもりで、業務の目的・条件・判断基準を渡す。AIの環境を作るとは「優秀な新人チーム」を作ることです。"},
+      {h:"任せる業務・判断する業務・展開する業務を見分ける", t:"AI推進の本質はツール選定ではありません。この3つを切り分けられる人が、推進の中心に立ちます。"},
+      {h:"業務を成果に変えるマネジメントとして設計する", t:"「導入したか」ではなく「どの業務がどれだけ変わったか」で語る。再設計の記録を残す設計が、あなたのキャリア資産になります。"}
+    ],
+    road:"推進役のあなたは、90日の実績を「チームで再現できる型」として残してください。それ自体が推進の実績になり、次の展開の説得材料になります。"
+  },
+  "越境チャレンジ型": {
+    tag:"外に道をひらく、展開タイプ",
+    redefine:"学びを増やすことよりも、外に見せられる形の実績を1本作ること。それが、値付けと選択肢を生みます。",
+    strengths:["環境を変えることを恐れない行動力","自分の市場価値への感度","本業・実務という、AI実績の生産拠点をすでに持っていること"],
+    stumbles:["「何をもって実績と言えるのか」が定まらず、動き出せない","スキルはあるのに、値付け・見せ方が分からない","本業と学びの両立で、時間が溶けていく"],
+    minds:[
+      {h:"外で売れるのは「再設計の実績」", t:"ツールの操作は数年で誰でもできるようになります。外で通用し続けるのは再現可能な実績。まず本業で1本作るのが最短です。"},
+      {h:"実績の言語化が、値付けを決める", t:"何を・どれくらい・どう変えたかを数字で語れれば、単価は自分で設計できるようになります。"},
+      {h:"小さく始めて、実績で広げる", t:"小さな案件・小さな副業で実績を重ねて、選択肢を増やしていく。「いつ辞めてもいい状態」は、その積み上げの先にあります。"}
+    ],
+    road:"外への展開を見据えるあなたは、90日の実績を「社外の人にも伝わる言葉」で記録してください。ポートフォリオと値付けの根拠になります。"
+  }
+};
+
+var EMPATHY_BY_Q5 = {
+  "浮いた時間に、次の仕事が乗っただけ":"AIで仕事は速くなったのに、浮いた時間に次の仕事が乗るだけ。頑張るほど忙しくなるこの構造は、あなたのせいではありません。",
+  "楽にはなったが、評価は変わらない":"AIで楽にはなった。でも評価は変わらない。「AIが使えること」と「キャリアが動くこと」のあいだには、実はもう1つ工程が挟まっています。",
+  "上司・周囲から頼られる場面が増えた":"すでに周囲から頼られ始めています。これは大きなサインで、その信頼を「役割」と「実績」に変える段階に入っています。",
+  "評価・役割が実際に変わった":"すでに評価が動き始めています。次は、その成果を組織とキャリアの両方に効く形へ広げる段階です。",
+  "まだ速くなる実感はない":"AIの手応えはまだこれからでも、大丈夫です。多くの人がここから始めて、90日で景色を変えています。"
+};
+
+var WALL_MSG = {
+  "まとまった時間の確保":"時間は、まとまって取れなくて大丈夫です。1日15分の積み上げでも、順番が正しければ90日で形になります。",
+  "何から手をつけるかの判断":"何から始めるかは、才能ではなく「設計」で決まります。順番さえ決まれば、迷いは消えます。",
+  "語れる実績がまだないこと":"実績は、これから作るものです。いまなくて当然です。90日あれば、最初の1本は作れます。",
+  "続けられるかどうかの自信":"自信は、始める前には生まれません。「できるか分からない」のままで始めて大丈夫です。",
+  "相談できる相手・環境がないこと":"独学でやり切る必要はありません。相談できる相手と環境は、これから用意できます。"
+};
+
+var ROADMAP = [
+  {m:"MONTH 1", h:"対象業務を1つ決めて、小さく実装する", t:"毎日やっている業務から、AIで改善しやすいテーマを1つ選びます。"},
+  {m:"MONTH 2", h:"業務フローを再設計して、変化を記録する", t:"作業時間・品質・量のどれがどう変わったかを記録します。"},
+  {m:"MONTH 3", h:"成果を「評価される言葉」に変換する", t:"評価面談・職務経歴書・商談で語れる1本の実績に仕上げます。"}
+];
+
+var rows = [];
+
+function esc(t){ return String(t == null ? "" : t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function getKey(){ try { return localStorage.getItem(KEY_STORE) || ""; } catch(e){ return ""; } }
+function setKey(k){ try { localStorage.setItem(KEY_STORE, k); } catch(e){} }
+function show(id, on){ document.getElementById(id).style.display = on ? "block" : "none"; }
+
+function loadRows(){
+  document.getElementById("listBody").innerHTML = '<div class="loading">読み込み中...</div>';
+  show("listCard", true);
+  fetch(WORKER + "/rows", { headers: { "X-Report-Key": getKey() } })
+    .then(function(res){
+      if (res.status === 403) throw new Error("forbidden");
+      return res.json();
+    })
+    .then(function(j){
+      if (!j.ok) throw new Error("api");
+      rows = j.values || [];
+      renderList();
+      var m = location.hash.match(/row=(\d+)/);
+      if (m) openReport(parseInt(m[1], 10));
+    })
+    .catch(function(e){
+      if (String(e.message) === "forbidden") {
+        try { localStorage.removeItem(KEY_STORE); } catch(_){}
+        show("listCard", false);
+        show("keyBox", true);
+        document.getElementById("keyErr").style.display = "";
+      } else {
+        document.getElementById("listBody").innerHTML = '<div class="loading">読み込みに失敗しました。電波の良い場所で再読み込みしてください。</div>';
+      }
+    });
+}
+
+function renderList(){
+  var html = "";
+  for (var i = rows.length - 1; i >= 1; i--) {
+    var r = rows[i];
+    html += '<div class="rowitem">' +
+      '<span class="d">' + esc(r[0]) + '</span>' +
+      '<span class="nm">' + esc(r[1]) + '</span>' +
+      '<span class="lvchip">' + esc(r[2]) + '</span>' +
+      '<span class="meta">' + esc(r[5]) + '</span>' +
+      '<a href="#row=' + (i + 1) + '" data-row="' + (i + 1) + '">レポートを開く</a>' +
+      '</div>';
+  }
+  if (!html) html = '<div class="loading">まだ回答がありません。</div>';
+  document.getElementById("listBody").innerHTML = html;
+  var links = document.querySelectorAll("#listBody a");
+  for (var l = 0; l < links.length; l++) {
+    links[l].addEventListener("click", function(e){
+      e.preventDefault();
+      openReport(parseInt(this.getAttribute("data-row"), 10));
+    });
+  }
+}
+
+function ringSVG(lv){
+  var C = 2 * Math.PI * 63;
+  var off = C * (1 - lv / 5);
+  return '<svg width="152" height="152" viewBox="0 0 152 152">' +
+    '<circle cx="76" cy="76" r="63" fill="none" stroke="rgba(201,162,75,.22)" stroke-width="7.5"/>' +
+    '<circle cx="76" cy="76" r="63" fill="none" stroke="#C9A24B" stroke-width="7.5" stroke-linecap="round" ' +
+    'stroke-dasharray="' + C.toFixed(1) + '" stroke-dashoffset="' + off.toFixed(1) + '"/></svg>';
+}
+
+function radarSVG(S){
+  var cx = 320, cy = 235, R = 165, n = 6;
+  var weak = 0;
+  for (var w = 1; w < n; w++) if (S[w] < S[weak]) weak = w;
+  function pt(idx, val){
+    var ang = -Math.PI / 2 + idx * 2 * Math.PI / n;
+    var rr = R * val / 4;
+    return [cx + rr * Math.cos(ang), cy + rr * Math.sin(ang)];
+  }
+  var svg = '<svg width="640" height="472" viewBox="0 0 640 472" style="max-width:100%">';
+  for (var ring = 1; ring <= 4; ring++) {
+    var pts = [];
+    for (var i = 0; i < n; i++) pts.push(pt(i, ring).join(","));
+    svg += '<polygon points="' + pts.join(" ") + '" fill="none" stroke="#C9A24B" stroke-opacity="' + (ring === 4 ? 0.6 : 0.22) + '" stroke-width="' + (ring === 4 ? 1.6 : 1.1) + '"/>';
+  }
+  for (var a = 0; a < n; a++) {
+    var p = pt(a, 4);
+    svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + p[0] + '" y2="' + p[1] + '" stroke="#C9A24B" stroke-opacity="0.22" stroke-width="1.1"/>';
+  }
+  var poly = [];
+  for (var v = 0; v < n; v++) poly.push(pt(v, Math.max(0.25, S[v])).join(","));
+  svg += '<polygon points="' + poly.join(" ") + '" fill="rgba(20,58,107,.2)" stroke="#143A6B" stroke-width="3" stroke-linejoin="round"/>';
+  for (var d = 0; d < n; d++) {
+    var dp = pt(d, Math.max(0.25, S[d]));
+    svg += '<circle cx="' + dp[0] + '" cy="' + dp[1] + '" r="6" fill="#fff" stroke="#C9A24B" stroke-width="2.5"/>';
+  }
+  for (var l = 0; l < n; l++) {
+    var lp = pt(l, 5.05);
+    var anchor = "middle";
+    if (lp[0] < cx - 50) anchor = "end";
+    if (lp[0] > cx + 50) anchor = "start";
+    svg += '<text x="' + lp[0] + '" y="' + (lp[1] + 6) + '" text-anchor="' + anchor + '" font-size="18" font-weight="700" fill="' + (l === weak ? "#B08A2E" : "#1C2733") + '">' + AXES[l] + '</text>';
+  }
+  svg += '</svg>';
+  return svg;
+}
+
+/* 総合診断メッセージの生成 */
+function buildMessage(name, lv, stage, typeName, td, S, exits, ans){
+  var q1 = ans[0] || "";
+  var q5 = ans[4] || "";
+  var q13 = ans[12] || "";
+  var q15 = ans[14] || "";
+  var q18 = ans[17] || "";
+
+  var idx = [0,1,2,3,4];
+  idx.sort(function(a,b){ return S[a] - S[b]; });
+  var ax1 = idx[0], ax2 = idx[1];
+
+  var jobPrefix = "";
+  if (q1 && q1.indexOf("フリーランス") >= 0) jobPrefix = "フリーランスとして働く";
+  else if (q1 && q1 !== "その他") jobPrefix = q1 + "の現場でAIと向き合う";
+
+  var p1 = jobPrefix + "<b>" + esc(name) + "さん</b>は現在、<b>Lv." + lv + "「" + esc(stage) + "」</b>。" +
+    (EMPATHY_BY_Q5[q5] || "AIとの距離を、これからキャリアの力に変えていく位置にいます。");
+
+  var p2 = "この診断結果から、いま" + esc(name) + "さんが伸ばすべきなのは、AIを“もっと使えるようになること”ではありません。" +
+    "伸ばすべきは<span class=\"gold\">「" + AXES[ax1] + "」</span>（" + AX_SUB[ax1] + "）、" +
+    "そして<span class=\"gold\">「" + AXES[ax2] + "」</span>（" + AX_SUB[ax2] + "）。" +
+    esc(td.redefine);
+
+  var p3 = "";
+  if (q13) p3 += "「<b>" + esc(q13) + "</b>」。この希望への最短の道は、出口でいえば<b>「" + esc(exits[0] || "") + "」</b>です。";
+  else p3 += "最短の道は、出口でいえば<b>「" + esc(exits[0] || "") + "」</b>です。";
+  p3 += "「" + AXES[ax1] + "」を軸に、90日で“語れる実績”を1本作ること。";
+  p3 += "それが、" + (q15 ? "「" + esc(q15) + "」という状態" : "理想とするキャリア") + "へ向かう、確かな一歩目になります。";
+
+  var p4 = WALL_MSG[q18] || "";
+
+  var html = "<p>" + p1 + "</p><p>" + p2 + "</p><p>" + p3 + "</p>";
+  if (p4) html += "<p>" + p4 + "</p>";
+  return html;
+}
+
+function openReport(rowNum){
+  var r = rows[rowNum - 1];
+  if (!r) { alert("その行のデータが見つかりません（行番号: " + rowNum + "）"); return; }
+  var name = r[1] || "（未入力）";
+  var lv = parseInt(String(r[2]).replace(/[^0-9]/g, ""), 10) || 1;
+  var stage = r[3] || "";
+  var phaseObj = PHASES_BY_LV[lv - 1];
+  var phase = r[4] || (phaseObj.en + "（" + phaseObj.ja + "）");
+  var typeName = r[5] || "";
+  var exits = [r[6], r[7], r[8]];
+  var S = [];
+  for (var i = 0; i < 6; i++) S.push(parseFloat(r[9 + i]) || 0);
+  var ans = [];
+  for (var q = 0; q < 18; q++) ans.push(r[15 + q] || "");
+  var td = TYPE_DATA[typeName] || TYPE_DATA["実務エンジン型"];
+
+  var stackWeak = 0;
+  for (var sw = 1; sw < 4; sw++) if (S[sw] < S[stackWeak]) stackWeak = sw;
+  var allWeak = 0;
+  for (var aw = 1; aw < 6; aw++) if (S[aw] < S[allWeak]) allWeak = aw;
+
+  var barsHtml = "";
+  for (var b = 0; b < 6; b++) {
+    barsHtml += '<div class="br' + (b === allWeak ? " weak" : "") + '">' +
+      '<span class="bn">' + AXES[b] + '</span>' +
+      '<span class="bt"><i style="width:' + (S[b] / 4 * 100) + '%"></i></span>' +
+      '<span class="bv">' + S[b].toFixed(1) + '</span></div>';
+  }
+
+  var strengthsHtml = "", stumblesHtml = "", mindsHtml = "";
+  for (var st = 0; st < td.strengths.length; st++) strengthsHtml += "<li>" + esc(td.strengths[st]) + "</li>";
+  for (var sm = 0; sm < td.stumbles.length; sm++) stumblesHtml += "<li>" + esc(td.stumbles[sm]) + "</li>";
+  for (var mi = 0; mi < td.minds.length; mi++) {
+    mindsHtml += '<div class="rp-mind"><p class="mh" data-n="0' + (mi + 1) + '">' + esc(td.minds[mi].h) + '</p><p>' + esc(td.minds[mi].t) + '</p></div>';
+  }
+  var exitsHtml = "";
+  for (var ex = 0; ex < 3; ex++) {
+    if (!exits[ex]) continue;
+    exitsHtml += '<div class="rp-exit' + (ex === 0 ? " first" : "") + '">' +
+      '<span class="rk">' + (ex === 0 ? "BEST MATCH" : (ex + 1) + "位") + '</span>' +
+      '<p class="en">' + esc(exits[ex]) + '</p></div>';
+  }
+  var roadHtml = "";
+  for (var rd = 0; rd < ROADMAP.length; rd++) {
+    roadHtml += '<div class="rp-rstep"><span class="rm">' + ROADMAP[rd].m + '</span>' +
+      '<p class="rh">' + esc(ROADMAP[rd].h) + '</p><p>' + esc(ROADMAP[rd].t) + '</p></div>';
+  }
+
+  var dateStr = String(r[0] || "").split(" ")[0];
+  var msgHtml = buildMessage(name, lv, stage, typeName, td, S, exits, ans);
+  var nmShort = esc(name) + 'さん｜' + esc(typeName);
+
+  /* ---------- 1枚目：表紙＋総合診断 ---------- */
+  var page1 =
+    '<div class="a4 on-navy">' +
+    '<div class="cv-head bp">' +
+      '<div class="cv-toprow"><span class="cv-brand">LEVANCE｜AI CAREER DIAGNOSIS</span>' +
+      '<span class="cv-date">診断日 ' + esc(dateStr) + '</span></div>' +
+      '<p class="cv-sub">AI人材レベル＆キャリアタイプ診断｜結果レポート</p>' +
+      '<p class="cv-name">' + esc(name) + '<span>さん</span></p>' +
+      '<div class="cv-main">' +
+        '<div class="cv-ring">' + ringSVG(lv) +
+          '<div class="cv-ring-c"><span class="p">LEVEL</span><span class="n">' + lv + '</span><span class="d">of 5</span></div></div>' +
+        '<div class="cv-lvtext"><p class="l">あなたのAI人材レベル</p><p class="s">' + esc(stage) + '</p>' +
+        '<span class="cv-phase">' + esc(phase) + '</span></div>' +
+      '</div>' +
+      '<div class="cv-typebar"><span class="lb">YOUR TYPE</span><p class="tn">' + esc(typeName) + '</p>' +
+      '<p class="tt">' + esc(td.tag) + '</p></div>' +
+    '</div>' +
+    '<div class="cv-body">' +
+      '<p class="rp-k">DIAGNOSIS MESSAGE</p><p class="rp-h">' + esc(name) + 'さんへの総合診断</p>' +
+      '<div class="rp-msg">' + msgHtml + '</div>' +
+    '</div>' +
+    '<span class="pgnum">LEVANCE AI CAREER REPORT｜1 / 4</span>' +
+    '</div>';
+
+  /* ---------- 2枚目：スキルバランス ---------- */
+  var page2 =
+    '<div class="a4">' +
+    '<div class="pg-head"><p class="t"><span>SKILL BALANCE</span>6つの力のバランス</p>' +
+    '<span class="nm">' + nmShort + '</span></div>' +
+    '<div class="pg-body">' +
+      '<div class="rp-radarwrap">' + radarSVG(S) + '</div>' +
+      '<div class="rp-bars">' + barsHtml + '</div>' +
+      '<div class="rp-focus"><b>FOCUS｜いま積み上げるべき力：「' + AXES[stackWeak] + '」</b><br>' +
+      esc(AX_SUB[stackWeak]) + '。AI人材の力は、設計力 → AI活用 → 実装 → 巻き込みの順で積み上がります。下の力が抜けたまま進むと「単発の便利」で止まります。</div>' +
+    '</div>' +
+    '<span class="pgnum">LEVANCE AI CAREER REPORT｜2 / 4</span>' +
+    '</div>';
+
+  /* ---------- 3枚目：タイプ ---------- */
+  var page3 =
+    '<div class="a4">' +
+    '<div class="pg-head"><p class="t"><span>YOUR TYPE</span>あなたのキャリアタイプ</p>' +
+    '<span class="nm">' + nmShort + '</span></div>' +
+    '<div class="pg-body">' +
+      '<p class="tp-name">' + esc(typeName) + '</p><p class="tp-tag">' + esc(td.tag) + '</p>' +
+      '<div class="rp-sec"><p class="rp-k">STRENGTHS</p><p class="rp-h">このタイプの強み</p>' +
+      '<ul class="rp-list">' + strengthsHtml + '</ul></div>' +
+      '<div class="rp-sec"><p class="rp-k">ATTENTION</p><p class="rp-h">つまずきやすいポイント</p>' +
+      '<ul class="rp-list">' + stumblesHtml + '</ul></div>' +
+      '<div class="rp-sec"><p class="rp-k">MINDSET</p><p class="rp-h">いま必要な考え方</p>' + mindsHtml + '</div>' +
+    '</div>' +
+    '<span class="pgnum">LEVANCE AI CAREER REPORT｜3 / 4</span>' +
+    '</div>';
+
+  /* ---------- 4枚目：道筋とご案内 ---------- */
+  var page4 =
+    '<div class="a4 on-navy">' +
+    '<div class="pg-head"><p class="t"><span>NEXT 90 DAYS</span>これからの道筋</p>' +
+    '<span class="nm">' + nmShort + '</span></div>' +
+    '<div class="pg-body">' +
+      '<div class="rp-sec"><p class="rp-k">CAREER EXITS</p><p class="rp-h">狙いやすい出口 トップ3</p>' + exitsHtml + '</div>' +
+      '<div class="rp-sec"><p class="rp-k">90 DAYS ROADMAP</p><p class="rp-h">最初の90日で「語れる実績」を1本作る</p>' +
+      roadHtml +
+      '<div class="rp-roadextra">' + esc(td.road) + '</div></div>' +
+    '</div>' +
+    '<div class="rp-cta bp"><div class="rp-cta-in">' +
+      '<p class="ck">NEXT STEP｜' + esc(name) + 'さんへのご案内</p>' +
+      '<p class="ch">あなたの業務・環境に基づいた<span>「進め方」</span>を、<br>一緒に設計する体験セッションをご用意しています。</p>' +
+      '<p class="cp">このレポートでお渡しできるのは、共通の地図までです。実際の業務内容・職場環境・使える時間に基づいて、どこを目指し、まず何から始めればいいか。その方向づけを行う<b>AI特化・個別キャリアコーチングの体験セッション</b>を、1回無料でご用意しています。</p>' +
+      '<p class="rp-cta-meta">約60〜90分｜オンライン（Zoom）｜マンツーマン｜<span>体験1回・無料</span></p>' +
+      '<p class="rp-cta-cap">※専任コーチの稼働枠に限りがあるため、定員に達し次第、受付を終了いたします。</p>' +
+      '<p class="rp-cta-link">お申し込み・詳細：<a href="' + CONSULT_URL + '">' + CONSULT_URL + '</a>（公式LINEからもご案内しています）</p>' +
+      '<p class="dis">※本レポートの内容は現時点での目安であり、成果を保証するものではありません。｜レバンス（LEVANCE）</p>' +
+    '</div></div>' +
+    '<span class="pgnum">LEVANCE AI CAREER REPORT｜4 / 4</span>' +
+    '</div>';
+
+  document.getElementById("pages").innerHTML = page1 + page2 + page3 + page4;
+
+  document.title = (name && name !== "（未入力）")
+    ? "レバンス_AI診断レポート_" + name + "様"
+    : "レバンス_AI診断レポート";
+  show("adminBar", false);
+  show("listCard", false);
+  show("reportView", true);
+  location.hash = "row=" + rowNum;
+  window.scrollTo(0, 0);
+}
+
+document.getElementById("backBtn").addEventListener("click", function(){
+  show("reportView", false);
+  show("adminBar", true);
+  show("listCard", true);
+  document.title = "診断レポート管理｜LEVANCE";
+  if (history.replaceState) history.replaceState(null, "", location.pathname);
+});
+document.getElementById("printBtn").addEventListener("click", function(){ window.print(); });
+document.getElementById("reloadBtn").addEventListener("click", loadRows);
+document.getElementById("keySubmit").addEventListener("click", function(){
+  var k = document.getElementById("keyInput").value.trim();
+  if (!k) return;
+  setKey(k);
+  document.getElementById("keyErr").style.display = "none";
+  show("keyBox", false);
+  loadRows();
+});
+document.getElementById("keyInput") && document.getElementById("keyInput").addEventListener("keydown", function(e){
+  if (e.key === "Enter") document.getElementById("keySubmit").click();
+});
+
+/* 初期化 */
+if (getKey()) {
+  loadRows();
+} else {
+  show("keyBox", true);
+}
+</script>
+</body>
+</html>

@@ -242,7 +242,10 @@ body{
 <script>
 "use strict";
 
-var WORKER = "https://levance-shindan-collect.saori421work.workers.dev";
+/* 本番は同一ドメインの /api（Pages Functions経由でWorkerへ中継）。ローカルで開いたときだけWorker直接 */
+var WORKER = (location.protocol === "file:")
+  ? "https://levance-shindan-collect.saori421work.workers.dev"
+  : "/api";
 var KEY_STORE = "lv_report_key";
 var CONSULT_URL = "https://sb.levance-inc.jp/page/clQkfO8D87rd";
 

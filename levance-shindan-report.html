@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- 最終更新 2026.8.27 -->
-<!-- AI人材レベル＆キャリアタイプ診断 レポート管理ページ（運営専用・非公開運用） -->
+<!-- 4タイプ別 AIレベル＆キャリアタイプ診断 レポート管理ページ（運営専用・非公開運用） -->
 <!-- 正本。公開は repo saori421/ai-career-shindan に levance-shindan-report.html としてコピーしてpush -->
 <!-- 診断ページからはリンクしない。データ表示には合言葉キー（Worker側REPORT_KEY）が必要 -->
 <!-- レポートはA4×4枚・スマホ閲覧前提の大きめ文字（1=表紙と総合診断/2=スキルバランス/3=タイプ/4=道筋とご案内） -->
@@ -531,12 +531,12 @@ function openReport(rowNum){
     '<div class="cv-head bp">' +
       '<div class="cv-toprow"><span class="cv-brand">LEVANCE｜AI CAREER DIAGNOSIS</span>' +
       '<span class="cv-date">診断日 ' + esc(dateStr) + '</span></div>' +
-      '<p class="cv-sub">AI人材レベル＆キャリアタイプ診断｜結果レポート</p>' +
+      '<p class="cv-sub">4タイプ別 AIレベル＆キャリアタイプ診断｜結果レポート</p>' +
       '<p class="cv-name">' + esc(name) + '<span>さん</span></p>' +
       '<div class="cv-main">' +
         '<div class="cv-ring">' + ringSVG(lv) +
           '<div class="cv-ring-c"><span class="p">LEVEL</span><span class="n">' + lv + '</span><span class="d">of 5</span></div></div>' +
-        '<div class="cv-lvtext"><p class="l">あなたのAI人材レベル</p><p class="s">' + esc(stage) + '</p>' +
+        '<div class="cv-lvtext"><p class="l">あなたのAIレベル</p><p class="s">' + esc(stage) + '</p>' +
         '<span class="cv-phase">' + esc(phase) + '</span></div>' +
       '</div>' +
       '<div class="cv-typebar"><span class="lb">YOUR TYPE</span><p class="tn">' + esc(typeName) + '</p>' +
@@ -558,7 +558,7 @@ function openReport(rowNum){
       '<div class="rp-radarwrap">' + radarSVG(S) + '</div>' +
       '<div class="rp-bars">' + barsHtml + '</div>' +
       '<div class="rp-focus"><b>FOCUS｜いま積み上げるべき力：「' + AXES[stackWeak] + '」</b><br>' +
-      esc(AX_SUB[stackWeak]) + '。AI人材の力は、設計力 → AI活用 → 実装 → 巻き込みの順で積み上がります。下の力が抜けたまま進むと「単発の便利」で止まります。</div>' +
+      esc(AX_SUB[stackWeak]) + '。AIをキャリアに変える力は、設計力 → AI活用 → 実装 → 巻き込みの順で積み上がります。下の力が抜けたまま進むと「単発の便利」で止まります。</div>' +
     '</div>' +
     '<span class="pgnum">LEVANCE AI CAREER REPORT｜2 / 4</span>' +
     '</div>';

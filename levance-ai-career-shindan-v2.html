@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- 最終更新 2026.8.27 -->
-<!-- AI人材レベル＆キャリアタイプ診断（リニューアル版 v2）｜レバンス -->
+<!-- 4タイプ別 AIレベル＆キャリアタイプ診断（リニューアル版 v2）｜レバンス -->
 <!-- 正本。公開は GitHub repo saori421/ai-career-shindan に levance-ai-career-shindan-v2.html としてコピーしてpush -->
 <!-- TODO: 結果レポート受け取りボタンの href を公式LINEのURLに差し替える（LINE_URL で検索） -->
 <html lang="ja">
@@ -8,7 +8,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>AI人材レベル＆キャリアタイプ診断｜LEVANCE</title>
+<title>4タイプ別 AIレベル＆キャリアタイプ診断｜LEVANCE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -64,7 +64,8 @@ img,svg{max-width:100%}
   padding:5px 14px;border-radius:2px;margin-bottom:22px;
 }
 .hero h1{font-size:27px;font-weight:900;line-height:1.45;letter-spacing:.02em}
-.hero h1 .small{display:block;font-size:14px;font-weight:700;color:var(--gold-soft);margin-bottom:10px;letter-spacing:.08em}
+.hero h1 .small{display:block;font-size:15px;font-weight:700;color:var(--gold-soft);margin-bottom:10px;letter-spacing:.12em}
+.hero-tagline{margin-top:14px;font-size:15px;font-weight:700;color:var(--gold-soft);letter-spacing:.06em}
 .hero .lead{margin-top:16px;font-size:14.5px;line-height:2;color:#DCE4EF}
 .hero .lead strong{color:#fff;font-weight:700}
 .hero-meta{margin-top:18px;font-size:12.5px;color:#A9B7CB;letter-spacing:.06em}
@@ -378,7 +379,8 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
   </svg>
   <div class="wrap hero-inner">
     <span class="brandbadge">LEVANCE｜AI CAREER DIAGNOSIS 2.0</span>
-    <h1><span class="small">AIを使う人から、AIで組織を動かす人へ。</span>AI人材レベル＆<br>キャリアタイプ診断</h1>
+    <h1><span class="small">4タイプ別</span>AIレベル＆<br>キャリアタイプ診断</h1>
+    <p class="hero-tagline">AIを使う人から、AIで組織を動かす人へ。</p>
     <p class="lead">AIで仕事は速くなった。なのに、評価もキャリアも変わらない。<br>その分かれ目は、<strong>スキルの差ではなく「積み上げの順番」</strong>にあります。<br>18の質問で、あなたの現在地と、その先に取れる道筋を診断します。</p>
     <div class="hero-goldline"></div>
     <p class="hero-meta">全18問｜所要 約3分｜結果はその場で表示されます</p>
@@ -390,7 +392,7 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
 
     <div class="learnbox">
       <h2>この診断で分かること</h2>
-      <div class="learn-item"><span class="learn-num">1</span><div><b>あなたのAI人材レベル</b><p>5段階の現在地と、「AIを使いこなす → 業務を設計する → 組織を動かす」3フェーズのどこにいるか</p></div></div>
+      <div class="learn-item"><span class="learn-num">1</span><div><b>あなたのAIレベル</b><p>5段階の現在地と、「AIを使いこなす → 業務を設計する → 組織を動かす」3フェーズのどこにいるか</p></div></div>
       <div class="learn-item"><span class="learn-num">2</span><div><b>あなたのキャリアタイプ</b><p>4タイプ別の強み・つまずきやすい点・いま必要な考え方</p></div></div>
       <div class="learn-item"><span class="learn-num">3</span><div><b>狙いやすいキャリアの道筋</b><p>7つの出口との相性トップ3と、90日で作る最初の実績</p></div></div>
     </div>
@@ -429,7 +431,7 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
               </div>
             </div>
             <div class="r-lvtext">
-              <p class="r-lv-label">あなたのAI人材レベル</p>
+              <p class="r-lv-label">あなたのAIレベル</p>
               <p class="r-stage" id="rLvName"></p>
               <span class="phase-chip" id="rPhase"></span>
             </div>
@@ -479,8 +481,8 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
 
       <div class="card">
         <p class="card-kicker">GROWTH MAP</p>
-        <h3>AI人材の成長マップ</h3>
-        <p class="note">AI人材の市場価値は、この3フェーズのどこにいるかで決まります。</p>
+        <h3>AIキャリアの成長マップ</h3>
+        <p class="note">AIキャリアの市場価値は、この3フェーズのどこにいるかで決まります。</p>
         <div class="gm-scroll"><svg id="growthSvg" viewBox="0 0 680 300" aria-hidden="true"></svg></div>
         <p class="gm-note" id="growthNote"></p>
       </div>
@@ -547,7 +549,7 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
 
 <footer>
   <div class="wrap">
-    <p>AI人材レベル＆キャリアタイプ診断｜レバンス（LEVANCE）<br>※診断結果は現時点での目安です。成果を保証するものではありません。<br>※回答内容は、診断結果のレポート作成および分析のために記録されます。</p>
+    <p>4タイプ別 AIレベル＆キャリアタイプ診断｜レバンス（LEVANCE）<br>※診断結果は現時点での目安です。成果を保証するものではありません。<br>※回答内容は、診断結果のレポート作成および分析のために記録されます。</p>
   </div>
 </footer>
 
@@ -1217,7 +1219,7 @@ function renderPyramid(S){
   for (var m = 0; m < AXES.length; m++) if (AXES[m].k === weak) ax = AXES[m];
   document.getElementById("pyrText").innerHTML =
     '<span class="h-label">FOCUS</span>いま積み上げるべきなのは<b>「' + ax.name + '」（' + ax.sub + '）</b>です。' +
-    'AI人材の力は、設計力 → AI活用 → 実装 → 巻き込みの順で積み上がります。下の力が抜けたまま上に進むと、「単発の便利」で止まってしまいます。';
+    'AIをキャリアに変える力は、設計力 → AI活用 → 実装 → 巻き込みの順で積み上がります。下の力が抜けたまま上に進むと、「単発の便利」で止まってしまいます。';
 }
 
 function renderGrowthMap(lv){

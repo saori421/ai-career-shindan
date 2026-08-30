@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 最終更新 2026.8.27 -->
+<!-- 最終更新 2026.8.30 -->
 <!-- 4タイプ別 AIレベル＆キャリアタイプ診断（リニューアル版 v2）｜レバンス -->
 <!-- 正本。公開は GitHub repo saori421/ai-career-shindan に levance-ai-career-shindan-v2.html としてコピーしてpush -->
 <!-- TODO: 結果レポート受け取りボタンの href を公式LINEのURLに差し替える（LINE_URL で検索） -->
@@ -97,14 +97,31 @@ main{padding:30px 0 60px}
 .section-head h2{font-size:19px;font-weight:900;color:var(--navy);line-height:1.5}
 .section-head p{font-size:13px;color:var(--sub);margin-top:4px}
 
-.namecard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-top:24px}
+.namecard{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:22px;margin-top:30px;scroll-margin-top:70px;
+}
+.namecard.unanswered{border-color:#C0392B}
+.nc-step{
+  display:inline-block;font-size:11px;letter-spacing:.22em;color:var(--gold-deep);
+  font-weight:700;border-bottom:1px solid var(--gold);padding-bottom:3px;margin-bottom:8px;
+}
+.nc-title{font-size:16.5px;font-weight:900;color:var(--navy);line-height:1.6}
+.nc-lead{font-size:12.5px;color:var(--sub);line-height:1.75;margin-top:6px}
+.nc-field{margin-top:18px}
 .namecard label{font-size:13.5px;font-weight:700;color:var(--navy);display:block;margin-bottom:8px}
 .namecard span{font-weight:400;color:var(--sub);font-size:12px}
+.req{
+  display:inline-block;font-size:10.5px;font-weight:700;color:#fff;background:var(--navy2);
+  border-radius:3px;padding:1px 7px;margin-left:7px;letter-spacing:.06em;vertical-align:2px;
+}
 .namecard input{
   width:100%;border:1px solid var(--line);border-radius:8px;padding:12px 14px;
   font-size:16px;font-family:inherit;background:#FBFCFE;color:var(--ink);
 }
 .namecard input:focus{outline:none;border-color:var(--navy2)}
+.namecard input.bad{border-color:#C0392B;background:#FEF7F6}
+.nc-err{display:none;font-size:12.5px;font-weight:700;color:#C0392B;margin-top:8px;line-height:1.7}
 
 .q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin-top:16px;scroll-margin-top:70px}
 .q.unanswered{border-color:#C0392B}
@@ -397,16 +414,24 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
       <div class="learn-item"><span class="learn-num">3</span><div><b>狙いやすいキャリアの道筋</b><p>7つの出口との相性トップ3と、90日で作る最初の実績</p></div></div>
     </div>
 
-    <div class="namecard">
-      <label for="userName">お名前（ニックネーム可）<span>｜任意・結果の表示に使います</span></label>
-      <input type="text" id="userName" placeholder="例：山田" autocomplete="off">
-    </div>
-
     <div id="questions"></div>
+
+    <div class="namecard" id="nameCard">
+      <span class="nc-step">LAST STEP</span>
+      <p class="nc-title">最後に、お名前をご記入ください</p>
+      <p class="nc-lead">診断結果の表示に使います。ニックネームでも構いません。</p>
+
+      <div class="nc-field">
+        <label for="userName">お名前（ニックネーム可）<span class="req">必須</span></label>
+        <input type="text" id="userName" placeholder="例：山田" autocomplete="name">
+      </div>
+
+      <p class="nc-err" id="ncErr"></p>
+    </div>
 
     <div class="diagnose-area">
       <button type="button" class="btn-main" id="diagnoseBtn">診断結果を見る</button>
-      <p class="diagnose-note">未回答の質問があると、その場所までご案内します。</p>
+      <p class="diagnose-note">未回答・未入力の項目があると、その場所までご案内します。</p>
     </div>
 
     <!-- ================= 結果 ================= -->
@@ -1411,6 +1436,30 @@ function renderResult(r){
 /* =========================================================
    イベント
 ========================================================= */
+/* お名前の入力チェック（必須） */
+function validateContact(){
+  var nameEl = document.getElementById("userName");
+  var errEl  = document.getElementById("ncErr");
+  var cardEl = document.getElementById("nameCard");
+
+  nameEl.classList.remove("bad");
+
+  if (!nameEl.value.trim()) {
+    nameEl.classList.add("bad");
+    cardEl.classList.add("unanswered");
+    errEl.textContent = "お名前をご記入ください。";
+    errEl.style.display = "block";
+    return false;
+  }
+  cardEl.classList.remove("unanswered");
+  errEl.style.display = "none";
+  return true;
+}
+
+document.getElementById("nameCard").addEventListener("input", function(e){
+  if (e.target.classList.contains("bad")) e.target.classList.remove("bad");
+});
+
 document.getElementById("diagnoseBtn").addEventListener("click", function(){
   var ans = getAnswers();
   var firstMissing = null;
@@ -1427,6 +1476,10 @@ document.getElementById("diagnoseBtn").addEventListener("click", function(){
     firstMissing.scrollIntoView({behavior:"smooth", block:"center"});
     return;
   }
+  if (!validateContact()) {
+    document.getElementById("nameCard").scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
   var r = compute(ans);
   renderResult(r);
   sendResult(ans, r);
@@ -1437,6 +1490,9 @@ document.getElementById("retakeBtn").addEventListener("click", function(){
   var inputs = document.querySelectorAll('#questions input[type="radio"]');
   for (var i = 0; i < inputs.length; i++) inputs[i].checked = false;
   document.getElementById("userName").value = "";
+  document.getElementById("userName").classList.remove("bad");
+  document.getElementById("nameCard").classList.remove("unanswered");
+  document.getElementById("ncErr").style.display = "none";
   document.getElementById("result").style.display = "none";
   updateProgress();
   window.scrollTo({top:0, behavior:"smooth"});

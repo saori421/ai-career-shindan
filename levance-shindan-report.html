@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 最終更新 2026.8.27 -->
+<!-- 最終更新 2026.9.7 -->
 <!-- 4タイプ別 AIレベル＆キャリアタイプ診断 レポート管理ページ（運営専用・非公開運用） -->
 <!-- 正本。公開は repo saori421/ai-career-shindan に levance-shindan-report.html としてコピーしてpush -->
 <!-- 診断ページからはリンクしない。データ表示には合言葉キー（Worker側REPORT_KEY）が必要 -->
@@ -375,7 +375,7 @@ function renderList(){
       '<span class="d">' + esc(r[0]) + '</span>' +
       '<span class="nm">' + esc(r[1]) + '</span>' +
       '<span class="lvchip">' + esc(r[2]) + '</span>' +
-      '<span class="meta">' + esc(r[5]) + '</span>' +
+      '<span class="meta">' + (r[33] ? esc(r[33]) + "・" : "") + esc(r[5]) + '</span>' +
       '<a href="#row=' + (i + 1) + '" data-row="' + (i + 1) + '">レポートを開く</a>' +
       '</div>';
   }

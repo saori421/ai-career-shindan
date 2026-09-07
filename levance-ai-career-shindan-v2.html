@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- 最終更新 2026.9.1 -->
+<!-- 最終更新 2026.9.7 -->
 <!-- 4タイプ別 AIレベル＆キャリアタイプ診断（リニューアル版 v2）｜レバンス -->
 <!-- 正本。公開は GitHub repo saori421/ai-career-shindan に levance-ai-career-shindan-v2.html としてコピーしてpush -->
 <!-- TODO: 結果レポート受け取りボタンの href を公式LINEのURLに差し替える（LINE_URL で検索） -->
@@ -122,6 +122,21 @@ main{padding:30px 0 60px}
 .namecard input:focus{outline:none;border-color:var(--navy2)}
 .namecard input.bad{border-color:#C0392B;background:#FEF7F6}
 .nc-err{display:none;font-size:12.5px;font-weight:700;color:#C0392B;margin-top:8px;line-height:1.7}
+
+.nc-ages{display:flex;flex-wrap:wrap;gap:8px}
+.agechip{position:relative;cursor:pointer;flex:1 1 28%}
+.agechip input{position:absolute;opacity:0;pointer-events:none}
+.agechip .agechip-in{
+  display:block;text-align:center;border:1.5px solid var(--line);border-radius:9px;
+  padding:11px 6px;font-size:14px;line-height:1.4;color:var(--ink);
+  background:#FBFCFE;transition:all .15s ease;
+}
+.agechip:hover .agechip-in{border-color:#B9C6D6}
+.agechip input:checked + .agechip-in{
+  border-color:var(--navy2);background:#EEF3FA;font-weight:700;color:var(--navy);
+  box-shadow:inset 3px 0 0 var(--gold);
+}
+.nc-ages.bad .agechip-in{border-color:#C0392B;background:#FEF7F6}
 
 .q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin-top:16px;scroll-margin-top:70px}
 .q.unanswered{border-color:#C0392B}
@@ -418,12 +433,24 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
 
     <div class="namecard" id="nameCard">
       <span class="nc-step">LAST STEP</span>
-      <p class="nc-title">最後に、お名前をご記入ください</p>
-      <p class="nc-lead">診断結果の表示に使います。LINEの登録名をご記入ください。</p>
+      <p class="nc-title">最後に、お名前と年代をご記入ください</p>
+      <p class="nc-lead">診断結果の表示に使います。お名前はLINEの登録名をご記入ください。</p>
 
       <div class="nc-field">
         <label for="userName">お名前（LINEの登録名）<span class="req">必須</span></label>
         <input type="text" id="userName" placeholder="例：山田" autocomplete="name">
+      </div>
+
+      <div class="nc-field">
+        <label>年代<span class="req">必須</span></label>
+        <div class="nc-ages" id="ageGroup">
+          <label class="agechip"><input type="radio" name="ageBand" value="20代"><span class="agechip-in">20代</span></label>
+          <label class="agechip"><input type="radio" name="ageBand" value="30代"><span class="agechip-in">30代</span></label>
+          <label class="agechip"><input type="radio" name="ageBand" value="40代"><span class="agechip-in">40代</span></label>
+          <label class="agechip"><input type="radio" name="ageBand" value="50代"><span class="agechip-in">50代</span></label>
+          <label class="agechip"><input type="radio" name="ageBand" value="60代"><span class="agechip-in">60代</span></label>
+          <label class="agechip"><input type="radio" name="ageBand" value="その他"><span class="agechip-in">その他</span></label>
+        </div>
       </div>
 
       <p class="nc-err" id="ncErr"></p>
@@ -1132,6 +1159,7 @@ function sendResult(ans, r){
     }
     var payload = {
       name: document.getElementById("userName").value.trim(),
+      age: getAgeBand(),
       lv: "Lv." + r.lv,
       stage: lvData.name,
       phase: PHASES[lvData.phase].en + "（" + PHASES[lvData.phase].ja + "）",
@@ -1436,18 +1464,31 @@ function renderResult(r){
 /* =========================================================
    イベント
 ========================================================= */
-/* お名前の入力チェック（必須） */
+/* お名前・年代の入力チェック（どちらも必須） */
+function getAgeBand(){
+  var el = document.querySelector('input[name="ageBand"]:checked');
+  return el ? el.value : "";
+}
+
 function validateContact(){
   var nameEl = document.getElementById("userName");
+  var ageEl  = document.getElementById("ageGroup");
   var errEl  = document.getElementById("ncErr");
   var cardEl = document.getElementById("nameCard");
 
   nameEl.classList.remove("bad");
+  ageEl.classList.remove("bad");
 
-  if (!nameEl.value.trim()) {
-    nameEl.classList.add("bad");
+  var noName = !nameEl.value.trim();
+  var noAge  = !getAgeBand();
+
+  if (noName || noAge) {
+    if (noName) nameEl.classList.add("bad");
+    if (noAge)  ageEl.classList.add("bad");
     cardEl.classList.add("unanswered");
-    errEl.textContent = "お名前をご記入ください。";
+    errEl.textContent = noName && noAge ? "お名前のご記入と、年代の選択をお願いします。"
+                      : noName ? "お名前をご記入ください。"
+                      : "年代をお選びください。";
     errEl.style.display = "block";
     return false;
   }
@@ -1458,6 +1499,7 @@ function validateContact(){
 
 document.getElementById("nameCard").addEventListener("input", function(e){
   if (e.target.classList.contains("bad")) e.target.classList.remove("bad");
+  if (e.target.name === "ageBand") document.getElementById("ageGroup").classList.remove("bad");
 });
 
 document.getElementById("diagnoseBtn").addEventListener("click", function(){
@@ -1491,6 +1533,9 @@ document.getElementById("retakeBtn").addEventListener("click", function(){
   for (var i = 0; i < inputs.length; i++) inputs[i].checked = false;
   document.getElementById("userName").value = "";
   document.getElementById("userName").classList.remove("bad");
+  var ages = document.querySelectorAll('input[name="ageBand"]');
+  for (var a = 0; a < ages.length; a++) ages[a].checked = false;
+  document.getElementById("ageGroup").classList.remove("bad");
   document.getElementById("nameCard").classList.remove("unanswered");
   document.getElementById("ncErr").style.display = "none";
   document.getElementById("result").style.display = "none";

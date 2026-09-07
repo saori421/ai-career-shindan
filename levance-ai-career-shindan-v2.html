@@ -1,14 +1,15 @@
 <!doctype html>
 <!-- 最終更新 2026.9.7 -->
-<!-- 4タイプ別 AIレベル＆キャリアタイプ診断（リニューアル版 v2）｜レバンス -->
-<!-- 正本。公開は GitHub repo saori421/ai-career-shindan に levance-ai-career-shindan-v2.html としてコピーしてpush -->
+<!-- 4タイプ別 AIキャリアタイプ診断（v3：面談前に「人物タイプ」を掴む診断）｜レバンス -->
+<!-- 正本。公開は GitHub repo saori421/ai-career-shindan に levance-ai-career-shindan-v2.html として上書きpush（公開URLは v2 のまま据え置き） -->
+<!-- 設計の正本: レバンス/2026-09-07_AIキャリアタイプ診断v3_設計案.md -->
 <!-- TODO: 結果レポート受け取りボタンの href を公式LINEのURLに差し替える（LINE_URL で検索） -->
 <html lang="ja">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>4タイプ別 AIレベル＆キャリアタイプ診断｜LEVANCE</title>
+<title>4タイプ別 AIキャリアタイプ診断｜LEVANCE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -42,7 +43,7 @@ img,svg{max-width:100%}
 #progressWrap{position:fixed;top:0;left:0;right:0;height:4px;background:rgba(11,29,58,.12);z-index:50}
 #progressBar{height:100%;width:0%;background:linear-gradient(90deg,var(--navy2),var(--gold));transition:width .3s ease}
 
-/* ---------- 設計図グリッド（共通オーバーレイ） ---------- */
+/* ---------- 設計図グリッド ---------- */
 .blueprint{position:relative;overflow:hidden}
 .blueprint::before{
   content:"";position:absolute;inset:0;pointer-events:none;
@@ -52,10 +53,7 @@ img,svg{max-width:100%}
 }
 
 /* ---------- hero ---------- */
-.hero{
-  background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 100%);
-  color:#fff;padding:44px 0 52px;
-}
+.hero{background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:44px 0 52px}
 .hero-inner{position:relative;z-index:2}
 .brandbadge{
   display:inline-block;font-size:11px;letter-spacing:.28em;font-weight:500;
@@ -97,6 +95,26 @@ main{padding:30px 0 60px}
 .section-head h2{font-size:19px;font-weight:900;color:var(--navy);line-height:1.5}
 .section-head p{font-size:13px;color:var(--sub);margin-top:4px}
 
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin-top:16px;scroll-margin-top:70px}
+.q.unanswered{border-color:#C0392B}
+.q.unanswered .q-title{color:#C0392B}
+.q-no{font-size:11px;color:var(--gold-deep);font-weight:700;letter-spacing:.14em;margin-bottom:4px}
+.q-scene{font-size:11px;letter-spacing:.2em;color:var(--sub);font-weight:700;margin-left:10px}
+.q-title{font-size:15.5px;font-weight:700;color:var(--navy);line-height:1.6;margin-bottom:14px}
+.opt{display:block;position:relative;margin-top:8px;cursor:pointer}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt .opt-in{
+  display:block;border:1.5px solid var(--line);border-radius:9px;
+  padding:12px 14px;font-size:14px;line-height:1.6;color:var(--ink);
+  background:#FBFCFE;transition:all .15s ease;
+}
+.opt:hover .opt-in{border-color:#B9C6D6}
+.opt input:checked + .opt-in{
+  border-color:var(--navy2);background:#EEF3FA;font-weight:700;color:var(--navy);
+  box-shadow:inset 3px 0 0 var(--gold);
+}
+
+/* ---------- 連絡先カード ---------- */
 .namecard{
   background:var(--card);border:1px solid var(--line);border-radius:12px;
   padding:22px;margin-top:30px;scroll-margin-top:70px;
@@ -115,14 +133,13 @@ main{padding:30px 0 60px}
   display:inline-block;font-size:10.5px;font-weight:700;color:#fff;background:var(--navy2);
   border-radius:3px;padding:1px 7px;margin-left:7px;letter-spacing:.06em;vertical-align:2px;
 }
-.namecard input{
+.namecard input[type="text"],.namecard input[type="email"]{
   width:100%;border:1px solid var(--line);border-radius:8px;padding:12px 14px;
   font-size:16px;font-family:inherit;background:#FBFCFE;color:var(--ink);
 }
 .namecard input:focus{outline:none;border-color:var(--navy2)}
 .namecard input.bad{border-color:#C0392B;background:#FEF7F6}
 .nc-err{display:none;font-size:12.5px;font-weight:700;color:#C0392B;margin-top:8px;line-height:1.7}
-
 .nc-ages{display:flex;flex-wrap:wrap;gap:8px}
 .agechip{position:relative;cursor:pointer;flex:1 1 28%}
 .agechip input{position:absolute;opacity:0;pointer-events:none}
@@ -137,24 +154,6 @@ main{padding:30px 0 60px}
   box-shadow:inset 3px 0 0 var(--gold);
 }
 .nc-ages.bad .agechip-in{border-color:#C0392B;background:#FEF7F6}
-
-.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin-top:16px;scroll-margin-top:70px}
-.q.unanswered{border-color:#C0392B}
-.q.unanswered .q-title{color:#C0392B}
-.q-no{font-size:11px;color:var(--gold-deep);font-weight:700;letter-spacing:.14em;margin-bottom:4px}
-.q-title{font-size:15.5px;font-weight:700;color:var(--navy);line-height:1.6;margin-bottom:14px}
-.opt{display:block;position:relative;margin-top:8px;cursor:pointer}
-.opt input{position:absolute;opacity:0;pointer-events:none}
-.opt .opt-in{
-  display:block;border:1.5px solid var(--line);border-radius:9px;
-  padding:12px 14px;font-size:14px;line-height:1.6;color:var(--ink);
-  background:#FBFCFE;transition:all .15s ease;
-}
-.opt:hover .opt-in{border-color:#B9C6D6}
-.opt input:checked + .opt-in{
-  border-color:var(--navy2);background:#EEF3FA;font-weight:700;color:var(--navy);
-  box-shadow:inset 3px 0 0 var(--gold);
-}
 
 .diagnose-area{margin-top:36px;text-align:center}
 .btn-main{
@@ -174,11 +173,9 @@ main{padding:30px 0 60px}
 #result > *:nth-child(2){animation-delay:.08s}
 #result > *:nth-child(3){animation-delay:.14s}
 #result > *:nth-child(n+4){animation-delay:.2s}
-
 .card{
   background:var(--card);border:1px solid var(--line);border-radius:16px;
-  padding:28px 26px;margin-top:22px;
-  box-shadow:0 4px 20px rgba(11,29,58,.05);
+  padding:28px 26px;margin-top:22px;box-shadow:0 4px 20px rgba(11,29,58,.05);
 }
 .card-kicker{font-size:11px;letter-spacing:.24em;color:var(--gold-deep);font-weight:700;margin-bottom:6px}
 .card h3{font-size:18px;font-weight:900;color:var(--navy);line-height:1.55;margin-bottom:8px}
@@ -193,57 +190,47 @@ main{padding:30px 0 60px}
 }
 .r-inner{position:relative;z-index:2}
 .r-kicker{font-size:11px;letter-spacing:.3em;color:var(--gold-soft);font-weight:700;margin-bottom:12px}
-.r-name{font-size:13px;color:#C6D2E2;margin-bottom:20px}
-.r-lvflex{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
-.ringwrap{flex:0 0 132px;position:relative;width:132px;height:132px}
-.ringwrap svg{transform:rotate(-90deg)}
-.ring-center{
-  position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;line-height:1.2;
-}
-.ring-center .lv-pre{font-size:10px;letter-spacing:.28em;color:var(--gold-soft);font-weight:700}
-.ring-center .lv-num{font-size:40px;font-weight:900;color:#fff;letter-spacing:.02em}
-.ring-center .lv-den{font-size:11px;color:#A9B7CB;letter-spacing:.1em}
-.r-lvtext{flex:1;min-width:200px}
-.r-lv-label{font-size:12px;color:#A9B7CB;letter-spacing:.1em}
-.r-stage{font-size:25px;font-weight:900;line-height:1.4;margin-top:4px}
-.phase-chip{
-  display:inline-block;margin-top:10px;font-size:11px;font-weight:700;letter-spacing:.1em;
-  color:var(--gold-soft);border:1px solid rgba(201,162,75,.55);border-radius:3px;padding:4px 12px;
-}
-.r-typebox{
-  margin-top:26px;background:rgba(255,255,255,.07);
-  border:1px solid rgba(201,162,75,.45);border-radius:12px;padding:18px 20px;
-}
-.r-typebox .t-label{font-size:10.5px;letter-spacing:.26em;color:var(--gold-soft);font-weight:700}
-.r-typebox .t-name{font-size:23px;font-weight:900;margin-top:4px}
-.r-typebox .t-tag{font-size:13px;color:#C6D2E2;margin-top:3px}
+.r-name{font-size:13px;color:#C6D2E2;margin-bottom:18px}
+.r-typelabel{font-size:10.5px;letter-spacing:.26em;color:var(--gold-soft);font-weight:700}
+.r-typename{font-size:30px;font-weight:900;line-height:1.35;margin-top:4px}
+.r-typeen{font-size:11.5px;letter-spacing:.24em;color:var(--gold-soft);margin-top:4px;font-weight:700}
+.r-typetag{font-size:13.5px;color:#C6D2E2;margin-top:8px}
 .r-summary{margin-top:18px;font-size:14px;line-height:2.05;color:#E4EAF3}
+.r-lvbox{
+  margin-top:22px;background:rgba(255,255,255,.07);border:1px solid rgba(201,162,75,.45);
+  border-radius:12px;padding:14px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+}
+.ringwrap{flex:0 0 86px;position:relative;width:86px;height:86px}
+.ringwrap svg{transform:rotate(-90deg)}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.ring-center .lv-pre{font-size:8.5px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
+.ring-center .lv-num{font-size:27px;font-weight:900;color:#fff}
+.r-lvtext{flex:1;min-width:180px}
+.r-lv-label{font-size:11px;color:#A9B7CB;letter-spacing:.1em}
+.r-stage{font-size:17px;font-weight:900;line-height:1.4;margin-top:2px}
+.phase-chip{
+  display:inline-block;margin-top:6px;font-size:10.5px;font-weight:700;letter-spacing:.1em;
+  color:var(--gold-soft);border:1px solid rgba(201,162,75,.55);border-radius:3px;padding:3px 10px;
+}
+.r-lvnote{font-size:12px;color:#C6D2E2;margin-top:8px;line-height:1.8;flex-basis:100%}
 
-/* ---------- reality ---------- */
-.reality{border-left:3px solid var(--navy2);background:#F2F6FB;border-radius:0 10px 10px 0;padding:16px 18px;font-size:14px;line-height:1.95}
-.tagrow{margin-top:12px;display:flex;flex-wrap:wrap;gap:8px}
-.tag{font-size:12px;border:1px solid var(--line);background:#FBFCFE;border-radius:999px;padding:4px 12px;color:var(--sub)}
-.tag b{color:var(--navy)}
-
-/* ---------- radar ---------- */
-.radar-flex{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:center}
-.radar-flex svg{flex:0 1 330px}
-.axis-list{flex:1 1 240px;min-width:230px}
-.axis-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px dashed var(--line)}
-.axis-row:last-child{border-bottom:none}
-.axis-row .a-name{flex:0 0 84px;font-size:12.5px;font-weight:700;color:var(--navy)}
-.axis-row .a-bar{flex:1;height:9px;background:#EDF1F6;border-radius:5px;overflow:hidden}
-.axis-row .a-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--navy2),var(--navy3));border-radius:5px;width:0;transition:width .9s cubic-bezier(.2,.7,.3,1)}
-.axis-row.weak .a-bar i{background:linear-gradient(90deg,var(--gold-deep),var(--gold))}
-.axis-row .a-val{flex:0 0 32px;text-align:right;font-size:12.5px;color:var(--navy);font-weight:900}
-
-/* ---------- pyramid focus ---------- */
-.pyr-flex{display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin-top:18px;border-top:1px dashed var(--line);padding-top:20px}
-.pyr-flex svg{flex:0 1 300px;margin:0 auto}
-.pyr-text{flex:1 1 240px;min-width:230px;font-size:13.5px;line-height:1.95}
-.pyr-text .h-label{font-size:10.5px;letter-spacing:.24em;color:var(--gold-deep);font-weight:700;display:block;margin-bottom:6px}
-.pyr-text b{color:var(--navy)}
+/* ---------- tendency sliders ---------- */
+.tend{margin-top:6px}
+.tend-row{padding:14px 0;border-bottom:1px dashed var(--line)}
+.tend-row:last-child{border-bottom:none}
+.tend-name{font-size:13px;font-weight:900;color:var(--navy);letter-spacing:.04em}
+.tend-name .en{font-size:10px;letter-spacing:.2em;color:var(--gold-deep);margin-left:8px;font-weight:700}
+.tend-track{position:relative;height:10px;background:#EDF1F6;border-radius:5px;margin:12px 0 8px}
+.tend-track::before{content:"";position:absolute;left:50%;top:-4px;bottom:-4px;width:1px;background:#C5CFDB}
+@keyframes fillGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes dotIn{from{opacity:0}to{opacity:1}}
+.tend-fill{position:absolute;top:0;height:100%;background:linear-gradient(90deg,var(--navy2),var(--navy3));border-radius:5px;animation:fillGrow .9s cubic-bezier(.2,.7,.3,1) both}
+.tend-fill.pos{transform-origin:left center}
+.tend-fill.neg{transform-origin:right center}
+.tend-dot{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:#fff;border:2.5px solid var(--gold);transform:translate(-50%,-50%);box-shadow:0 2px 8px rgba(11,29,58,.2);animation:dotIn .9s ease both}
+.tend-poles{display:flex;justify-content:space-between;font-size:12px;color:var(--sub)}
+.tend-poles b{color:var(--navy);font-weight:900}
+.tend-read{font-size:13px;color:#33455C;margin-top:6px;line-height:1.8;background:#F7F9FC;border-radius:8px;padding:8px 12px}
 
 /* ---------- type ---------- */
 .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 22px}
@@ -253,10 +240,8 @@ main{padding:30px 0 60px}
 .tg-cell.on{background:linear-gradient(150deg,var(--navy),var(--navy2));border:1px solid var(--gold);box-shadow:0 8px 22px rgba(11,29,58,.22)}
 .tg-cell.on .n{color:#fff}
 .tg-cell.on .t{color:#C6D2E2}
-.tg-badge{
-  position:absolute;top:-9px;right:12px;background:var(--gold);color:var(--navy);
-  font-size:9px;font-weight:900;letter-spacing:.16em;border-radius:3px;padding:2px 9px;
-}
+.tg-badge{position:absolute;top:-9px;right:12px;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:.16em;border-radius:3px;padding:2px 9px}
+.tg-axes{font-size:11.5px;color:var(--sub);margin-bottom:6px;line-height:1.7}
 .tp-block{margin-top:18px}
 .tp-h{font-size:13.5px;font-weight:900;color:var(--navy);border-left:3px solid var(--gold);padding-left:10px;margin-bottom:8px}
 .tp-list{list-style:none}
@@ -268,19 +253,11 @@ main{padding:30px 0 60px}
 .mind p{font-size:13.5px;color:#3D4B5C;margin-top:6px;line-height:1.9}
 .detour{margin-top:16px;background:#F2F6FB;border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.9;color:#33455C}
 
-/* ---------- growth map ---------- */
-.gm-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:6px -6px 0;padding:0 6px}
-.gm-scroll svg{min-width:580px;display:block}
-.gm-note{font-size:13px;color:#33455C;margin-top:14px;line-height:1.9;background:#F2F6FB;border-radius:10px;padding:13px 16px}
-
 /* ---------- exits ---------- */
 .exit-card{border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:12px;background:#FBFCFE}
 .exit-card.first{border:1.5px solid var(--gold);background:linear-gradient(180deg,#FFFDF6,#FFFFFF);box-shadow:0 6px 20px rgba(201,162,75,.14)}
 .exit-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.rankb{
-  flex:0 0 auto;font-size:11px;font-weight:900;letter-spacing:.06em;
-  border:1px solid var(--navy2);color:var(--navy2);border-radius:3px;padding:2px 9px;
-}
+.rankb{flex:0 0 auto;font-size:11px;font-weight:900;letter-spacing:.06em;border:1px solid var(--navy2);color:var(--navy2);border-radius:3px;padding:2px 9px}
 .exit-card.first .rankb{background:var(--navy);color:var(--gold-soft);border-color:var(--navy)}
 .exit-name{font-size:16px;font-weight:900;color:var(--navy)}
 .exit-group{font-size:11px;color:var(--sub);border:1px solid var(--line);border-radius:999px;padding:1px 9px}
@@ -295,33 +272,15 @@ details.allexits summary{cursor:pointer;font-size:13.5px;font-weight:700;color:v
 details.allexits summary::before{content:"▸ ";color:var(--gold)}
 details.allexits[open] summary::before{content:"▾ "}
 
-/* ---------- gaps ---------- */
-.gap-list{list-style:none;counter-reset:g}
-.gap-list li{
-  counter-increment:g;position:relative;padding:12px 0 12px 40px;
-  border-bottom:1px dashed var(--line);font-size:14px;line-height:1.85;
-}
-.gap-list li:last-child{border-bottom:none}
-.gap-list li::before{
-  content:counter(g,decimal-leading-zero);position:absolute;left:0;top:13px;
-  font-size:13px;font-weight:700;color:var(--gold-deep);letter-spacing:.05em;
-  border-bottom:1px solid var(--gold);padding-bottom:1px;
-}
-.gap-list b{color:var(--navy)}
-
-/* ---------- roadmap timeline ---------- */
+/* ---------- roadmap ---------- */
 .tl{position:relative;padding-left:58px;margin-top:8px}
-.tl::before{
-  content:"";position:absolute;left:20px;top:12px;bottom:26px;width:2px;
-  background:linear-gradient(180deg,var(--gold) 0%,rgba(201,162,75,.15) 100%);
-}
+.tl::before{content:"";position:absolute;left:20px;top:12px;bottom:26px;width:2px;background:linear-gradient(180deg,var(--gold) 0%,rgba(201,162,75,.15) 100%)}
 .tl-item{position:relative;padding-bottom:26px}
 .tl-item:last-child{padding-bottom:4px}
 .tl-node{
   position:absolute;left:-58px;top:-2px;width:42px;height:42px;border:1.5px solid var(--gold);
   border-radius:50%;background:#fff;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;line-height:1;
-  box-shadow:0 4px 12px rgba(201,162,75,.2);
+  align-items:center;justify-content:center;line-height:1;box-shadow:0 4px 12px rgba(201,162,75,.2);
 }
 .tl-node .m{font-size:7.5px;letter-spacing:.14em;color:var(--gold-deep);font-weight:700}
 .tl-node .d{font-size:15px;font-weight:900;color:var(--navy);margin-top:2px}
@@ -330,11 +289,7 @@ details.allexits[open] summary::before{content:"▾ "}
 .road-extra{margin-top:18px;background:#F2F6FB;border-radius:10px;padding:13px 16px;font-size:13.5px;line-height:1.85;color:#33455C}
 
 /* ---------- CTA ---------- */
-.cta{
-  background:linear-gradient(150deg,var(--navy) 0%,#123D63 100%);
-  border-radius:18px;color:#fff;padding:38px 28px;margin-top:26px;
-  box-shadow:0 14px 40px rgba(11,29,58,.28);
-}
+.cta{background:linear-gradient(150deg,var(--navy) 0%,#123D63 100%);border-radius:18px;color:#fff;padding:38px 28px;margin-top:26px;box-shadow:0 14px 40px rgba(11,29,58,.28)}
 .cta-inner{position:relative;z-index:2}
 .cta-kicker{font-size:11px;letter-spacing:.28em;color:var(--gold-soft);font-weight:700}
 .cta h3{font-size:21px;font-weight:900;line-height:1.6;margin-top:10px}
@@ -352,31 +307,18 @@ details.allexits[open] summary::before{content:"▾ "}
 .cta-btn{
   display:block;background:var(--orange);color:#fff;text-decoration:none;
   font-weight:900;font-size:16.5px;border:1px solid var(--gold);border-radius:10px;
-  padding:18px;letter-spacing:.03em;box-shadow:0 6px 18px rgba(0,0,0,.3);
-  transition:transform .12s ease;
+  padding:18px;letter-spacing:.03em;box-shadow:0 6px 18px rgba(0,0,0,.3);transition:transform .12s ease;
 }
 .cta-btn:hover{transform:translateY(-1px)}
 .cta-sub{font-size:12px;color:#A9B7CB;margin-top:10px}
-
-/* 結果レポート受け取り（控えめ導線） */
 .cta-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(201,162,75,.55),transparent);margin:30px 0 20px}
 .report-area{text-align:center}
 .report-lead{font-size:13px;color:#C6D2E2}
-.btn-ghost{
-  display:inline-block;margin-top:12px;border:1px solid rgba(201,162,75,.7);
-  color:var(--gold-soft);border-radius:8px;padding:12px 26px;
-  font-size:13.5px;font-weight:700;text-decoration:none;letter-spacing:.03em;
-  transition:background .15s ease;
-}
+.btn-ghost{display:inline-block;margin-top:12px;border:1px solid rgba(201,162,75,.7);color:var(--gold-soft);border-radius:8px;padding:12px 26px;font-size:13.5px;font-weight:700;text-decoration:none;letter-spacing:.03em;transition:background .15s ease}
 .btn-ghost:hover{background:rgba(201,162,75,.1)}
 .report-note{font-size:11.5px;color:#A9B7CB;margin-top:12px;line-height:1.9;text-align:left}
-
 .retake{margin-top:22px;text-align:center}
-.retake button{
-  background:none;border:1px solid var(--line);border-radius:8px;color:var(--sub);
-  font-size:13px;padding:11px 26px;cursor:pointer;font-family:inherit;
-}
-
+.retake button{background:none;border:1px solid var(--line);border-radius:8px;color:var(--sub);font-size:13px;padding:11px 26px;cursor:pointer;font-family:inherit}
 footer{border-top:1px solid var(--line);padding:26px 0 40px;margin-top:50px}
 footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
 
@@ -393,16 +335,12 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
   .hero-meta{margin-top:10px;font-size:11px}
   .card{padding:23px 18px}
   .r-hero,.cta{padding:30px 20px}
-  .r-stage{font-size:21px}
-  .r-lvflex{gap:18px}
-  .axis-row .a-name{flex-basis:76px;font-size:12px}
+  .r-typename{font-size:25px}
   .type-grid{gap:8px}
   .tg-cell{padding:11px 12px}
   .tg-cell .n{font-size:12.5px}
 }
-@media print{
-  .hero,.diagnose-area,.retake,#progressWrap{display:none}
-}
+@media print{.hero,.diagnose-area,.retake,#progressWrap{display:none}}
 </style>
 </head>
 <body>
@@ -410,12 +348,12 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
 
 <header class="hero blueprint">
   <div class="wrap hero-inner">
-    <span class="brandbadge">LEVANCE｜AI CAREER DIAGNOSIS 2.0</span>
-    <h1><span class="small">4タイプ別</span>AIレベル＆<br>キャリアタイプ診断</h1>
-    <p class="hero-tagline">AIを使う人から、AIで組織を動かす人へ。</p>
-    <p class="lead">AIで仕事は速くなった。なのに、評価もキャリアも変わらない。<br>その分かれ目は、<strong>スキルの差ではなく「積み上げの順番」</strong>にあります。<br>18の質問で、あなたの現在地と、その先に取れる道筋を診断します。</p>
+    <span class="brandbadge">LEVANCE｜AI CAREER DIAGNOSIS 3.0</span>
+    <h1><span class="small">4タイプ別</span>AIキャリアタイプ診断</h1>
+    <p class="hero-tagline">AIを「使える」で終わらせない人の、進め方を知る。</p>
+    <p class="lead">同じAIスキルでも、キャリアが動く人と動かない人がいます。<br>分かれ目はスキルの差ではなく、<strong>自分に合った「進め方・決め方」</strong>で積み上げているかどうか。<br>20の質問で、あなたのタイプと、いちばん力が出る進め方を診断します。</p>
     <div class="hero-goldline"></div>
-    <p class="hero-meta">全18問｜所要 約3分｜結果はその場で表示されます</p>
+    <p class="hero-meta">全20問｜所要 約3分｜結果はその場で表示されます</p>
   </div>
 </header>
 
@@ -424,17 +362,17 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
 
     <div class="learnbox">
       <h2>この診断で分かること</h2>
-      <div class="learn-item"><span class="learn-num">1</span><div><b>あなたのAIレベル</b><p>5段階の現在地と、「AIを使いこなす → 業務を設計する → 組織を動かす」3フェーズのどこにいるか</p></div></div>
-      <div class="learn-item"><span class="learn-num">2</span><div><b>あなたのキャリアタイプ</b><p>4タイプ別の強み・つまずきやすい点・いま必要な考え方</p></div></div>
-      <div class="learn-item"><span class="learn-num">3</span><div><b>狙いやすいキャリアの道筋</b><p>7つの出口との相性トップ3と、90日で作る最初の実績</p></div></div>
+      <div class="learn-item"><span class="learn-num">1</span><div><b>あなたのキャリアタイプ</b><p>4タイプ別の強み・つまずきやすい点・いま必要な考え方</p></div></div>
+      <div class="learn-item"><span class="learn-num">2</span><div><b>あなたの傾向</b><p>判断の仕方・決め方・進め方など、6つの傾向と、そこから見える最短の進め方</p></div></div>
+      <div class="learn-item"><span class="learn-num">3</span><div><b>相性の良いキャリアの道筋</b><p>7つの出口との相性トップ3と、90日で作る最初の実績</p></div></div>
     </div>
 
     <div id="questions"></div>
 
     <div class="namecard" id="nameCard">
       <span class="nc-step">LAST STEP</span>
-      <p class="nc-title">最後に、お名前と年代をご記入ください</p>
-      <p class="nc-lead">診断結果の表示に使います。お名前はLINEの登録名をご記入ください。</p>
+      <p class="nc-title">最後に、お名前・年代・メールアドレスをご記入ください</p>
+      <p class="nc-lead">診断結果の表示と、結果レポートのお届けに使います。お名前はLINEの登録名をご記入ください。</p>
 
       <div class="nc-field">
         <label for="userName">お名前（LINEの登録名）<span class="req">必須</span></label>
@@ -453,6 +391,11 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
         </div>
       </div>
 
+      <div class="nc-field">
+        <label for="userEmail">メールアドレス<span class="req">必須</span></label>
+        <input type="email" id="userEmail" placeholder="例：yamada@example.com" autocomplete="email" inputmode="email">
+      </div>
+
       <p class="nc-err" id="ncErr"></p>
     </div>
 
@@ -468,61 +411,46 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
         <div class="r-inner">
           <p class="r-kicker">YOUR RESULT</p>
           <p class="r-name" id="rName"></p>
-          <div class="r-lvflex">
+          <p class="r-typelabel">YOUR TYPE</p>
+          <p class="r-typename" id="rTypeName"></p>
+          <p class="r-typeen" id="rTypeEn"></p>
+          <p class="r-typetag" id="rTypeTag"></p>
+          <p class="r-summary" id="rSummary"></p>
+          <div class="r-lvbox">
             <div class="ringwrap">
-              <svg width="132" height="132" viewBox="0 0 132 132" aria-hidden="true">
-                <circle cx="66" cy="66" r="57" fill="none" stroke="rgba(201,162,75,.22)" stroke-width="6"/>
-                <circle id="ringProg" cx="66" cy="66" r="57" fill="none" stroke="#C9A24B" stroke-width="6"
-                        stroke-linecap="round" stroke-dasharray="358.1" stroke-dashoffset="358.1"
+              <svg width="86" height="86" viewBox="0 0 86 86" aria-hidden="true">
+                <circle cx="43" cy="43" r="37" fill="none" stroke="rgba(201,162,75,.22)" stroke-width="5"/>
+                <circle id="ringProg" cx="43" cy="43" r="37" fill="none" stroke="#C9A24B" stroke-width="5"
+                        stroke-linecap="round" stroke-dasharray="232.5" stroke-dashoffset="232.5"
                         style="transition:stroke-dashoffset 1.1s cubic-bezier(.2,.7,.3,1)"/>
               </svg>
               <div class="ring-center">
-                <span class="lv-pre">LEVEL</span>
+                <span class="lv-pre">AI LEVEL</span>
                 <span class="lv-num" id="rLvNum"></span>
-                <span class="lv-den">of 5</span>
               </div>
             </div>
             <div class="r-lvtext">
-              <p class="r-lv-label">あなたのAIレベル</p>
+              <p class="r-lv-label">あなたのAIレベル（5段階）</p>
               <p class="r-stage" id="rLvName"></p>
               <span class="phase-chip" id="rPhase"></span>
             </div>
+            <p class="r-lvnote" id="rLvNote"></p>
           </div>
-          <div class="r-typebox">
-            <p class="t-label">YOUR TYPE</p>
-            <p class="t-name" id="rTypeName"></p>
-            <p class="t-tag" id="rTypeTag"></p>
-          </div>
-          <p class="r-summary" id="rSummary"></p>
         </div>
       </div>
 
       <div class="card">
-        <p class="card-kicker">YOUR REALITY</p>
-        <h3>いまのあなたに、起きていること</h3>
-        <div class="goldline"></div>
-        <div class="reality" id="rReality"></div>
-        <div class="tagrow" id="rTags"></div>
-      </div>
-
-      <div class="card">
-        <p class="card-kicker">SKILL BALANCE</p>
-        <h3>6つの力のバランス</h3>
-        <p class="note">回答から算出した、AIをキャリアに変えるための力の現在値です（各4点満点）。</p>
-        <div class="radar-flex">
-          <svg id="radarSvg" viewBox="0 0 330 300" aria-hidden="true"></svg>
-          <div class="axis-list" id="axisList"></div>
-        </div>
-        <div class="pyr-flex">
-          <svg id="pyrSvg" viewBox="0 0 320 205" aria-hidden="true"></svg>
-          <div class="pyr-text" id="pyrText"></div>
-        </div>
+        <p class="card-kicker">YOUR TENDENCY</p>
+        <h3>あなたの6つの傾向</h3>
+        <p class="note">どちらが良い・悪いではありません。自分の傾向に合った進め方を選ぶほど、同じ努力で遠くまで届きます。</p>
+        <div class="tend" id="tendList"></div>
       </div>
 
       <div class="card">
         <p class="card-kicker">YOUR TYPE</p>
         <h3 id="tpTitle"></h3>
         <div class="goldline"></div>
+        <p class="tg-axes">「動機の向き（攻め・守り）」と「進め方（自走・伴走）」の組み合わせで、4つのタイプに分かれます。</p>
         <div class="type-grid" id="typeGrid"></div>
         <p id="tpDesc" style="font-size:14px;line-height:2"></p>
         <div class="tp-block"><p class="tp-h">このタイプの強み</p><ul class="tp-list" id="tpStrengths"></ul></div>
@@ -532,17 +460,9 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
       </div>
 
       <div class="card">
-        <p class="card-kicker">GROWTH MAP</p>
-        <h3>AIキャリアの成長マップ</h3>
-        <p class="note">AIキャリアの市場価値は、この3フェーズのどこにいるかで決まります。</p>
-        <div class="gm-scroll"><svg id="growthSvg" viewBox="0 0 680 300" aria-hidden="true"></svg></div>
-        <p class="gm-note" id="growthNote"></p>
-      </div>
-
-      <div class="card">
-        <p class="card-kicker">CAREER EXITS</p>
-        <h3>狙いやすい出口 トップ3</h3>
-        <p class="note">いまのあなたの状況と相性が良い順に並べました。到達目安は「いまのまま独学で進んだ場合」と「伴走者と進んだ場合」の2つで示しています。</p>
+        <p class="card-kicker">CAREER PATHS</p>
+        <h3>相性の良い進み方 トップ3</h3>
+        <p class="note">ご希望とタイプ、いまの立場から相性の良い順に並べました。到達目安は「いまのまま独学で進んだ場合」と「伴走者と進んだ場合」の2つで示しています。</p>
         <div id="exitTop3"></div>
         <details class="allexits">
           <summary>7つの出口すべての相性を見る</summary>
@@ -551,16 +471,9 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
       </div>
 
       <div class="card">
-        <p class="card-kicker">NEXT ACTIONS</p>
-        <h3>いまのあなたに必要な3つのこと</h3>
-        <p class="note">AIスキルそのものではなく、AIの成果を評価・キャリアに変えるための材料です。</p>
-        <ol class="gap-list" id="gapList"></ol>
-      </div>
-
-      <div class="card">
         <p class="card-kicker">90 DAYS ROADMAP</p>
         <h3>90日で「語れる実績」を1本作る</h3>
-        <p class="note">出口がどれであっても、最初の90日でやることは共通です。</p>
+        <p class="note">出口がどれであっても、最初の90日でやることは共通です。進め方だけ、タイプに合わせて変えます。</p>
         <div class="tl" id="roadmap"></div>
         <div class="road-extra" id="roadExtra"></div>
       </div>
@@ -568,10 +481,10 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
       <div class="cta blueprint">
         <div class="cta-inner">
           <p class="cta-kicker">YOUR NEXT STEP</p>
-          <h3>この診断が示せるのは、<br>「共通の地図」まで。</h3>
-          <p class="cta-lead">あなたの業務・環境・使える時間を踏まえた「何から、どの順で進めるか」は、一人ひとり違います。その<b>あなた専用の設計図</b>を、コーチがマンツーマンで一緒に作るのが、レバンスのAI特化・個別キャリアコーチング（体験）です。</p>
+          <h3>この診断が示せるのは、<br>「タイプ別の地図」まで。</h3>
+          <p class="cta-lead">あなたの業務・環境・使える時間を踏まえた「何から、どの順で進めるか」は、一人ひとり違います。この診断結果を手元に置いて、<b>あなた専用の設計図</b>をコーチと一緒に作るのが、レバンスのAI特化・個別キャリアコーチング（体験）です。</p>
           <div class="cta-items">
-            <div class="cta-item"><span class="n">1</span><div><b>AIレベル診断</b><p>市場基準での現在地を、プロンプト精度・業務組み込み・出力判断・再現性の4軸で確認します</p></div></div>
+            <div class="cta-item"><span class="n">1</span><div><b>診断結果の読み解き</b><p>タイプと傾向をもとに、あなたに合う進め方・つまずきやすい点を一緒に確認します</p></div></div>
             <div class="cta-item"><span class="n">2</span><div><b>現在地と業務の整理</b><p>あなたの業務の中で、最も評価につながるAI活用ポイントをその場で言語化します</p></div></div>
             <div class="cta-item"><span class="n">3</span><div><b>あなた専用のAIキャリア設計図</b><p>90日で作る実績の輪郭と、積み上げる順番を「設計図」として持ち帰れます</p></div></div>
           </div>
@@ -588,7 +501,7 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
             <p class="report-lead">診断結果のレポートを、手元に残したい方へ</p>
             <!-- LINE_URL: 公式LINEのURLに差し替える -->
             <a class="btn-ghost" href="https://lin.ee/XXXXXXXX" target="_blank" rel="noopener">診断結果のレポートを受け取る</a>
-            <p class="report-note">公式LINEにて「診断結果のレポートを受け取りたい」とメッセージをお送りください。あなたの結果レポートを、個別にお届けします（お届けまで少しお時間をいただく場合があります）。この結果画面のスクリーンショットを添えていただくと、レポートをお作りしやすくなります。</p>
+            <p class="report-note">公式LINEにて「診断結果のレポートを受け取りたい」とメッセージをお送りください。あなたの結果レポートを、個別にお届けします。</p>
           </div>
         </div>
       </div>
@@ -601,7 +514,7 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
 
 <footer>
   <div class="wrap">
-    <p>4タイプ別 AIレベル＆キャリアタイプ診断｜レバンス（LEVANCE）<br>※診断結果は現時点での目安です。成果を保証するものではありません。<br>※回答内容は、診断結果のレポート作成および分析のために記録されます。</p>
+    <p>4タイプ別 AIキャリアタイプ診断｜レバンス（LEVANCE）<br>※診断結果は現時点での目安です。成果を保証するものではありません。<br>※回答内容とご記入いただいた連絡先は、診断結果のレポート作成・お届けおよび分析のために記録されます。</p>
   </div>
 </footer>
 
@@ -610,154 +523,193 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
 
 /* =========================================================
    データ定義
+   軸: A判断(+結論先行/-納得重視) B決め方(+即決/-持ち帰り) C自己開示(+本音/-慎重)
+       D動機(+攻め/-守り) E進め方(+自走/-伴走) F課題の捉え方(+自分で動かす/-環境要因)
+   その他: S2 AI活用度 / S3 AI成果 / H 時間 / tag系フラグ
 ========================================================= */
 
 var SECTIONS = [
   {step:"STEP 1", title:"いまのあなた", desc:"現在地を確認します"},
-  {step:"STEP 2", title:"働き方と環境", desc:"使える時間と、まわりの環境について"},
+  {step:"STEP 2", title:"こんな場面、あなたなら？", desc:"いちばん近いものを選んでください。正解はありません", scene:true},
   {step:"STEP 3", title:"これからの方向", desc:"どこへ向かいたいかを整理します"}
 ];
 
-/* d: スコア寄与（S1設計力 S2活用力 S3実装力 S4巻き込み力 S5変換力 S6環境 / F社外展開 G変化温度 H時間） */
 var QUESTIONS = [
   /* ---------- STEP 1 ---------- */
   { id:"shokushu", sec:0, title:"現在の職種に、いちばん近いものは？", opts:[
-    {t:"営業", d:{S5:0.5}, job:"営業"},
-    {t:"企画・マーケティング", d:{S1:0.5}, job:"企画・マーケティング"},
-    {t:"経営企画・事業企画", d:{S1:0.5,S4:0.5}, job:"企画"},
-    {t:"IT・DX推進", d:{S2:0.5,S4:0.5}, job:"IT・DX推進"},
+    {t:"営業", d:{}, job:"営業"},
+    {t:"企画・マーケティング", d:{}, job:"企画・マーケティング"},
+    {t:"経営企画・事業企画", d:{}, job:"企画"},
+    {t:"IT・DX推進", d:{}, job:"IT・DX推進"},
     {t:"管理部門（人事・総務・経理など）", d:{}, job:"管理部門"},
     {t:"現場・技術・製造", d:{}, job:"現場・技術"},
     {t:"カスタマーサポート・事務", d:{}, job:"事務・サポート"},
-    {t:"フリーランス・個人事業", d:{F:1}, job:"いま", flag:"notEmployee"},
+    {t:"フリーランス・個人事業", d:{}, job:"いま", flag:"notEmployee"},
     {t:"その他", d:{}, job:"いま"}
   ]},
   { id:"tachiba", sec:0, title:"現在の立場に、いちばん近いものは？", opts:[
-    {t:"一般職", d:{S4:0}},
-    {t:"リーダー・主任クラス", d:{S4:1}},
-    {t:"管理職の一歩手前", d:{S4:1.5}},
-    {t:"課長以上の管理職", d:{S4:2}, flag:"kanri"},
-    {t:"会社員ではない", d:{S4:1}, flag:"notEmployee"}
+    {t:"一般職", d:{}, pos:0},
+    {t:"リーダー・主任クラス", d:{}, pos:1},
+    {t:"管理職の一歩手前", d:{}, pos:2},
+    {t:"課長以上の管理職", d:{}, pos:3, flag:"kanri"},
+    {t:"会社員ではない", d:{}, pos:1, flag:"notEmployee"}
   ]},
   { id:"katsuyo", sec:0, title:"AIとの現在の距離感は？", opts:[
     {t:"ほとんど使ったことがない", d:{S2:0}},
     {t:"調べ物や文章づくりで、たまに使う", d:{S2:1}},
     {t:"資料作成・壁打ちなど、日常的に使っている", d:{S2:2}},
-    {t:"業務の一部のフローに組み込んでいる", d:{S2:3,S3:1}},
-    {t:"自動化・仕組み化まで作り込んでいる", d:{S2:4,S3:1.5}}
+    {t:"業務の一部のフローに組み込んでいる", d:{S2:3}},
+    {t:"自動化・仕組み化まで作り込んでいる", d:{S2:4}}
   ]},
   { id:"seika", sec:0, title:"AIで出せている変化に、いちばん近いものは？", opts:[
     {t:"まだ変化はない", d:{S3:0}},
     {t:"自分の作業が少し速くなった", d:{S3:1}},
-    {t:"成果物の質が上がった", d:{S3:1.5,S5:0.5}},
-    {t:"業務フローを1つ改善できた", d:{S3:2.5,S5:1}},
-    {t:"チーム・部署の業務が変わった", d:{S3:3,S4:1,S5:1}}
+    {t:"成果物の質が上がった", d:{S3:2}},
+    {t:"業務フローを1つ改善できた", d:{S3:3}},
+    {t:"チーム・部署の業務が変わった", d:{S3:4}}
   ]},
-  { id:"hitaisho", sec:0, title:"AIで仕事が速くなった分、あなたに起きたことは？", opts:[
-    {t:"浮いた時間に、次の仕事が乗っただけ", d:{S5:0}, emp:0},
-    {t:"楽にはなったが、評価は変わらない", d:{S5:0.5}, emp:1},
-    {t:"上司・周囲から頼られる場面が増えた", d:{S5:1,S4:0.5}, emp:2},
-    {t:"評価・役割が実際に変わった", d:{S5:2,S4:0.5}, emp:3},
-    {t:"まだ速くなる実感はない", d:{S5:0}, emp:4}
-  ]},
-  { id:"sekkei", sec:0, title:"AIに仕事を頼むとき、あなたに近いのは？", opts:[
-    {t:"そもそも何を頼めるのかが分からない", d:{S1:0}},
-    {t:"思いついたことを、そのまま聞いている", d:{S1:1}},
-    {t:"目的や条件を整理してから頼んでいる", d:{S1:3}},
-    {t:"業務全体を分解して、AIに任せる部分を決めている", d:{S1:4,S4:0.5}}
-  ]},
-  { id:"kankyo", sec:0, title:"会社のAI活用環境は？", opts:[
-    {t:"制約が多い・使いにくい", d:{S6:0}, flag:"constraint"},
-    {t:"個人の判断で使える", d:{S6:1.5}},
-    {t:"一部の部署で活用が進んでいる", d:{S6:2}},
-    {t:"全社的にAI活用が推奨されている", d:{S6:2.5}},
-    {t:"会社員ではない", d:{S6:1.5}, flag:"notEmployee"}
-  ]},
-  { id:"suishin", sec:0, title:"会社のAI活用に対する、あなたの立ち位置は？", opts:[
-    {t:"特に関わっていない", d:{}},
-    {t:"個人的に使っているだけ", d:{}},
-    {t:"周囲からAIについて聞かれることが増えた", d:{S4:1}},
-    {t:"AI推進・DX推進を任されている（任されそう）", d:{S4:1.5}, flag:"suishin"},
-    {t:"自分から推進の旗を振りたいと思っている", d:{S4:1}, flag:"suishinWill"}
-  ]},
-  /* ---------- STEP 2 ---------- */
-  { id:"soudan", sec:1, title:"AIの使い方・進め方を相談できる相手は？", opts:[
-    {t:"いない。ほぼ独学", d:{S6:0}, flag:"alone"},
-    {t:"ネット・動画で調べる程度", d:{S6:0.5}, flag:"alone"},
-    {t:"聞ける同僚・知人が少しいる", d:{S6:1}},
-    {t:"詳しい人が身近にいる・コミュニティにいる", d:{S6:1.5}}
-  ]},
-  { id:"jikan", sec:1, title:"学び・実践に使えそうな時間は？", opts:[
+  { id:"jikan", sec:0, title:"学び・実践に使えそうな時間は？", opts:[
     {t:"1日15分くらいなら作れそう", d:{H:1}},
     {t:"1日30分〜1時間", d:{H:2}},
     {t:"週5〜10時間", d:{H:3}},
     {t:"週10時間以上", d:{H:4}}
   ]},
-  { id:"jumyou", sec:1, title:"いまの働き方を、あと何年続けられそうですか？", opts:[
-    {t:"正直、ずっと続けられる気はしない", d:{G:1.5}, flag:"longAnx"},
-    {t:"10年後はどうなっているか分からない", d:{G:1}, flag:"midAnx"},
-    {t:"続けられるが、このままでいいのかとは思う", d:{G:0.5}},
-    {t:"特に不安はない", d:{G:0}}
+
+  /* ---------- STEP 2: 場面設問 ---------- */
+  { id:"s_page", sec:1, title:"気になる講座やサービスのページを開いたとき、まず確かめるのは？", opts:[
+    {t:"結局なにが得られるのか。結論と全体像", d:{A:2}},
+    {t:"どういう仕組み・根拠でそうなるのか", d:{A:-2}},
+    {t:"受けた人の事例や声", d:{A:-1}},
+    {t:"費用・期間などの条件", d:{A:1,B:-1}}
   ]},
-  { id:"sotoryoku", sec:1, title:"会社や環境が変わったとき、「外でも通用する力がある」と言えそうですか？", opts:[
-    {t:"正直、自信がない", d:{F:0}},
-    {t:"何かあるとは思うが、言葉にできない", d:{F:0.5}},
-    {t:"実績はあるが、外向けに整理できていない", d:{F:1,S5:0.5}},
-    {t:"外でも通用する実績・スキルがある", d:{F:1.5,S5:1}}
+  { id:"s_explain", sec:1, title:"相談の場で説明を受けるとき、心地よい進め方は？", opts:[
+    {t:"先に要点を聞き、気になる点だけ質問する", d:{A:2}},
+    {t:"背景から順を追って、丁寧に説明してもらう", d:{A:-2}},
+    {t:"まずこちらの話を聞いてもらってから、提案してほしい", d:{C:1,A:-1}},
+    {t:"資料をもらい、自分のペースで読んで考えたい", d:{B:-1,E:1}}
   ]},
+  { id:"s_decide", sec:1, title:"まとまった金額の自己投資を検討するとき、ふだんの決め方は？", opts:[
+    {t:"価値を感じたら、その場で決めることが多い", d:{B:2}},
+    {t:"いったん持ち帰り、他と比較してから決める", d:{B:-2}},
+    {t:"身近な人に相談してから決める", d:{B:-1}, hintDecision:"family"},
+    {t:"自分で期限を決めて、それまでに判断する", d:{}, hintDeadline:1}
+  ]},
+  { id:"s_open", sec:1, title:"初めて会う相談相手に、いまの悩みを聞かれたら？", opts:[
+    {t:"最初から、わりと本音で話す", d:{C:2}},
+    {t:"相手が信頼できそうなら話す", d:{C:1}},
+    {t:"聞かれたことには答えるが、自分からは出さない", d:{C:-1}},
+    {t:"そもそも、うまく言葉にできない", d:{C:-2}, flag:"lowVerbal"}
+  ]},
+  { id:"s_result", sec:1, title:"仕事で思うように成果が出ないとき、まず頭に浮かぶのは？", opts:[
+    {t:"自分のやり方の、どこを変えるか", d:{F:2}},
+    {t:"会社の方針や環境に、原因があると感じる", d:{F:-2}},
+    {t:"時間や人手が足りないのだから仕方ない", d:{F:-1}},
+    {t:"誰かに相談して、原因を整理したい", d:{F:1,E:-1}}
+  ]},
+  { id:"s_tool", sec:1, title:"職場に新しいツールや仕組みが入ったのに、周りが使ってくれないとき", opts:[
+    {t:"自分がまず使い、成果で示す", d:{F:2,D:1}},
+    {t:"上が号令をかけない限り、動かないと思う", d:{F:-2}},
+    {t:"使いやすい形に整えてから広める", d:{F:1,E:1}},
+    {t:"無理に広めず、様子を見る", d:{F:-1,D:-1}}
+  ]},
+  { id:"s_stop", sec:1, title:"学びや取り組みが途中で止まったとき、振り返ると原因は？", opts:[
+    {t:"自分で優先順位を下げてしまった", d:{F:1}},
+    {t:"忙しくて時間が取れなかった", d:{F:-1}},
+    {t:"何から手をつけるか、分からなくなった", d:{E:-1}, hintAnx:"judge"},
+    {t:"一緒に進める相手や、締切がなかった", d:{E:-2}},
+    {t:"止まった経験は、あまりない", d:{E:2,F:1}}
+  ]},
+  { id:"s_learn", sec:1, title:"新しいスキルを身につけるとき、いちばんうまくいくのは？", opts:[
+    {t:"自分で調べて、自分なりの型を作る", d:{E:2}},
+    {t:"道筋があれば、一人で進められる", d:{E:1}},
+    {t:"相談相手や伴走者がいると続く", d:{E:-2}},
+    {t:"締切や約束があると動ける", d:{E:-1}, hintDeadline:1}
+  ]},
+  { id:"s_why", sec:1, title:"AIをキャリアに活かしたい、いちばんの理由は？", opts:[
+    {t:"役割・評価・収入を上げたい", d:{D:2}},
+    {t:"新しいことに挑戦したい", d:{D:1}},
+    {t:"いざという時に困らないよう、備えたい", d:{D:-2}},
+    {t:"いまの仕事を楽に、長く続けやすくしたい", d:{D:-1}}
+  ]},
+  { id:"s_leader", sec:1, title:"もし明日、周囲から「AI活用の旗振り役をやってほしい」と言われたら？", opts:[
+    {t:"ぜひやりたい。むしろ待っていた", d:{D:2,F:1}},
+    {t:"範囲や条件を確認してから、引き受ける", d:{D:1,A:-1}},
+    {t:"正直、荷が重い。裏方で支える方が向いている", d:{D:-2}},
+    {t:"自分にできるか、という不安が先に立つ", d:{D:-1}, hintAnx:"confidence"}
+  ]},
+
   /* ---------- STEP 3 ---------- */
+  { id:"decision", sec:2, title:"仕事や学びへの投資を決めるとき、相談が必要な相手は？", opts:[
+    {t:"自分だけで決められる", d:{}, decision:"自分だけで決められる"},
+    {t:"家族・パートナーに相談する", d:{}, decision:"家族・パートナーに相談"},
+    {t:"会社の承認が必要", d:{}, decision:"会社の承認が必要"},
+    {t:"金額や内容による", d:{}, decision:"金額や内容による"}
+  ]},
+  { id:"anxiety", sec:2, title:"新しいことを始めるとき、最初に浮かぶのは？", opts:[
+    {t:"やり切れるか（時間）", d:{}, anx:"時間（やり切れるか）"},
+    {t:"自分にできるか（自信）", d:{}, anx:"自信（自分にできるか）"},
+    {t:"費用に見合うか", d:{A:1}, anx:"費用対効果"},
+    {t:"特に不安はない", d:{D:1}, anx:"特になし"}
+  ]},
   { id:"kibo", sec:2, title:"今後の希望に、いちばん近いものは？", opts:[
-    {t:"いまの会社で評価・役割を上げたい", d:{G:0.5}, dir:"shoshin"},
-    {t:"社内でAI・DXのポジションを作りたい", d:{G:1,S4:0.5}, dir:"dx"},
-    {t:"部署異動・職種転換をしたい", d:{G:1}, dir:"idou"},
-    {t:"転職して市場価値を上げたい", d:{F:1,G:1}, dir:"tenshoku"},
-    {t:"副業で収入の柱を増やしたい", d:{F:1.5,G:1}, dir:"fukugyo"},
-    {t:"独立・フリーランス・起業をしたい", d:{F:2,G:1.5}, dir:"dokuritsu"}
-  ]},
-  { id:"shagai", sec:2, title:"副業・転職・独立など、社外への展開はどのくらい視野にありますか？", opts:[
-    {t:"まったく視野にない", d:{F:0,G:0}},
-    {t:"あまり考えていない", d:{F:0.5}},
-    {t:"どちらとも言えない", d:{F:1,G:0.5}},
-    {t:"視野に入れている", d:{F:1.5,G:0.5}},
-    {t:"強く視野に入れている・すでに動いている", d:{F:2,G:1}}
-  ]},
-  { id:"year1", sec:2, title:"1年後、どうなっていられたら理想に近いですか？", opts:[
-    {t:"AIで成果を出し、社内で頼られている", d:{}, hint:"jissen"},
-    {t:"AI推進の中心として、組織を動かしている", d:{}, hint:"suishin"},
-    {t:"外でも通用する実績を持っている", d:{}, hint:"kaitaku"},
-    {t:"いざという時に稼げる力を、静かに備えている", d:{}, hint:"sonae"},
-    {t:"まだ模索している段階かもしれない", d:{}, hint:"sonae"}
-  ]},
-  { id:"kaetai", sec:2, title:"いまの働き方で、いちばん変えたいことは？", opts:[
-    {t:"評価・役割", d:{}},
-    {t:"働き方・時間", d:{}},
-    {t:"自分の市場価値", d:{}},
-    {t:"環境・会社", d:{}},
-    {t:"大きな不満はない。ただ備えておきたい", d:{}, hint:"sonae"}
+    {t:"いまの会社で評価・役割を上げたい", d:{}, dir:"shoshin"},
+    {t:"社内でAI・DXのポジションを作りたい", d:{}, dir:"dx"},
+    {t:"部署異動・職種転換をしたい", d:{}, dir:"idou"},
+    {t:"転職して市場価値を上げたい", d:{}, dir:"tenshoku"},
+    {t:"副業で収入の柱を増やしたい", d:{}, dir:"fukugyo"},
+    {t:"独立・フリーランス・起業をしたい", d:{}, dir:"dokuritsu"}
   ]},
   { id:"honki", sec:2, title:"キャリアを動かすことへの、いまの温度感は？", opts:[
-    {t:"今すぐ動きたい", d:{G:1.5}, honki:0},
-    {t:"1〜3ヶ月以内には動きたい", d:{G:1}, honki:0},
-    {t:"半年以内には動きたい", d:{G:0.5}, honki:1},
-    {t:"いずれは、と思っている", d:{G:0}, honki:1}
+    {t:"今すぐ動きたい", d:{}, honki:0},
+    {t:"1〜3ヶ月以内には動きたい", d:{}, honki:0},
+    {t:"半年以内には動きたい", d:{}, honki:1},
+    {t:"いずれは、と思っている", d:{}, honki:1}
   ]},
-  { id:"kabe", sec:2, title:"AIをキャリアに変えていく上で、壁に感じそうなことは？", opts:[
-    {t:"まとまった時間の確保", d:{}},
-    {t:"何から手をつけるかの判断", d:{}},
-    {t:"語れる実績がまだないこと", d:{}},
-    {t:"続けられるかどうかの自信", d:{}},
-    {t:"相談できる相手・環境がないこと", d:{}}
+  { id:"deadline", sec:2, title:"直近で、キャリアに関わる動きはありますか？（社内の声かけ・異動・プロジェクト・年度の区切りなど）", opts:[
+    {t:"ある。時期も決まっている", d:{}, deadline:"あり（時期確定）"},
+    {t:"ありそうだが、まだはっきりしない", d:{}, deadline:"ありそう（未確定）"},
+    {t:"特にない", d:{}, deadline:"特になし"}
   ]}
 ];
 
-var SCALE = {S1:4.5, S2:4.5, S3:4.5, S4:5, S5:3.5, S6:3.5, F:4.5, G:4};
+/* 軸の正規化スケールと両極ラベル */
 var AXES = [
-  {k:"S1", name:"設計力",   sub:"業務を分解し言語化する力"},
-  {k:"S2", name:"AI活用力", sub:"AIを日常的に使う力"},
-  {k:"S3", name:"実装力",   sub:"業務フローに組み込む力"},
-  {k:"S4", name:"巻き込み力", sub:"チーム・組織を動かす力"},
-  {k:"S5", name:"変換力",   sub:"成果を評価の言葉に変える力"},
-  {k:"S6", name:"環境・時間", sub:"続けられる環境の力"}
+  {k:"A", name:"判断の仕方", en:"JUDGMENT", scale:4,
+   pos:"結論から知りたい", neg:"納得を積み上げたい",
+   coachPos:"結論先行", coachNeg:"納得重視", coachMid:"場面による",
+   readPos:"要点と結論を先に押さえるほど、動きやすくなる傾向です。詳細は、必要なところだけ確認する進め方が合っています。",
+   readNeg:"背景と根拠を理解してから動くほど、力が出る傾向です。仕組みまで納得できる材料を先に揃えると、迷いが減ります。",
+   readMid:"場面に応じて、結論から入るときと、根拠を確かめるときを使い分けるタイプです。"},
+  {k:"B", name:"決め方", en:"DECISION", scale:3,
+   pos:"その場で決める", neg:"持ち帰って比べる",
+   coachPos:"即決", coachNeg:"持ち帰り・比較", coachMid:"場面による",
+   readPos:"価値を感じたら、その場で決めて動ける傾向です。勢いを活かしつつ、進める順番だけは先に決めておくと確実です。",
+   readNeg:"いったん持ち帰り、比較して決める傾向です。判断材料を揃える時間を最初から確保しておくと、納得して動けます。",
+   readMid:"内容と金額によって、即決と持ち帰りを使い分けるタイプです。"},
+  {k:"C", name:"本音の出し方", en:"OPENNESS", scale:3,
+   pos:"最初から本音で話す", neg:"様子を見てから話す",
+   coachPos:"本音を出す", coachNeg:"慎重", coachMid:"相手次第",
+   readPos:"初対面でも、悩みや本音を言葉にしやすい傾向です。話しながら整理するほど、次の一手が見えやすくなります。",
+   readNeg:"信頼できると感じてから、少しずつ本音を出す傾向です。無理に言葉にしなくても、事実から整理していけば十分に進めます。",
+   readMid:"相手や場面によって、本音の出し方を変えるタイプです。"},
+  {k:"D", name:"動機の向き", en:"MOTIVATION", scale:4,
+   pos:"上を目指したい（攻め）", neg:"安心を確かにしたい（守り）",
+   coachPos:"攻め（上昇・挑戦）", coachNeg:"守り（備え・安心）", coachMid:"両方",
+   readPos:"役割・評価・挑戦が動機になるタイプです。目指す姿をはっきりさせるほど、行動の速さが上がります。",
+   readNeg:"備え・安心・続けやすさが動機になるタイプです。大きく変えるより、いまの土台にAIを足していく進め方が合っています。",
+   readMid:"上を目指す気持ちと、安心を確かにしたい気持ちの両方を持っているタイプです。"},
+  {k:"E", name:"進め方", en:"STYLE", scale:4,
+   pos:"自分で型を作る（自走）", neg:"相談相手と進める（伴走）",
+   coachPos:"自走", coachNeg:"伴走", coachMid:"両方",
+   readPos:"自分で調べ、自分で型を作って進めるタイプです。中身と順番が具体で見えていれば、一人でも走り切れます。",
+   readNeg:"相談相手や締切があると、続けやすくなるタイプです。一人で抱えず、戻れる場所を先に用意しておくと速くなります。",
+   readMid:"一人で進める部分と、相談しながら進める部分を組み合わせるとうまくいくタイプです。"},
+  {k:"F", name:"課題への向き合い方", en:"OWNERSHIP", scale:4,
+   pos:"まず自分の打ち手を探す", neg:"まず環境や条件を整える",
+   coachPos:"自分の打ち手で捉える（自責寄り）", coachNeg:"環境要因を先に挙げる（他責寄り）", coachMid:"場面による",
+   readPos:"うまくいかないとき、まず自分のやり方を見直すタイプです。その姿勢は、そのまま実績の再現性につながります。",
+   readNeg:"うまくいかないとき、まず環境や条件に目が向くタイプです。環境を変えるより「自分の裁量で完結する業務」から始めると、動き出しやすくなります。",
+   readMid:"自分の打ち手と、環境の条件を分けて考えられるタイプです。"}
 ];
 
 var PHASES = [
@@ -765,185 +717,110 @@ var PHASES = [
   {en:"PHASE 2｜WORK DESIGNER", ja:"業務を設計し直す"},
   {en:"PHASE 3｜ORG DRIVER", ja:"組織を動かす"}
 ];
-
 var LEVELS = [
-  {lv:1, name:"情報収集ステージ", short:"情報収集", phase:0,
-   text:"AIが気になり、情報を集め始めた段階です。ここで大事なのは、勉強を増やすことではなく「自分の業務のどこに使うか」を1つ決めること。それだけで次のステージに進めます。"},
-  {lv:2, name:"個人活用ステージ", short:"個人活用", phase:0,
-   text:"調べ物・文章づくり・壁打ちなど、個人の時短にAIを使えている段階です。次は、便利ツールで終わらせず、毎日の業務フローに組み込むこと。ここから、AIを便利に使う人と、成果に変える人が分かれていきます。"},
-  {lv:3, name:"業務実装ステージ", short:"業務実装", phase:1,
-   text:"業務の一部にAIを組み込めている段階です。次は、成果を数字で語れる形に変換すること。「どの業務を、どれくらい改善したか」を言語化できれば、実績として評価・キャリアに使えるようになります。"},
-  {lv:4, name:"仕組み化ステージ", short:"仕組み化", phase:1,
-   text:"再現できる型・仕組みまで作り込めている段階です。次は、その型をチーム・周囲に広げること。個人の生産性から組織の生産性へ。ここを越えると「AIで組織を効率化させる人材」の入り口に立ちます。"},
-  {lv:5, name:"組織展開ステージ", short:"組織展開", phase:2,
-   text:"チーム・組織にAI活用を広げられている段階です。あなたはすでに、社内のAI・DX推進や、市場価値の高いポジションを狙える側にいます。次は、その推進実績をキャリアの言葉に変換して、狙う出口を取りにいく段階です。"}
+  {lv:1, name:"情報収集ステージ", phase:0, note:"AIが気になり、情報を集め始めた段階です。勉強を増やすより「自分の業務のどこに使うか」を1つ決めるだけで、次のステージに進めます。"},
+  {lv:2, name:"個人活用ステージ", phase:0, note:"個人の時短にAIを使えている段階です。次は、毎日の業務フローに組み込むこと。ここから、便利に使う人と成果に変える人が分かれます。"},
+  {lv:3, name:"業務実装ステージ", phase:1, note:"業務の一部にAIを組み込めている段階です。次は、成果を「どの業務を、どれくらい改善したか」の形に変換することです。"},
+  {lv:4, name:"仕組み化ステージ", phase:1, note:"再現できる型まで作り込めている段階です。次は、その型をチーム・周囲に広げること。個人の生産性から組織の生産性へ進みます。"},
+  {lv:5, name:"組織展開ステージ", phase:2, note:"チーム・組織にAI活用を広げられている段階です。推進実績をキャリアの言葉に変換して、狙う出口を取りにいく段階です。"}
 ];
 
 var TYPES = {
-  sonae: {
-    name:"サイレント準備型",
-    tag:"静かに備える、堅実タイプ",
-    summary:"いま大きく困ってはいない。ただ「この働き方をいつまで続けられるか」という静かな問いを持っているタイプです。",
-    desc:"いま大きく困っているわけではない。ただ、「この働き方をあと何年続けられるか」「いざという時に外で通用するか」という静かな問いを持っているタイプです。実は、この感覚を持てていること自体が強みです。多くの人は、必要に迫られてから慌てて動き始めます。あなたは、その前に備えられる位置にいます。",
-    strengths:[
-      "危機になる前に備えようとする、先読みの視点",
-      "堅実に積み上げられる継続力",
-      "長年の実務経験という、AI活用のいちばんの土台"
-    ],
-    stumbles:[
-      "「きちんと理解してから始めよう」として、最初の一歩が遅れる",
-      "何から手をつけるべきかの判断がつかず、情報収集で止まる",
-      "教えてくれる人がいないまま、独学で遠回りする"
-    ],
+  driver: {
+    name:"戦略牽引型", en:"STRATEGIC DRIVER", tag:"自分で道筋を描き、成果で示すタイプ",
+    d:"攻め", e:"自走",
+    summary:"目標も進め方も、自分で決めたい。求めているのは励ましではなく、判断材料と成果物です。",
+    desc:"上を目指す意欲があり、進め方も自分で設計できるタイプです。だからこそ、中身の見えないサービスや抽象的な励ましには動きません。必要なのは「何を、どの順で、どこまでやるか」が具体で見えること。そして、その成果が評価・役割・市場価値のどれに効くかを、自分で判断できる材料です。",
+    strengths:["目標から逆算して動ける設計力","自分で調べ、自分で決める推進力","成果に対する基準の高さ"],
+    stumbles:["「中身が具体で見えない」と感じた瞬間に、関心が切れる","全部自分で検証しようとして、時間が足りなくなる","周囲との温度差に消耗する"],
     mindset:[
-      {h:"学んでから、ではなく「自分の業務」から始める",
-       t:"AIの勉強から入ると、多くの人が途中で止まります。毎日やっている業務（資料作成・データ入力・文書チェックなど）を1つ選び、そこにAIを当てるのが最短です。"},
-      {h:"1日15分の実践で、十分に変わる",
-       t:"まとまった時間は要りません。15分しかできない日は、15分進んだと考える。完璧な計画より、続けられる設計が結果を分けます。"},
-      {h:"不安なままで、始めていい",
-       t:"「自分にできるか」という不安は、このタイプのほぼ全員が持っています。これまで資格や新しい仕事を身につけたときも、最初は同じだったはずです。"}
+      {h:"自分の型を「再現できる形」で残す", t:"個人の成果で止めず、チームでも再現できる型として残す。それがそのまま推進実績・市場価値になります。"},
+      {h:"検証は全部やらない。任せる部分を決める", t:"全部自分で触ると時間切れになります。判断が必要な部分だけ自分が持ち、それ以外は仕組みと人に任せる設計が結果を分けます。"},
+      {h:"判断材料は、走り出す前に集める", t:"「何が得られるか」「どう評価に効くか」を具体で押さえてから動くと、途中で迷いません。"}
     ],
-    detour:"このタイプが独学で進むと、「調べて終わり」の期間が長くなりがちです。何を、どの順番で積み上げるかを最初に設計してしまうのが、いちばんの近道です。",
-    road:"備えとして始めるあなたは、90日の実績1本がそのまま「いざという時の名刺」になります。小さくても、外に見せられる形で残してください。"
+    detour:"このタイプが独学で進むと、成果は出ているのに「外から見える形」になっていない期間が延びがちです。成果物の設計図を先に持つのが近道です。",
+    road:"90日の実績を「チームでも再現できる型」として文書化してください。それが次の役割・次の交渉の材料になります。"
   },
-  jissen: {
-    name:"実務エンジン型",
-    tag:"現場で成果を作る、実践タイプ",
-    summary:"AIはすでに使えている。次の課題は、その成果を「評価される言葉」に変換することです。",
-    desc:"AIをすでに業務で使えているタイプです。ただ、心当たりはないでしょうか。AIで仕事は速くなったのに、評価・役割・キャリアはあまり変わっていない。浮いた時間に、次の仕事が乗っただけ。それはあなたの力不足ではなく、「AIの成果」を「評価される言葉」に変換する工程が、まだ設計されていないだけです。",
-    strengths:[
-      "日常的にAIを使いこなす実践力",
-      "業務の中の改善ポイントを見つける現場感覚",
-      "すでに手元にある「実績の種」"
-    ],
-    stumbles:[
-      "時短で満足してしまい、業務フローの再設計まで踏み込めていない",
-      "成果が「なんとなく楽になった」で止まり、数字で語れる形になっていない",
-      "個人の工夫で終わり、チーム・組織に広がっていない"
-    ],
+  leap: {
+    name:"飛躍チャレンジ型", en:"LEAP CHALLENGER", tag:"高い目標を、相談相手と一緒に取りにいくタイプ",
+    d:"攻め", e:"伴走",
+    summary:"目指す姿ははっきりしている。あとは、迷ったときに戻れる相談相手と、進む順番があれば速い。",
+    desc:"上を目指す意欲が強く、挑戦を前向きに捉えるタイプです。一方で、選択肢が多いと迷い、独学だと途中で優先順位が下がりがちです。それは意欲の問題ではなく、進む順番と相談相手が設計されていないだけです。方向と順番が決まれば、このタイプはもっとも速く動けます。",
+    strengths:["挑戦を楽しめる前向きさ","目指す姿を語れる意欲","人の力を借りて加速できる柔軟さ"],
+    stumbles:["選択肢が多いと迷い、着手が遅れる","独学だと、途中で優先順位が下がる","成果を急いで、土台が抜ける"],
     mindset:[
-      {h:"「速くなった」で止めない。成果を評価の言葉に変換する",
-       t:"「AIで資料が速くなった」ではなく、「資料作成の工数を月◯時間削減し、浮いた時間で◯◯を実行した」。この変換ができた瞬間、同じ仕事が実績に変わります。"},
-      {h:"個人の時短から、業務フローの再設計へ",
-       t:"1つの作業を速くするのではなく、業務の流れ全体を分解して、AIに任せる部分と人が判断する部分を設計し直す。ここから先が、周りと差がつく領域です。"},
-      {h:"実績は、磨かれた1本でいい",
-       t:"あれこれ手を広げるより、「どの業務を、どれくらい改善したか」を語れる実績を1本作る。評価面談でも職務経歴書でも、効くのはこの1本です。"}
+      {h:"迷ったら戻る場所を、先に決めておく", t:"相談相手と週次の区切りを先に置くと、迷いが「止まる時間」ではなく「決める時間」に変わります。"},
+      {h:"順番を決めれば、速さは自然に出る", t:"あれもこれもではなく、90日で1本。順番が決まると、意欲がそのまま推進力になります。"},
+      {h:"小さく始めて、実績で広げる", t:"いきなり大きく飛ぶより、小さな実績を積んで選択肢を増やす方が、結果として遠くまで届きます。"}
     ],
-    detour:"このタイプが独学で進むと、「使えるのに評価されない」期間が延び続けます。足りないのはAIスキルではなく、成果の言語化と業務再設計の設計図です。",
-    road:"すでにAIで手応えのあるあなたは、1ヶ月目を短縮できます。いま使っている場面の中から「フローごと変えられる業務」を選ぶと、実績の質が一段上がります。"
+    detour:"このタイプが独学で進むと、学びは増えるのに「1本の実績」にまとまらないまま時間が経ちがちです。順番と相談相手を先に用意するのが近道です。",
+    road:"90日は「1つの業務・1つの成果」に絞ってください。絞るほど、次の挑戦の選択肢が増えます。"
   },
-  suishin: {
-    name:"組織ドライバー型",
-    tag:"組織を動かす、推進タイプ",
-    summary:"AI推進に関わる立場のあなたへ。自分が使えることと、組織で成果を出すことは、別の仕事です。",
-    desc:"AI推進を任されている、あるいは自分から組織を動かしたいと考えているタイプです。そして、このポジションの難しさも、すでに感じているのではないでしょうか。自分がAIを使えることと、組織で成果を出すことは、まったく別の仕事です。ここで求められるのは、ツールの知識ではなく「AIで組織を動かすための考え方」です。",
-    strengths:[
-      "組織・チームという、個人より大きなレバレッジを動かせる立場",
-      "現場と経営のあいだをつなげる視点",
-      "「AIが分かって業務を再設計できる人」という、どの会社でも空いている椅子への最短距離"
-    ],
-    stumbles:[
-      "自分で全部触って検証しようとして、時間切れになる",
-      "「AIで何ができるか」から入って、「どの業務を変えるか」の設計が後回しになる",
-      "現場の温度差・セキュリティ・費用対効果の説明に消耗する"
-    ],
+  architect: {
+    name:"堅実設計型", en:"STEADY ARCHITECT", tag:"納得してから、自分のペースで積み上げるタイプ",
+    d:"守り", e:"自走",
+    summary:"大きく変えたいわけではない。ただ「このままでいいのか」は消えない。納得できれば、着実に進める人です。",
+    desc:"安定を大切にしながら、自分で考えて動けるタイプです。「いま困っていないが、この先が見えない」という静かな問いを持っている方が多く、勢いでは動きません。中身が具体で見え、得られるものを自分で想像できたとき、確実に前へ進めます。",
+    strengths:["先を読んで備える視点","自分で調べ、判断できる堅実さ","長年の実務経験という土台"],
+    stumbles:["「きちんと理解してから」で、最初の一歩が遅れる","中身が見えないものには動かない","社内で少し評価されると、動く理由が薄れる"],
     mindset:[
-      {h:"AIを「道具」ではなく「優秀な新人」として扱う",
-       t:"道具として触ると、機能の検証で終わります。優秀な新人に仕事を任せるつもりで、業務の目的・条件・判断基準を渡す。AIの環境を作るとは、「優秀な新人チーム」を作ることです。"},
-      {h:"任せる業務・判断する業務・展開する業務を見分ける",
-       t:"AI推進の本質は、ツール選定ではありません。AIに任せる業務、人が判断する業務、チームで展開する業務。この3つを切り分けられる人が、推進の中心に立ちます。"},
-      {h:"ツール導入ではなく、業務を成果に変えるマネジメントとして設計する",
-       t:"「導入したか」ではなく「どの業務が、どれだけ変わったか」で語る。業務再設計の記録・ビフォーアフターを成果物として残す設計にすると、推進の実績がそのままあなたのキャリア資産になります。"}
+      {h:"学んでからではなく、自分の業務から始める", t:"毎日やっている業務を1つ選び、そこにAIを当てるのが最短です。理解は、動きながら深まります。"},
+      {h:"「いざという時」を、いま作っておく", t:"備えは、必要になってからでは間に合いません。小さくても外に見せられる実績が、そのまま選択肢になります。"},
+      {h:"判断材料は、具体で揃える", t:"何を、どの順で、どこまでやるか。具体で見えれば、このタイプは迷いなく進めます。"}
     ],
-    detour:"このタイプが独学で進むと、期待と現場の板挟みの中で消耗しがちです。推進する人にこそ、壁打ちできる伴走者と、組織を動かす考え方の型が必要です。",
-    road:"推進役のあなたは、この90日の実績を「チームで再現できる型」として残してください。それ自体が推進の実績になり、次の展開の説得材料になります。"
+    detour:"このタイプが独学で進むと「調べて終わり」の期間が長くなりがちです。順番を先に設計してしまうのが近道です。",
+    road:"90日の実績1本を「いざという時の名刺」として残してください。小さくても、外に見せられる形が大切です。"
   },
-  kaitaku: {
-    name:"越境チャレンジ型",
-    tag:"外に道をひらく、展開タイプ",
-    summary:"社外への展開を視野に入れているあなたへ。外で通用するのは「ツールが使える」ことではなく「再設計した実績」です。",
-    desc:"転職・副業・独立など、社外への展開を視野に入れているタイプです。行動力と変化への意欲は、すでにあります。問われるのは、実績を「外で通用する形」に整えられているかどうか。外の市場で評価されるのは「ツールが使える」ことではなく、「業務を再設計して成果を出した」実績です。",
-    strengths:[
-      "環境を変えることを恐れない行動力",
-      "自分の市場価値への感度",
-      "本業・実務という、AI実績の生産拠点をすでに持っていること"
-    ],
-    stumbles:[
-      "「何をもって実績と言えるのか」が定まらず、動き出せない",
-      "スキルはあるのに、値付け・見せ方が分からない",
-      "本業と学びの両立で、時間が溶けていく"
-    ],
+  builder: {
+    name:"安定積み上げ型", en:"STEADY BUILDER", tag:"安心できる環境で、一歩ずつ確実に進めるタイプ",
+    d:"守り", e:"伴走",
+    summary:"大きな変化は望んでいない。ただ、いまの働き方を楽に、長く続けられる力は欲しい。一人より、誰かと一緒の方が続く人です。",
+    desc:"安定と安心を大切にし、無理のないペースで積み上げたいタイプです。「自分にできるだろうか」という不安が先に立つことがありますが、これまで新しい仕事や資格を身につけたときも、最初は同じだったはずです。相談できる相手と続けられる環境があれば、確実に前へ進めます。",
+    strengths:["続ける力、積み上げる力","実務で培った経験","無理をしない現実的な判断"],
+    stumbles:["「自分にできるか」で止まる","何から手をつけるかで迷う","相談相手がいないと、独学で遠回りする"],
     mindset:[
-      {h:"外で売れるのは「再設計の実績」",
-       t:"ツールの操作は、数年で誰でもできるようになります。外で通用し続けるのは「この業務を、こう分解して、こう変えた」という再現可能な実績。まず本業で1本作るのが最短です。"},
-      {h:"実績の言語化が、値付けを決める",
-       t:"「相談は来るのに、値段がつけられない」のは、実績が言葉になっていないからです。何を・どれくらい・どう変えたかを数字で語れれば、単価は自分で設計できるようになります。"},
-      {h:"小さく始めて、実績で広げる",
-       t:"いきなり大きく飛ぶ必要はありません。小さな案件・小さな副業で実績を重ねて、選択肢を増やしていく。「いつ辞めてもいい状態」は、その積み上げの先にあります。"}
+      {h:"不安なままで、始めていい", t:"不安は、このタイプのほぼ全員が持っています。始めてから消えていくものです。"},
+      {h:"1日15分で、十分に変わる", t:"まとまった時間は要りません。続けられる設計が、結果を分けます。"},
+      {h:"すでに持っている力に、AIを足す", t:"ゼロから学ぶのではなく、いまの業務・いまのスキルにAIを重ねる。それがいちばん確実です。"}
     ],
-    detour:"このタイプが独学で進むと、学びは増えるのに「外に出せる形」が作れないまま時間が経ちがちです。実績の作り方と見せ方を先に設計すると、動きが一気に速くなります。",
-    road:"外への展開を見据えるあなたは、90日の実績を「社外の人にも伝わる言葉」で記録してください。それがそのまま、ポートフォリオと値付けの根拠になります。"
+    detour:"このタイプが独学で進むと「調べたけれど不安が消えない」まま止まりがちです。相談相手と順番があれば、遠回りしません。",
+    road:"90日は「いまの業務を1つ楽にする」から始めてください。その1つが、次の安心につながります。"
   }
 };
-var TYPE_ORDER = ["sonae","jissen","suishin","kaitaku"];
+var TYPE_ORDER = ["driver","leap","architect","builder"];
 
 var EXITS = [
-  {id:"shoshin", name:"昇進・昇給", group:"社内で動く", w:{S5:0.30,S3:0.25,S6:0.15,S2:0.15,S4:0.15}, dir:"shoshin",
-   text:{
-     high:"AIの成果を評価の言葉に変換できれば、いまの会社で評価と役割を上げるのが最短ルートです。次の評価面談を目標に、語れる実績を仕上げてください。",
-     mid:"昇進の土台はあります。あとは、AIで出した成果を「どの業務を、どれくらい改善したか」の形で語れるようにするだけです。",
-     low:"まず、いまの業務でAIを使った改善実績を1つ作るところからです。小さくても、数字で語れる1本が評価を動かし始めます。"}},
-  {id:"dx", name:"社内DXポジション確立", group:"社内で動く", w:{S4:0.30,S2:0.20,S3:0.20,S6:0.15,S1:0.15}, dir:"dx",
-   text:{
-     high:"社内のAI・DX推進ポジションを取りにいける状態です。個人の活用を、部署をまたぐ業務再設計の提案まで広げてください。",
-     mid:"「AIに強い人」として認知される一歩手前です。チームを巻き込んだ活用事例を1つ作れば、推進の中心に近づきます。",
-     low:"まず自分の業務でAI活用を成果にして、「AIならあの人」という社内認知を作るところからです。"}},
-  {id:"idou", name:"社内異動・職種転換", group:"社内で動く", w:{S2:0.25,S3:0.25,S1:0.20,S5:0.15,S6:0.15}, dir:"idou",
-   text:{
-     high:"AIを軸に職種を移れる素地があります。移りたい先で通用する成果を1つ見せられれば、話が動きます。",
-     mid:"異動・職種転換は十分狙えます。いまの職種で作った実績を、移りたい職種でも再現できる形で言語化してください。",
-     low:"まず、いまの職種でAIの実績を作り、「他の業務でも再現できる」と示せる材料を揃えるのが先です。"}},
-  {id:"tenshoku", name:"転職", group:"外に出る", w:{S5:0.30,S3:0.25,S2:0.15,F:0.20,G:0.10}, dir:"tenshoku",
-   text:{
-     high:"職務経歴書に書けるAI実績を整えれば、市場価値の高いポジションを狙える状態です。",
-     mid:"転職市場で戦える素地はあります。「どの業務を、どれくらい改善したか」を書ける実績を、あと1本作ってください。",
-     low:"いきなり動くより、まず90日で職務経歴書に書ける実績を作るのが現実的です。それが、いちばんの準備になります。"}},
-  {id:"venture", name:"ベンチャー・新規事業の幹部参画", group:"外に出る", w:{S4:0.35,S3:0.25,F:0.20,G:0.20}, dir:null,
-   text:{
-     high:"影響範囲と成果が揃いつつあります。事業を一段大きく動かす場に挑む準備を始められる状態です。",
-     mid:"幹部参画の芽はあります。チーム規模の成果と、人を動かした実績を重ねてください。",
-     low:"まず自分の影響範囲を広げて、チーム単位で成果を出す経験を積むのが先です。"}},
-  {id:"fukugyo", name:"副業", group:"外に出る", w:{F:0.30,S3:0.20,S2:0.20,S5:0.15,S6:0.15}, dir:"fukugyo",
-   text:{
-     high:"AIスキルを社外に展開できる状態です。小さな案件から始めて、外での実績を作っていけます。",
-     mid:"副業の可能性はあります。まず本業のAI実績を、社外の人にも伝わる形に整えるところからです。",
-     low:"副業に広げる前に、本業で語れるAI実績と、外で通用する型を作るのが現実的な順番です。"}},
-  {id:"freelance", name:"フリーランス・起業", group:"外に出る", w:{F:0.35,S3:0.20,S5:0.20,G:0.25}, dir:"dokuritsu",
-   text:{
-     high:"独立を視野に入れられる土台があります。案件で再現できる実績と、値付けの根拠を積み上げてください。",
-     mid:"将来的に独立は狙えます。まず副業で小さく試して、外で売れる実績を作ってください。",
-     low:"独立は、これからの選択肢です。まず本業と小さな副業で、外で通用する実績を作るところから始めてください。"}}
+  {id:"shoshin", name:"昇進・昇給", group:"社内で動く", dir:"shoshin", inner:true,
+   text:{high:"AIの成果を評価の言葉に変換できれば、いまの会社で評価と役割を上げるのが最短ルートです。次の評価面談を目標に、語れる実績を仕上げてください。",
+         mid:"昇進の土台はあります。あとは、AIで出した成果を「どの業務を、どれくらい改善したか」の形で語れるようにするだけです。",
+         low:"まず、いまの業務でAIを使った改善実績を1つ作るところからです。小さくても、数字で語れる1本が評価を動かし始めます。"}},
+  {id:"dx", name:"社内DXポジション確立", group:"社内で動く", dir:"dx", inner:true,
+   text:{high:"社内のAI・DX推進ポジションを取りにいける状態です。個人の活用を、部署をまたぐ業務再設計の提案まで広げてください。",
+         mid:"「AIに強い人」として認知される一歩手前です。チームを巻き込んだ活用事例を1つ作れば、推進の中心に近づきます。",
+         low:"まず自分の業務でAI活用を成果にして、「AIならあの人」という社内認知を作るところからです。"}},
+  {id:"idou", name:"社内異動・職種転換", group:"社内で動く", dir:"idou", inner:true,
+   text:{high:"AIを軸に職種を移れる素地があります。移りたい先で通用する成果を1つ見せられれば、話が動きます。",
+         mid:"異動・職種転換は十分狙えます。いまの職種で作った実績を、移りたい職種でも再現できる形で言語化してください。",
+         low:"まず、いまの職種でAIの実績を作り、「他の業務でも再現できる」と示せる材料を揃えるのが先です。"}},
+  {id:"tenshoku", name:"転職", group:"外に出る", dir:"tenshoku", inner:false,
+   text:{high:"職務経歴書に書けるAI実績を整えれば、市場価値の高いポジションを狙える状態です。",
+         mid:"転職市場で戦える素地はあります。「どの業務を、どれくらい改善したか」を書ける実績を、あと1本作ってください。",
+         low:"いきなり動くより、まず90日で職務経歴書に書ける実績を作るのが現実的です。それが、いちばんの準備になります。"}},
+  {id:"venture", name:"ベンチャー・新規事業の幹部参画", group:"外に出る", dir:null, inner:false,
+   text:{high:"影響範囲と成果が揃いつつあります。事業を一段大きく動かす場に挑む準備を始められる状態です。",
+         mid:"幹部参画の芽はあります。チーム規模の成果と、人を動かした実績を重ねてください。",
+         low:"まず自分の影響範囲を広げて、チーム単位で成果を出す経験を積むのが先です。"}},
+  {id:"fukugyo", name:"副業", group:"外に出る", dir:"fukugyo", inner:false,
+   text:{high:"AIスキルを社外に展開できる状態です。小さな案件から始めて、外での実績を作っていけます。",
+         mid:"副業の可能性はあります。まず本業のAI実績を、社外の人にも伝わる形に整えるところからです。",
+         low:"副業に広げる前に、本業で語れるAI実績と、外で通用する型を作るのが現実的な順番です。"}},
+  {id:"freelance", name:"フリーランス・起業", group:"外に出る", dir:"dokuritsu", inner:false,
+   text:{high:"独立を視野に入れられる土台があります。案件で再現できる実績と、値付けの根拠を積み上げてください。",
+         mid:"将来的に独立は狙えます。まず副業で小さく試して、外で売れる実績を作ってください。",
+         low:"独立は、これからの選択肢です。まず本業と小さな副業で、外で通用する実績を作るところから始めてください。"}}
 ];
-
-var EMPATHY = [
-  "浮いた時間に、次の仕事が乗る。頑張るほど忙しくなるこの構造は、あなたのせいではありません。AIの成果を「評価される形」に変換する工程が、まだ設計されていないだけです。",
-  "楽にはなった。でも評価は変わらない。「AIが使えること」と「キャリアが動くこと」のあいだには、実はもう1つ工程が挟まります。それが、成果の言語化です。",
-  "周囲から頼られ始めているのは、大きなサインです。その信頼を「役割」と「実績」に変える段階に、あなたは入っています。",
-  "すでに評価が動き始めています。次は、その成果を組織とキャリアの両方に効く形へ広げる段階です。",
-  "まだ実感がなくても大丈夫です。多くの人が、ここから始めています。大事なのは、勉強からではなく「自分の業務」から始めることです。"
-];
-
 var CUR_LABELS = ["3〜6ヶ月で射程","1年ほど先","1年以上先","現状の延長では遠め"];
 var LEV_LABELS = ["3〜6ヶ月で視野","半年で視野","半年〜1年で視野","半年〜1年で射程"];
-
-var GAP_TEXT = {
-  S1:"<b>業務を分解して言語化する「設計力」を鍛えること。</b>AIの出力の質は、頼み方の設計で決まります。ここが、すべての土台です。",
-  S2:"<b>AIに触れる頻度を上げること。</b>学習からではなく、毎日の業務の中の1作業から始めるのが、いちばん確実です。",
-  S3:"<b>個人の時短を、業務フローへの組み込みに引き上げること。</b>「作業が速くなった」の一歩先が、実績になる領域です。",
-  S4:"<b>自分の業務の外に、半歩出ること。</b>チーム・周囲を動かした経験が、キャリアの階段になります。",
-  S5:"<b>成果を「どの業務を、どれくらい改善したか」の形に言語化すること。</b>評価・単価を動かすのは、この材料です。",
-  S6:"<b>独学の時間を減らすこと。</b>相談できる相手と続けられる環境の設計が、遠回りを防ぎます。"
-};
 
 /* =========================================================
    質問の描画
@@ -958,7 +835,8 @@ for (var s = 0; s < SECTIONS.length; s++) {
     var q = QUESTIONS[i];
     if (q.sec !== s) continue;
     qNo++;
-    html += '<div class="q" id="q_' + q.id + '"><p class="q-no">Q' + qNo + ' / ' + QUESTIONS.length + '</p>' +
+    html += '<div class="q" id="q_' + q.id + '"><p class="q-no">Q' + qNo + ' / ' + QUESTIONS.length +
+            (SECTIONS[s].scene ? '<span class="q-scene">SCENE</span>' : '') + '</p>' +
             '<p class="q-title">' + q.title + '</p>';
     for (var j = 0; j < q.opts.length; j++) {
       html += '<label class="opt"><input type="radio" name="' + q.id + '" value="' + j + '">' +
@@ -969,7 +847,6 @@ for (var s = 0; s < SECTIONS.length; s++) {
 }
 qWrap.innerHTML = html;
 
-/* 進捗バー */
 function updateProgress(){
   var done = 0;
   for (var i = 0; i < QUESTIONS.length; i++) {
@@ -996,11 +873,14 @@ function getAnswers(){
   return ans;
 }
 
+function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+
 function compute(ans){
-  var raw = {S1:0,S2:0,S3:0,S4:0,S5:0,S6:0,F:0,G:0,H:0};
+  var raw = {A:0,B:0,C:0,D:0,E:0,F:0,S2:0,S3:0,H:1};
   var flags = {};
-  var dir = null, empIdx = 4, honki = 1, job = "いま", typeHints = [];
-  var kaetaiText = "", kabeText = "";
+  var dir = null, honki = 1, job = "いま", pos = 0;
+  var decision = "", anx = "", deadline = "", hopeText = "", honkiText = "";
+  var hintDecision = null, hintAnx = null, deadlineSelf = 0;
 
   for (var i = 0; i < QUESTIONS.length; i++) {
     var q = QUESTIONS[i];
@@ -1008,136 +888,100 @@ function compute(ans){
     if (!opt) continue;
     for (var k in opt.d) raw[k] += opt.d[k];
     if (opt.flag) flags[opt.flag] = true;
-    if (opt.dir) dir = opt.dir;
-    if (typeof opt.emp === "number") empIdx = opt.emp;
-    if (typeof opt.honki === "number") honki = opt.honki;
+    if (opt.dir) { dir = opt.dir; hopeText = opt.t; }
+    if (typeof opt.honki === "number") { honki = opt.honki; honkiText = opt.t; }
     if (opt.job) job = opt.job;
-    if (opt.hint) typeHints.push(opt.hint);
-    if (q.id === "kaetai") kaetaiText = opt.t;
-    if (q.id === "kabe") kabeText = opt.t;
+    if (typeof opt.pos === "number") pos = opt.pos;
+    if (opt.decision) decision = opt.decision;
+    if (opt.anx) anx = opt.anx;
+    if (opt.deadline) deadline = opt.deadline;
+    if (opt.hintDecision) hintDecision = opt.hintDecision;
+    if (opt.hintAnx) hintAnx = opt.hintAnx;
+    if (opt.hintDeadline) deadlineSelf += opt.hintDeadline;
   }
 
-  /* 0〜4に正規化 */
-  var S = {};
-  for (var key in SCALE) {
-    S[key] = Math.min(4, Math.round(raw[key] / SCALE[key] * 4 * 10) / 10);
-  }
-  S.H = raw.H;
-
-  /* レベル判定 */
-  var lv = Math.round(S.S2) + 1;
-  if (S.S3 >= 2.2) lv = Math.max(lv, 3);
-  if (S.S3 >= 3.0) lv = Math.max(lv, 4);
-  if (S.S3 >= 3.0 && S.S4 >= 2.5) lv = Math.max(lv, 5);
-  lv = Math.max(1, Math.min(5, lv));
-
-  /* タイプ判定 */
-  var tp = {sonae:0, jissen:0, suishin:0, kaitaku:0};
-  var ansSuishin = ans["suishin"];
-  if (ansSuishin === 2) tp.suishin += 1;
-  if (ansSuishin === 3) tp.suishin += 3;
-  if (ansSuishin === 4) tp.suishin += 2;
-  if (flags.kanri) tp.suishin += 1;
-  if (dir === "dx") tp.suishin += 2;
-  if (S.S4 >= 2.5) tp.suishin += 1;
-
-  if (dir === "tenshoku" || dir === "fukugyo" || dir === "dokuritsu") tp.kaitaku += 3;
-  var ansShagai = ans["shagai"];
-  if (ansShagai === 3) tp.kaitaku += 1;
-  if (ansShagai === 4) tp.kaitaku += 2;
-  if (ans["sotoryoku"] === 3) tp.kaitaku += 1;
-  if (flags.notEmployee) tp.kaitaku += 2;
-
-  if (S.S2 >= 2) tp.jissen += 2;
-  if (empIdx === 0 || empIdx === 1) tp.jissen += 2;
-  if (ans["seika"] !== null && ans["seika"] >= 2) tp.jissen += 1;
-  if (dir === "shoshin" || dir === "idou") tp.jissen += 1;
-
-  if (S.S2 <= 1.2) tp.sonae += 2;
-  if (flags.longAnx) tp.sonae += 2;
-  if (flags.midAnx) tp.sonae += 1;
-  if (kaetaiText.indexOf("備えて") >= 0) tp.sonae += 2;
-  if (honki === 1) tp.sonae += 1;
-  if (flags.alone) tp.sonae += 1;
-
-  for (var h = 0; h < typeHints.length; h++) tp[typeHints[h]] += 2;
-
-  var order = ["suishin","kaitaku","jissen","sonae"];
-  var typeKey = order[0], best = -1;
-  for (var o = 0; o < order.length; o++) {
-    if (tp[order[o]] > best) { best = tp[order[o]]; typeKey = order[o]; }
+  /* 軸を -1〜1 に正規化 */
+  var ax = {};
+  for (var a = 0; a < AXES.length; a++) {
+    var key = AXES[a].k;
+    ax[key] = Math.round(clamp(raw[key] / AXES[a].scale, -1, 1) * 100) / 100;
   }
 
-  return {S:S, flags:flags, dir:dir, empIdx:empIdx, honki:honki, job:job,
-          lv:lv, typeKey:typeKey, kaetaiText:kaetaiText, kabeText:kabeText};
+  /* AIレベル（Q3を主軸、Q4で底上げ） */
+  var lv = raw.S2 + 1;
+  if (raw.S3 >= 2) lv = Math.max(lv, 2);
+  if (raw.S3 >= 3) lv = Math.max(lv, 3);
+  if (raw.S3 >= 4) lv = Math.max(lv, 4);
+  if (raw.S2 >= 4 && raw.S3 >= 4) lv = 5;
+  lv = clamp(lv, 1, 5);
+
+  /* タイプ判定（D×E。同点は希望・学び方で補う） */
+  var attack = ax.D > 0 ? true : ax.D < 0 ? false :
+               (dir === "tenshoku" || dir === "fukugyo" || dir === "dokuritsu" || dir === "dx");
+  var self = ax.E > 0 ? true : ax.E < 0 ? false : (ans["s_learn"] !== null && ans["s_learn"] <= 1);
+  var typeKey = attack ? (self ? "driver" : "leap") : (self ? "architect" : "builder");
+
+  return {ax:ax, raw:raw, flags:flags, dir:dir, honki:honki, job:job, pos:pos, lv:lv, typeKey:typeKey,
+          decision:decision, anx:anx, deadline:deadline, hopeText:hopeText, honkiText:honkiText,
+          hintDecision:hintDecision, hintAnx:hintAnx, deadlineSelf:deadlineSelf,
+          isEmployee:!flags.notEmployee};
+}
+
+/* 軸ごとのラベル（コーチ向け・受診者向け共通の判定） */
+function axisSide(v){ return v >= 0.34 ? "pos" : v <= -0.34 ? "neg" : "mid"; }
+function axisCoachLabel(axis, v){
+  var s = axisSide(v);
+  return s === "pos" ? axis.coachPos : s === "neg" ? axis.coachNeg : axis.coachMid;
+}
+function axisReadText(axis, v){
+  var s = axisSide(v);
+  return s === "pos" ? axis.readPos : s === "neg" ? axis.readNeg : axis.readMid;
 }
 
 function strictTier(sc){ if (sc >= 3.4) return 0; if (sc >= 2.8) return 1; if (sc >= 2.2) return 2; return 3; }
 function softTier(sc){ if (sc >= 3.0) return 0; if (sc >= 2.2) return 1; if (sc >= 1.5) return 2; return 3; }
 
 function evaluateExits(r){
-  var isEmployee = !r.flags.notEmployee;
   var out = [];
+  var H = r.raw.H;
   for (var i = 0; i < EXITS.length; i++) {
     var ex = EXITS[i];
-    var rawScore = 0;
-    for (var k in ex.w) rawScore += ex.w[k] * (r.S[k] || 0);
-    var pen = 1, notes = [];
-    var curTier = strictTier(rawScore), levTier = softTier(rawScore);
-    var inner = (ex.id === "shoshin" || ex.id === "dx" || ex.id === "idou");
-    var outer = !inner;
+    var score = 1.0, notes = [];
     var dirMatch = (r.dir && ex.dir === r.dir);
+    if (dirMatch) score += 2.0;
 
-    if (dirMatch) pen *= 1.15;
-
-    if (r.S.S3 < 1 && outer) {
-      pen *= 0.6; curTier = 3; levTier = Math.max(levTier, 2);
-      notes.push("まず90日で、語れる実績を1本作るのが先です。");
-    }
-    if (!isEmployee && inner) {
-      pen *= 0.45; curTier = Math.min(3, curTier + 1); levTier = Math.min(3, levTier + 1);
-      notes.push("現在は会社に所属していないため、社内ルートの優先度は下げています。");
-    }
-    if (isEmployee && inner) pen *= 1.1;
-    if (isEmployee && (ex.id === "fukugyo" || ex.id === "freelance")) {
-      pen *= (ex.id === "fukugyo" ? 0.6 : 0.5) + 0.08 * r.S.S3;
-      if (r.S.S3 < 2.5) notes.push("会社員のうちは、まず本業でAIの実績を作るのが現実的です。副業・独立は、その先の選択肢になります。");
-    }
-    if (r.S.H <= 1 && (ex.id === "fukugyo" || ex.id === "freelance")) {
-      curTier = Math.min(3, curTier + 1); levTier = Math.min(3, levTier + 1);
-      notes.push("確保できる時間が少なめのため、到達目安は長めに見ています。");
-    }
-    if (r.flags.constraint && ex.id === "dx") {
-      curTier = Math.min(3, curTier + 1);
-      notes.push("会社のAI活用に制約があるため、環境づくりから逆算する必要があります。");
-    }
-    if (ex.id === "venture" && r.S.S4 < 2) {
-      pen *= 0.6; curTier = Math.min(3, curTier + 1);
-      notes.push("幹部参画は、チーム規模の成果が揃ってから現実的になります。");
+    if (ex.inner) {
+      score += r.isEmployee ? 0.8 : -1.5;
+      if (r.ax.D < 0) score += 0.3;
+      if (ex.id === "dx") { if (r.pos >= 1) score += 0.4; if (r.ax.D > 0) score += 0.2; if (r.ax.F > 0.3) score += 0.2; }
+      if (ex.id === "idou" && r.lv >= 2) score += 0.2;
+      if (ex.id === "shoshin" && r.lv >= 3) score += 0.2;
+      if (!r.isEmployee) notes.push("現在は会社に所属していないため、社内ルートの優先度は下げています。");
+    } else {
+      if (r.ax.D > 0) score += 0.5;
+      if (!r.isEmployee) score += (ex.id === "fukugyo" || ex.id === "freelance") ? 1.0 : 0.6;
+      if (H >= 3) score += 0.3;
+      if (r.lv >= 3) score += 0.3;
+      if (ex.id === "venture") { score += r.pos >= 2 ? 0.6 : -0.6; if (r.pos < 2) notes.push("幹部参画は、チーム規模の成果が揃ってから現実的になります。"); }
+      if ((ex.id === "fukugyo" || ex.id === "freelance") && r.isEmployee && r.lv < 3) {
+        score -= 0.5;
+        notes.push("会社員のうちは、まず本業でAIの実績を作るのが現実的です。副業・独立は、その先の選択肢になります。");
+      }
+      if ((ex.id === "fukugyo" || ex.id === "freelance") && H <= 1) notes.push("確保できる時間が少なめのため、到達目安は長めに見ています。");
     }
 
+    /* 到達目安（現状の準備度: AIレベル・時間・希望の一致） */
+    var ready = (r.lv - 1) / 4 * 2 + (H - 1) / 3 * 1 + (dirMatch ? 1 : 0);
+    var curTier = strictTier(ready), levTier = softTier(ready);
+    if ((ex.id === "fukugyo" || ex.id === "freelance") && H <= 1) { curTier = Math.min(3, curTier + 1); levTier = Math.min(3, levTier + 1); }
+    if (ex.id === "venture" && r.pos < 2) curTier = Math.min(3, curTier + 1);
     levTier = Math.min(levTier, curTier);
-    var adjusted = rawScore * pen + (dirMatch ? 0.35 : 0);
-    var band = adjusted >= 2.8 ? "high" : (adjusted >= 2.0 ? "mid" : "low");
-    out.push({ex:ex, adjusted:adjusted, band:band, curTier:curTier, levTier:levTier, notes:notes});
-  }
-  out.sort(function(a,b){ return b.adjusted - a.adjusted; });
-  return out;
-}
 
-function buildGaps(r){
-  var arr = [];
-  for (var i = 0; i < AXES.length; i++) {
-    var k = AXES[i].k;
-    arr.push({k:k, v:r.S[k]});
+    var band = score >= 3.0 ? "high" : (score >= 2.0 ? "mid" : "low");
+    out.push({ex:ex, score:score, band:band, curTier:curTier, levTier:levTier, notes:notes});
   }
-  arr.sort(function(a,b){ return a.v - b.v; });
-  var picked = [];
-  for (var j = 0; j < arr.length && picked.length < 3; j++) {
-    picked.push(arr[j].k);
-  }
-  if (r.flags.alone && picked.indexOf("S6") < 0) picked[2] = "S6";
-  return picked;
+  out.sort(function(a,b){ return b.score - a.score; });
+  return out;
 }
 
 /* =========================================================
@@ -1148,29 +992,47 @@ var COLLECT_URL = (location.protocol === "file:")
   ? "https://levance-shindan-collect.saori421work.workers.dev/"
   : "/api/collect";
 
+function buildPayload(ans, r){
+  var lvData = LEVELS[r.lv - 1];
+  var evals = evaluateExits(r);
+  var answers = [];
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    var opt = QUESTIONS[i].opts[ans[QUESTIONS[i].id]];
+    answers.push(opt ? opt.t : "");
+  }
+  var axisLabels = {}, axes = {};
+  for (var a = 0; a < AXES.length; a++) {
+    axisLabels[AXES[a].k] = axisCoachLabel(AXES[a], r.ax[AXES[a].k]);
+    axes[AXES[a].k] = r.ax[AXES[a].k];
+  }
+  var decision = r.decision;
+  if (r.hintDecision === "family" && decision === "自分だけで決められる") decision += "（決め方では「身近な人に相談」を選択）";
+  var t = TYPES[r.typeKey];
+  return {
+    v: 3,
+    name: document.getElementById("userName").value.trim(),
+    age: getAgeBand(),
+    email: document.getElementById("userEmail").value.trim(),
+    lv: "Lv." + r.lv,
+    stage: lvData.name,
+    type: t.name,
+    typeKey: r.typeKey,
+    typeAxes: t.d + "×" + t.e,
+    axes: axes,
+    axisLabels: axisLabels,
+    decision: decision,
+    deadline: r.deadline + (r.deadlineSelf ? "／自分で期限を切る傾向あり" : ""),
+    anxiety: r.anx + (r.flags.lowVerbal ? "／言語化に不慣れ" : ""),
+    hope: r.hopeText,
+    honki: r.honkiText,
+    exits: [evals[0].ex.name, evals[1].ex.name, evals[2].ex.name],
+    answers: answers
+  };
+}
+
 function sendResult(ans, r){
   try {
-    var lvData = LEVELS[r.lv - 1];
-    var evals = evaluateExits(r);
-    var answers = [];
-    for (var i = 0; i < QUESTIONS.length; i++) {
-      var opt = QUESTIONS[i].opts[ans[QUESTIONS[i].id]];
-      answers.push(opt ? opt.t : "");
-    }
-    var payload = {
-      name: document.getElementById("userName").value.trim(),
-      age: getAgeBand(),
-      lv: "Lv." + r.lv,
-      stage: lvData.name,
-      phase: PHASES[lvData.phase].en + "（" + PHASES[lvData.phase].ja + "）",
-      type: TYPES[r.typeKey].name,
-      exits: [evals[0].ex.name, evals[1].ex.name, evals[2].ex.name],
-      scores: {
-        S1: r.S.S1.toFixed(1), S2: r.S.S2.toFixed(1), S3: r.S.S3.toFixed(1),
-        S4: r.S.S4.toFixed(1), S5: r.S.S5.toFixed(1), S6: r.S.S6.toFixed(1)
-      },
-      answers: answers
-    };
+    var payload = buildPayload(ans, r);
     fetch(COLLECT_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -1185,154 +1047,6 @@ function sendResult(ans, r){
 ========================================================= */
 function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
-function weakestStack(S){
-  var stack = ["S1","S2","S3","S4"];
-  var minK = stack[0];
-  for (var s = 1; s < stack.length; s++) {
-    if (S[stack[s]] < S[minK]) minK = stack[s];
-  }
-  return minK;
-}
-
-function renderRadar(S){
-  var cx = 165, cy = 148, R = 98;
-  var n = AXES.length;
-  var weak = null, weakVal = 99;
-  for (var w = 0; w < n; w++) {
-    if (S[AXES[w].k] < weakVal) { weakVal = S[AXES[w].k]; weak = AXES[w].k; }
-  }
-  var svg = '<defs><radialGradient id="rgFill" cx="50%" cy="50%" r="65%">' +
-            '<stop offset="0%" stop-color="#1D4E8F" stop-opacity="0.5"/>' +
-            '<stop offset="100%" stop-color="#143A6B" stop-opacity="0.14"/>' +
-            '</radialGradient></defs>';
-  function pt(idx, val){
-    var ang = -Math.PI/2 + idx * 2 * Math.PI / n;
-    var rr = R * val / 4;
-    return [cx + rr * Math.cos(ang), cy + rr * Math.sin(ang)];
-  }
-  for (var ring = 1; ring <= 4; ring++) {
-    var pts = [];
-    for (var i = 0; i < n; i++) pts.push(pt(i, ring).join(","));
-    svg += '<polygon points="' + pts.join(" ") + '" fill="none" stroke="#C9A24B" stroke-opacity="' + (ring === 4 ? 0.6 : 0.22) + '" stroke-width="' + (ring === 4 ? 1.3 : 1) + '"/>';
-  }
-  for (var a = 0; a < n; a++) {
-    var p = pt(a, 4);
-    svg += '<line x1="' + cx + '" y1="' + cy + '" x2="' + p[0] + '" y2="' + p[1] + '" stroke="#C9A24B" stroke-opacity="0.22" stroke-width="1"/>';
-  }
-  for (var sc = 1; sc <= 4; sc++) {
-    svg += '<text x="' + (cx + 5) + '" y="' + (cy - R * sc / 4 + 4) + '" font-size="8.5" fill="#9AA7B6">' + sc + '</text>';
-  }
-  var poly = [];
-  for (var v = 0; v < n; v++) poly.push(pt(v, Math.max(0.25, S[AXES[v].k])).join(","));
-  svg += '<polygon points="' + poly.join(" ") + '" fill="url(#rgFill)" stroke="#143A6B" stroke-width="2.2" stroke-linejoin="round"/>';
-  for (var d = 0; d < n; d++) {
-    var dp = pt(d, Math.max(0.25, S[AXES[d].k]));
-    svg += '<circle cx="' + dp[0] + '" cy="' + dp[1] + '" r="4.5" fill="#FFFFFF" stroke="#C9A24B" stroke-width="2"/>';
-  }
-  svg += '<circle cx="' + cx + '" cy="' + cy + '" r="2" fill="#C9A24B"/>';
-  for (var l = 0; l < n; l++) {
-    var lp = pt(l, 5.05);
-    var anchor = "middle";
-    if (lp[0] < cx - 34) anchor = "end";
-    if (lp[0] > cx + 34) anchor = "start";
-    var isWeak = (AXES[l].k === weak);
-    svg += '<text x="' + lp[0] + '" y="' + (lp[1] + 4) + '" text-anchor="' + anchor + '" font-size="12.5" font-weight="700" fill="' + (isWeak ? "#B08A2E" : "#1C2733") + '">' + AXES[l].name + '</text>';
-  }
-  document.getElementById("radarSvg").innerHTML = svg;
-}
-
-function renderPyramid(S){
-  var layers = [
-    {k:"S4", label:"巻き込み力", w:118, fill:"#1D4E8F"},
-    {k:"S3", label:"実装力",     w:172, fill:"#17427C"},
-    {k:"S2", label:"AI活用力",   w:226, fill:"#123561"},
-    {k:"S1", label:"設計力",     w:280, fill:"#0B1D3A"}
-  ];
-  var weak = weakestStack(S);
-  var svg = "";
-  var y = 20;
-  for (var i = 0; i < layers.length; i++) {
-    var L = layers[i];
-    var x = (320 - L.w) / 2;
-    var isWeak = (L.k === weak);
-    var fill = isWeak ? "#FCF6E8" : L.fill;
-    svg += '<rect x="' + x + '" y="' + y + '" width="' + L.w + '" height="36" rx="4" fill="' + fill + '"' +
-           (isWeak ? ' stroke="#C9A24B" stroke-width="2"' : ' stroke="rgba(201,162,75,.35)" stroke-width="1"') + '/>';
-    svg += '<text x="160" y="' + (y + 23) + '" text-anchor="middle" font-size="12" font-weight="700" fill="' + (isWeak ? "#0B1D3A" : "#FFFFFF") + '">' + L.label + '</text>';
-    if (isWeak) {
-      svg += '<circle cx="' + (x - 11) + '" cy="' + (y + 18) + '" r="3" fill="#C9A24B"/>';
-      svg += '<text x="' + (x - 19) + '" y="' + (y + 22) + '" text-anchor="end" font-size="10" font-weight="700" fill="#B08A2E" letter-spacing="1">FOCUS</text>';
-    }
-    y += 42;
-  }
-  svg += '<text x="160" y="' + (y + 12) + '" text-anchor="middle" font-size="10" fill="#5B6B7B">下の層から積み上がる（土台が抜けると、上で止まる）</text>';
-  document.getElementById("pyrSvg").innerHTML = svg;
-
-  var ax = null;
-  for (var m = 0; m < AXES.length; m++) if (AXES[m].k === weak) ax = AXES[m];
-  document.getElementById("pyrText").innerHTML =
-    '<span class="h-label">FOCUS</span>いま積み上げるべきなのは<b>「' + ax.name + '」（' + ax.sub + '）</b>です。' +
-    'AIをキャリアに変える力は、設計力 → AI活用 → 実装 → 巻き込みの順で積み上がります。下の力が抜けたまま上に進むと、「単発の便利」で止まってしまいます。';
-}
-
-function renderGrowthMap(lv){
-  var stepW = 124, gap = 8, x0 = 20, baseY = 290;
-  var heights = [70,110,150,190,230];
-  var svg = '<defs>' +
-    '<linearGradient id="gmStep" x1="0" y1="0" x2="0" y2="1">' +
-    '<stop offset="0%" stop-color="#1D4E8F"/><stop offset="100%" stop-color="#0B1D3A"/>' +
-    '</linearGradient>' +
-    '<linearGradient id="gmStepCur" x1="0" y1="0" x2="0" y2="1">' +
-    '<stop offset="0%" stop-color="#2A5EA8"/><stop offset="100%" stop-color="#0B1D3A"/>' +
-    '</linearGradient></defs>';
-
-  /* フェーズ帯 */
-  var bands = [
-    {from:0, to:1, en:"PHASE 1", ja:"AIを使いこなす"},
-    {from:2, to:3, en:"PHASE 2", ja:"業務を設計し直す"},
-    {from:4, to:4, en:"PHASE 3", ja:"組織を動かす"}
-  ];
-  for (var b = 0; b < bands.length; b++) {
-    var bx1 = x0 + bands[b].from * (stepW + gap);
-    var bx2 = x0 + bands[b].to * (stepW + gap) + stepW;
-    var bcx = (bx1 + bx2) / 2;
-    svg += '<text x="' + bcx + '" y="20" text-anchor="middle" font-size="11" font-weight="700" fill="#B08A2E" letter-spacing="2">' + bands[b].en + '</text>';
-    svg += '<text x="' + bcx + '" y="36" text-anchor="middle" font-size="10.5" fill="#5B6B7B">' + bands[b].ja + '</text>';
-    svg += '<line x1="' + (bx1 + 4) + '" y1="44" x2="' + (bx2 - 4) + '" y2="44" stroke="#C9A24B" stroke-width="1" stroke-opacity="0.7"/>';
-  }
-
-  /* 上昇ライン */
-  var linePts = [];
-  for (var lp = 0; lp < 5; lp++) {
-    linePts.push((x0 + lp * (stepW + gap) + stepW / 2) + "," + (baseY - heights[lp] - 12));
-  }
-  svg += '<polyline points="' + linePts.join(" ") + '" fill="none" stroke="#C9A24B" stroke-width="1.3" stroke-dasharray="1 5" stroke-linecap="round"/>';
-
-  /* ステップ */
-  var opac = [0.32, 0.48, 0.62, 0.78, 0.92];
-  for (var i = 0; i < 5; i++) {
-    var x = x0 + i * (stepW + gap);
-    var h = heights[i];
-    var yTop = baseY - h;
-    var cur = (i + 1 === lv);
-    svg += '<rect x="' + x + '" y="' + yTop + '" width="' + stepW + '" height="' + h + '" rx="6" ' +
-           'fill="url(#' + (cur ? "gmStepCur" : "gmStep") + ')" fill-opacity="' + (cur ? 1 : opac[i]) + '"' +
-           (cur ? ' stroke="#C9A24B" stroke-width="2"' : '') + '/>';
-    svg += '<text x="' + (x + stepW / 2) + '" y="' + (yTop + 24) + '" text-anchor="middle" font-size="11" font-weight="700" fill="rgba(255,255,255,.92)">Lv.' + (i + 1) + '</text>';
-    svg += '<text x="' + (x + stepW / 2) + '" y="' + (yTop + 41) + '" text-anchor="middle" font-size="11.5" font-weight="700" fill="rgba(255,255,255,.85)">' + LEVELS[i].short + '</text>';
-    if (cur) {
-      var mcx = x + stepW / 2;
-      var pinY = yTop - 46;
-      svg += '<rect x="' + (mcx - 43) + '" y="' + pinY + '" width="86" height="26" rx="13" fill="#0B1D3A" stroke="#C9A24B" stroke-width="1.3"/>';
-      svg += '<circle cx="' + (mcx - 28) + '" cy="' + (pinY + 13) + '" r="3" fill="#C9A24B"/>';
-      svg += '<text x="' + (mcx + 4) + '" y="' + (pinY + 17.5) + '" text-anchor="middle" font-size="11" font-weight="700" fill="#E3D3A8" letter-spacing="1">現在地</text>';
-      svg += '<line x1="' + mcx + '" y1="' + (pinY + 26) + '" x2="' + mcx + '" y2="' + (yTop - 6) + '" stroke="#C9A24B" stroke-width="1.3"/>';
-      svg += '<circle cx="' + mcx + '" cy="' + (yTop - 4) + '" r="3" fill="#C9A24B"/>';
-    }
-  }
-  document.getElementById("growthSvg").innerHTML = svg;
-}
-
 function exitCardHTML(item, rank){
   var ex = item.ex;
   var first = rank === 1;
@@ -1344,69 +1058,59 @@ function exitCardHTML(item, rank){
   h += '<div class="tier-row"><span class="chip cur">いまのまま：' + CUR_LABELS[item.curTier] + '</span>' +
        '<span class="chip lev">伴走すると：' + LEV_LABELS[item.levTier] + '</span></div>';
   h += '<p class="exit-text">' + ex.text[item.band] + '</p>';
-  for (var i = 0; i < item.notes.length; i++) {
-    h += '<p class="exit-note">' + item.notes[i] + '</p>';
-  }
+  for (var i = 0; i < item.notes.length; i++) h += '<p class="exit-note">' + item.notes[i] + '</p>';
   h += '</div>';
   return h;
+}
+
+function renderTendency(r){
+  var out = "";
+  for (var a = 0; a < AXES.length; a++) {
+    var axis = AXES[a];
+    var v = r.ax[axis.k];
+    var pct = 50 + v * 50;
+    var left = v >= 0 ? 50 : pct;
+    var width = Math.abs(v) * 50;
+    out += '<div class="tend-row">' +
+      '<p class="tend-name">' + axis.name + '<span class="en">' + axis.en + '</span></p>' +
+      '<div class="tend-track"><div class="tend-fill ' + (v >= 0 ? "pos" : "neg") + '" style="left:' + left + '%;width:' + width + '%"></div>' +
+      '<div class="tend-dot" style="left:' + pct + '%"></div></div>' +
+      '<div class="tend-poles"><span>' + (axisSide(v) === "neg" ? "<b>" + axis.neg + "</b>" : axis.neg) + '</span>' +
+      '<span>' + (axisSide(v) === "pos" ? "<b>" + axis.pos + "</b>" : axis.pos) + '</span></div>' +
+      '<p class="tend-read">' + esc(axisReadText(axis, v)) + '</p></div>';
+  }
+  document.getElementById("tendList").innerHTML = out;
 }
 
 function renderResult(r){
   var name = document.getElementById("userName").value.trim();
   document.getElementById("rName").textContent = name ? name + " さんの診断結果" : "";
 
+  var t = TYPES[r.typeKey];
+  document.getElementById("rTypeName").textContent = t.name;
+  document.getElementById("rTypeEn").textContent = t.en;
+  document.getElementById("rTypeTag").textContent = t.tag;
+  document.getElementById("rSummary").textContent = t.summary;
+
   var lvData = LEVELS[r.lv - 1];
   document.getElementById("rLvNum").textContent = r.lv;
   document.getElementById("rLvName").textContent = lvData.name;
   document.getElementById("rPhase").textContent = PHASES[lvData.phase].en + "（" + PHASES[lvData.phase].ja + "）";
-
-  /* リングゲージ */
-  var C = 358.1;
+  document.getElementById("rLvNote").textContent = lvData.note;
+  var C = 232.5;
   var ring = document.getElementById("ringProg");
   ring.style.strokeDashoffset = C;
   setTimeout(function(){ ring.style.strokeDashoffset = C * (1 - r.lv / 5); }, 200);
 
-  var t = TYPES[r.typeKey];
-  document.getElementById("rTypeName").textContent = t.name;
-  document.getElementById("rTypeTag").textContent = t.tag;
-  document.getElementById("rSummary").innerHTML = esc(lvData.text) + "<br><br>" + esc(t.summary);
+  renderTendency(r);
 
-  /* 現状 */
-  document.getElementById("rReality").textContent = EMPATHY[r.empIdx];
-  var tags = "";
-  if (r.kaetaiText) tags += '<span class="tag">変えたいのは <b>' + esc(r.kaetaiText) + '</b></span>';
-  if (r.kabeText) tags += '<span class="tag">壁に感じるのは <b>' + esc(r.kabeText) + '</b></span>';
-  document.getElementById("rTags").innerHTML = tags;
-
-  /* レーダー＋バー＋ピラミッド */
-  renderRadar(r.S);
-  renderPyramid(r.S);
-  var weakAll = null, weakAllVal = 99;
-  for (var wv = 0; wv < AXES.length; wv++) {
-    if (r.S[AXES[wv].k] < weakAllVal) { weakAllVal = r.S[AXES[wv].k]; weakAll = AXES[wv].k; }
-  }
-  var axHtml = "";
-  for (var a = 0; a < AXES.length; a++) {
-    var val = r.S[AXES[a].k];
-    axHtml += '<div class="axis-row' + (AXES[a].k === weakAll ? " weak" : "") + '"><span class="a-name">' + AXES[a].name + '</span>' +
-      '<span class="a-bar"><i data-w="' + (val / 4 * 100) + '"></i></span>' +
-      '<span class="a-val">' + val.toFixed(1) + '</span></div>';
-  }
-  document.getElementById("axisList").innerHTML = axHtml;
-  setTimeout(function(){
-    var bars = document.querySelectorAll(".a-bar i");
-    for (var b = 0; b < bars.length; b++) bars[b].style.width = bars[b].getAttribute("data-w") + "%";
-  }, 200);
-
-  /* タイプ詳細 */
   document.getElementById("tpTitle").textContent = t.name + "のあなたへ";
   var tg = "";
   for (var tk = 0; tk < TYPE_ORDER.length; tk++) {
     var key = TYPE_ORDER[tk];
     var on = key === r.typeKey;
-    tg += '<div class="tg-cell' + (on ? " on" : "") + '">' +
-          (on ? '<span class="tg-badge">YOU</span>' : "") +
-          '<p class="n">' + TYPES[key].name + '</p><p class="t">' + TYPES[key].tag + '</p></div>';
+    tg += '<div class="tg-cell' + (on ? " on" : "") + '">' + (on ? '<span class="tg-badge">YOU</span>' : "") +
+          '<p class="n">' + TYPES[key].name + '</p><p class="t">' + TYPES[key].d + "×" + TYPES[key].e + "｜" + TYPES[key].tag + '</p></div>';
   }
   document.getElementById("typeGrid").innerHTML = tg;
   document.getElementById("tpDesc").textContent = t.desc;
@@ -1421,12 +1125,6 @@ function renderResult(r){
   document.getElementById("tpMindset").innerHTML = md;
   document.getElementById("tpDetour").textContent = t.detour;
 
-  /* 成長マップ */
-  renderGrowthMap(r.lv);
-  document.getElementById("growthNote").textContent =
-    "あなたは現在 Lv." + r.lv + "「" + lvData.name + "」、" + PHASES[lvData.phase].en.replace("｜", " / ") + " の位置にいます。このマップは、一段飛ばしでは登れません。だからこそ、正しい順番で積み上げた人から、次のフェーズの景色に届きます。";
-
-  /* 出口 */
   var evals = evaluateExits(r);
   var top3 = "", all = "";
   for (var e = 0; e < evals.length; e++) {
@@ -1436,13 +1134,6 @@ function renderResult(r){
   document.getElementById("exitTop3").innerHTML = top3;
   document.getElementById("exitAll").innerHTML = all;
 
-  /* ギャップ */
-  var gaps = buildGaps(r);
-  var gapHtml = "";
-  for (var gi = 0; gi < gaps.length; gi++) gapHtml += "<li>" + GAP_TEXT[gaps[gi]] + "</li>";
-  document.getElementById("gapList").innerHTML = gapHtml;
-
-  /* ロードマップ（タイムライン） */
   var jobLabel = r.job === "いま" ? "いまの" : r.job + "の";
   document.getElementById("roadmap").innerHTML =
     '<div class="tl-item"><div class="tl-node"><span class="m">MONTH</span><span class="d">1</span></div>' +
@@ -1453,7 +1144,6 @@ function renderResult(r){
     '<b>成果を「評価される言葉」に変換する</b><p>「どの業務を、どれくらい改善したか」を、評価面談・職務経歴書・商談で語れる1本の実績に仕上げます。</p></div>';
   document.getElementById("roadExtra").textContent = t.road;
 
-  /* CTA温度別メッセージ */
   document.getElementById("ctaHonki").textContent = r.honki === 0
     ? "動き出すなら、勢いのあるいまがいちばんです。まず60分で、あなた専用の地図を手に入れてください。"
     : "いきなり大きく動く必要はありません。ただ、方向だけ先に決めておくと、動きたくなったときに迷いません。";
@@ -1464,31 +1154,34 @@ function renderResult(r){
 /* =========================================================
    イベント
 ========================================================= */
-/* お名前・年代の入力チェック（どちらも必須） */
 function getAgeBand(){
   var el = document.querySelector('input[name="ageBand"]:checked');
   return el ? el.value : "";
 }
+function validEmail(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v); }
 
 function validateContact(){
-  var nameEl = document.getElementById("userName");
-  var ageEl  = document.getElementById("ageGroup");
-  var errEl  = document.getElementById("ncErr");
-  var cardEl = document.getElementById("nameCard");
+  var nameEl  = document.getElementById("userName");
+  var ageEl   = document.getElementById("ageGroup");
+  var mailEl  = document.getElementById("userEmail");
+  var errEl   = document.getElementById("ncErr");
+  var cardEl  = document.getElementById("nameCard");
 
-  nameEl.classList.remove("bad");
-  ageEl.classList.remove("bad");
+  nameEl.classList.remove("bad"); ageEl.classList.remove("bad"); mailEl.classList.remove("bad");
 
-  var noName = !nameEl.value.trim();
-  var noAge  = !getAgeBand();
+  var missing = [];
+  if (!nameEl.value.trim()) { nameEl.classList.add("bad"); missing.push("お名前"); }
+  if (!getAgeBand())        { ageEl.classList.add("bad");  missing.push("年代"); }
+  var mail = mailEl.value.trim();
+  var badMail = false;
+  if (!mail) { mailEl.classList.add("bad"); missing.push("メールアドレス"); }
+  else if (!validEmail(mail)) { mailEl.classList.add("bad"); badMail = true; }
 
-  if (noName || noAge) {
-    if (noName) nameEl.classList.add("bad");
-    if (noAge)  ageEl.classList.add("bad");
+  if (missing.length || badMail) {
     cardEl.classList.add("unanswered");
-    errEl.textContent = noName && noAge ? "お名前のご記入と、年代の選択をお願いします。"
-                      : noName ? "お名前をご記入ください。"
-                      : "年代をお選びください。";
+    errEl.textContent = missing.length
+      ? missing.join("・") + "をご記入ください。" + (badMail ? " メールアドレスの形式もご確認ください。" : "")
+      : "メールアドレスの形式をご確認ください（例：yamada@example.com）。";
     errEl.style.display = "block";
     return false;
   }
@@ -1514,14 +1207,8 @@ document.getElementById("diagnoseBtn").addEventListener("click", function(){
       el.classList.remove("unanswered");
     }
   }
-  if (firstMissing) {
-    firstMissing.scrollIntoView({behavior:"smooth", block:"center"});
-    return;
-  }
-  if (!validateContact()) {
-    document.getElementById("nameCard").scrollIntoView({behavior:"smooth", block:"center"});
-    return;
-  }
+  if (firstMissing) { firstMissing.scrollIntoView({behavior:"smooth", block:"center"}); return; }
+  if (!validateContact()) { document.getElementById("nameCard").scrollIntoView({behavior:"smooth", block:"center"}); return; }
   var r = compute(ans);
   renderResult(r);
   sendResult(ans, r);
@@ -1532,7 +1219,9 @@ document.getElementById("retakeBtn").addEventListener("click", function(){
   var inputs = document.querySelectorAll('#questions input[type="radio"]');
   for (var i = 0; i < inputs.length; i++) inputs[i].checked = false;
   document.getElementById("userName").value = "";
+  document.getElementById("userEmail").value = "";
   document.getElementById("userName").classList.remove("bad");
+  document.getElementById("userEmail").classList.remove("bad");
   var ages = document.querySelectorAll('input[name="ageBand"]');
   for (var a = 0; a < ages.length; a++) ages[a].checked = false;
   document.getElementById("ageGroup").classList.remove("bad");

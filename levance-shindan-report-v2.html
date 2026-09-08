@@ -123,7 +123,9 @@ body{
   border:1px solid var(--gold-soft);border-radius:12px;background:#FDFBF5;
   padding:12px 18px;
 }
-.rp-msg p{font-size:14.6px;line-height:1.66;color:#26313E;margin-bottom:6px}
+.rp-msg p{font-size:17px;line-height:1.75;color:#26313E;margin-bottom:8px}
+.rp-msg.cont{margin-top:10px;padding:10px 18px}
+.rp-msg.cont p{font-size:16px;line-height:1.7;margin-bottom:6px}
 .rp-msg p:last-child{margin-bottom:0}
 .rp-msg b{color:var(--navy)}
 .rp-msg .gold{color:var(--gold-deep);font-weight:700}
@@ -137,29 +139,29 @@ body{
 .pg-head .t span{color:var(--gold-soft);font-size:12px;letter-spacing:.22em;display:block;font-weight:700;margin-bottom:2px}
 .pg-head .nm{font-size:14px;color:#C6D2E2}
 .pg-body{padding:20px 44px 0;flex:1 1 auto;min-height:0}
-.rp-sec{margin-bottom:17px}
+.rp-sec{margin-bottom:12px}
 
 /* 2枚目：スキルバランス */
-.rp-radarwrap{text-align:center;margin:-6px 0 0}
+.rp-radarwrap{text-align:center;margin:-8px 0 0}
 .rp-bars .br{display:flex;align-items:center;gap:14px;padding:1.5px 0}
 .rp-bars .bn{flex:0 0 116px;font-size:16px;font-weight:700;color:var(--navy)}
 .rp-bars .bt{flex:1;height:11px;background:#EDF1F6;border-radius:7px;overflow:hidden}
 .rp-bars .bt i{display:block;height:100%;background:linear-gradient(90deg,var(--navy2),var(--navy3));border-radius:7px}
 .rp-bars .br.weak .bt i{background:linear-gradient(90deg,var(--gold-deep),var(--gold))}
 .rp-bars .bv{flex:0 0 46px;text-align:right;font-size:16px;font-weight:900;color:var(--navy)}
-.rp-focus{border:1px solid var(--gold-soft);background:#FCF9F0;border-radius:12px;padding:10px 16px;font-size:14.4px;line-height:1.65;margin-top:8px}
+.rp-focus{border:1px solid var(--gold-soft);background:#FCF9F0;border-radius:12px;padding:10px 16px;font-size:15.5px;line-height:1.65;margin-top:4px}
 .rp-focus b{color:var(--navy)}
 
 /* 3枚目：タイプ */
 .tp-name{font-size:31px;font-weight:900;color:var(--navy);line-height:1.4}
-.tp-tag{font-size:15px;color:var(--sub);margin-top:2px;margin-bottom:14px}
+.tp-tag{font-size:15px;color:var(--sub);margin-top:2px;margin-bottom:10px}
 .rp-list{list-style:none}
-.rp-list li{position:relative;padding:4px 0 4px 26px;font-size:16.8px;line-height:1.65}
+.rp-list li{position:relative;padding:3px 0 3px 26px;font-size:16.5px;line-height:1.65}
 .rp-list li::before{content:"";position:absolute;left:2px;top:14px;width:9px;height:9px;border:2px solid var(--gold);border-radius:50%}
-.rp-mind{border:1px solid var(--line);border-radius:12px;padding:11px 18px;margin-bottom:7px;background:#FBFCFE}
-.rp-mind .mh{font-size:17.8px;font-weight:900;color:var(--navy);line-height:1.5}
+.rp-mind{border:1px solid var(--line);border-radius:12px;padding:9px 18px;margin-bottom:6px;background:#FBFCFE}
+.rp-mind .mh{font-size:17.5px;font-weight:900;color:var(--navy);line-height:1.5}
 .rp-mind .mh::before{content:attr(data-n);color:var(--gold-deep);font-size:13px;margin-right:9px;letter-spacing:.08em}
-.rp-mind p{font-size:15.3px;color:#3D4B5C;margin-top:4px;line-height:1.7}
+.rp-mind p{font-size:15.5px;color:#3D4B5C;margin-top:3px;line-height:1.65}
 
 /* 4枚目：出口・90日・CTA */
 .rp-exit{
@@ -169,28 +171,28 @@ body{
 .rp-exit.first{border:1.5px solid var(--gold);background:#FFFDF6}
 .rp-exit .rk{flex:0 0 auto;font-size:12px;font-weight:900;letter-spacing:.05em;color:var(--navy2);border:1px solid var(--navy2);border-radius:4px;padding:3px 10px}
 .rp-exit.first .rk{background:var(--navy);color:var(--gold-soft);border-color:var(--navy)}
-.rp-exit .en{font-size:17px;font-weight:900;color:var(--navy);line-height:1.45}
-.rp-exit .why{font-size:12.8px;color:#3D4B5C;line-height:1.45;margin-top:1px}
-.rp-msg .kw{font-size:14.5px;color:var(--navy);font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--gold-soft)}
+.rp-exit .en{font-size:18px;font-weight:900;color:var(--navy);line-height:1.45}
+.rp-exit .why{font-size:14.5px;color:#3D4B5C;line-height:1.45;margin-top:1px}
+.rp-msg .kw{font-size:15.5px;color:var(--navy);font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--gold-soft)}
 .rp-msg .kw span{font-size:11px;letter-spacing:.22em;color:var(--gold-deep);margin-right:10px}
-.rp-closing{margin-top:10px;border-left:4px solid var(--gold);background:#FCF9F0;padding:10px 16px;font-size:15.5px;line-height:1.65;color:var(--navy);font-weight:700}
+.rp-closing{margin-top:8px;border-left:4px solid var(--gold);background:#FCF9F0;padding:9px 16px;font-size:16.5px;line-height:1.65;color:var(--navy);font-weight:700}
 .rp-closing .ck{display:block;font-size:11px;letter-spacing:.24em;color:var(--gold-deep);font-weight:700;margin-bottom:4px}
 .rp-rstep{border:1px solid var(--line);border-radius:12px;padding:9px 16px;background:#FBFCFE;margin-bottom:7px}
 .rp-rstep .rm{font-size:12.5px;letter-spacing:.16em;color:var(--gold-deep);font-weight:700}
-.rp-rstep .rh{font-size:17.5px;font-weight:900;color:var(--navy);margin-top:2px;line-height:1.5}
-.rp-rstep p{font-size:14.5px;color:#3D4B5C;margin-top:3px;line-height:1.6}
-.rp-roadextra{margin-top:2px;background:#F2F6FB;border-radius:10px;padding:10px 16px;font-size:14.5px;color:#33455C;line-height:1.6}
+.rp-rstep .rh{font-size:19px;font-weight:900;color:var(--navy);margin-top:2px;line-height:1.5}
+.rp-rstep p{font-size:15.8px;color:#3D4B5C;margin-top:3px;line-height:1.6}
+.rp-roadextra{margin-top:2px;background:#F2F6FB;border-radius:10px;padding:9px 16px;font-size:15.5px;color:#33455C;line-height:1.6}
 
 .rp-cta{
   position:relative;margin-top:auto;flex:0 0 auto;
   background:linear-gradient(150deg,var(--navy) 0%,#123D63 100%);color:#fff;
-  padding:16px 44px 16px;overflow:hidden;
+  padding:14px 44px 14px;overflow:hidden;
 }
 .rp-cta-in{position:relative;z-index:2}
 .rp-cta .ck{font-size:13px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
 .rp-cta .ch{font-size:20px;font-weight:900;margin-top:4px;line-height:1.45}
 .rp-cta .ch span{color:var(--gold-soft)}
-.rp-cta .cp{font-size:14px;color:#DCE4EF;margin-top:7px;line-height:1.65}
+.rp-cta .cp{font-size:15px;color:#DCE4EF;margin-top:7px;line-height:1.65}
 .rp-cta .cp b{color:#fff}
 .rp-cta-meta{margin-top:9px;font-size:15px;color:#E4EAF3;font-weight:700}
 .rp-cta-meta span{color:var(--gold-soft)}
@@ -282,7 +284,7 @@ var TYPE_DATA = {
   },
   "実務エンジン型": {
     tag:"現場で成果を作る、実践タイプ",
-    redefine:"AIスキルは、もう足りています。足りないのは、成果を「評価される言葉」に変換する工程だけです。",
+    redefine:"AIスキルは、もう十分にあります。あとは、成果を「評価される言葉」に変換する工程を加えるだけです。",
     strengths:["日常的にAIを使いこなす実践力","業務の中の改善ポイントを見つける現場感覚","すでに手元にある「実績の種」"],
     stumbles:["時短で満足し、業務フローの再設計まで踏み込めていない","成果が「なんとなく楽になった」で止まっている","個人の工夫で終わり、チーム・組織に広がっていない"],
     minds:[
@@ -415,7 +417,7 @@ function radarSVG(S){
     var rr = R * val / 4;
     return [cx + rr * Math.cos(ang), cy + rr * Math.sin(ang)];
   }
-  var svg = '<svg width="520" height="325" viewBox="0 0 640 400" style="max-width:100%">';
+  var svg = '<svg width="432" height="270" viewBox="0 0 640 400" style="max-width:100%">';
   for (var ring = 1; ring <= 4; ring++) {
     var pts = [];
     for (var i = 0; i < n; i++) pts.push(pt(i, ring).join(","));
@@ -503,31 +505,34 @@ var AX_MEAN_HIGH = [
   "続けられる環境と時間の設計ができている。伸びる人は、意志ではなく環境で続けている"
 ];
 var AX_MEAN_LOW = [
-  "業務を分解して言語化する工程。ここが弱いと、AIの出力が安定せず「使えるのに成果にならない」が起きる",
-  "AIに触れる頻度。学習からではなく、毎日の業務の1作業から始めると最短で上がる",
-  "個人の時短を業務フローに組み込む力。「作業が速くなった」の一歩先に、実績になる領域がある",
-  "自分の業務の外に半歩出る力。チーム・周囲を動かした経験が、キャリアの階段になる",
-  "成果を評価の言葉に変換する力。ここが抜けると、成果は出ているのに報われない状態が続く",
-  "続けられる環境の力。独学の時間を減らし、相談できる相手を持つだけで遠回りが消える"
+  "業務を分解して言葉にする工程。ここが加わると、AIの出力が安定して「使える」が「成果」に変わります",
+  "AIに触れる頻度。学習からではなく、毎日の業務の1作業から始めると、いちばん早く上がります",
+  "個人の時短を業務フローに組み込む力。「作業が速くなった」の一歩先に、実績になる領域があります",
+  "自分の業務の外に半歩出る力。チーム・周囲を動かした経験が、そのままキャリアの階段になります",
+  "成果を評価の言葉に変換する力。ここが加わると、同じ成果が評価と単価を動かし始めます",
+  "続けられる環境の力。相談できる相手が1人いるだけで、遠回りが消えます"
 ];
 
-/* あなたを表す3つの言葉 */
+/* あなたを表す3つの言葉（前向きな言い当て） */
 function buildKeywords(p){
   var kw = [];
-  if (p.evalNext || p.evalSame) kw.push("使えているのに、報われていない");
-  else if (p.evalRelied) kw.push("周りが先に気づき始めている");
+  if (p.evalNext || p.evalSame) kw.push("成果を言葉にすれば、評価が動く人");
+  else if (p.evalRelied) kw.push("周りが先に気づき始めている人");
   else if (p.evalMoved) kw.push("すでに評価が動き始めた人");
-  else if (p.aiFar || p.aiSome) kw.push("始める前の、静かな助走");
-  if (p.wantPrep || p.lifeNo || p.life10) kw.push("表には出さない、将来への問い");
-  else if (p.wantValue || (p.hopeOuter && (p.outNo || p.outVague))) kw.push("外に出たいのに、名刺がない");
-  else if (p.wantTime) kw.push("時間を取り戻したい");
-  else if (p.wantEnv) kw.push("環境が変わるのを待てない");
-  else if (p.wantEval) kw.push("評価と役割を、取りにいく");
-  if (p.alone || p.web) kw.push("独学で来た、確認相手のいない道");
+  else if (p.aiFar || p.aiSome) kw.push("これから伸びしろが大きい人");
+  else kw.push("実績1本で景色が変わる人");
+  if (p.wantPrep || p.lifeNo || p.life10) kw.push("先を読んで、備えられる人");
+  else if (p.wantValue || (p.hopeOuter && (p.outNo || p.outVague))) kw.push("外に見せる1本で、道が開く人");
+  else if (p.wantTime) kw.push("時間の使い方を変えたい人");
+  else if (p.wantEnv) kw.push("環境に左右されない手札を持ちたい人");
+  else if (p.wantEval) kw.push("評価と役割を、取りにいく人");
+  else kw.push("目指す姿が見えている人");
+  if (p.alone || p.web) kw.push("独学でここまで来た人");
   else if (p.t15) kw.push("15分の積み上げが効く人");
-  else if (p.roleAssigned || p.roleWill) kw.push("組織を動かす側へ");
-  else if (p.askGoal || p.askDesign) kw.push("設計できる人");
-  else kw.push("実績1本で景色が変わる");
+  else if (p.roleAssigned || p.roleWill) kw.push("組織を動かす側に立つ人");
+  else if (p.askGoal || p.askDesign) kw.push("仕事を設計できる人");
+  else if (p.mentor) kw.push("相談できる環境を持っている人");
+  else kw.push("順番が決まれば速い人");
   return kw.slice(0, 3);
 }
 
@@ -555,28 +560,28 @@ function buildMessage(name, lv, stage, typeName, td, S, exits, ans){
   if (p.evalNone && change) emp = "ただ、その変化がキャリアに効いている実感は、まだないはずです。多くの人がここから始めて、90日で景色を変えています。";
   var p1 = where + n + "。" + ai + "。" + (change ? change + "。" : "") + emp;
 
-  /* P2 隠れた本音（2つの回答の組み合わせから、矛盾を言語化） */
+  /* P2 いま感じていること（2つの回答の組み合わせを、決めつけずに映す） */
   var p2 = "";
   if (p.hopeOuter && (p.outNo || p.outVague)) {
-    p2 = "「" + esc(p.hope) + "」。この気持ちと同時に、「外で通用すると言い切れない自分」も抱えている。動きたいのに、名刺になる実績がまだ言葉になっていない。この2つが同時にあるから、頭では分かっていても最初の一歩が重くなる。";
+    p2 = "「" + esc(p.hope) + "」という方向が、すでに見えています。そのうえで「外で通用する力を、まだ言葉にできていない」とも感じている。動く気持ちと、確かめたい気持ち。この2つが同時にあるのは自然なことで、外に見せられる実績が1本あれば、両方が同時に解けます。";
   } else if ((p.evalNext || p.evalSame) && p.wantEval) {
-    p2 = "いちばん変えたいのは、評価と役割。AIを使えているのに、そこが動かない。この「使えているのに報われない」状態が、実は一番消耗します。努力が足りないのではなく、成果が「評価される言葉」に変換されていないだけ、という可能性が高いです。";
+    p2 = "いちばん変えたいのは、評価と役割。AIはすでに使えている。だからこそ、次に必要なのはスキルの上乗せではなく、出している成果を「評価される言葉」に変換する工程です。ここが加わるだけで、同じ仕事が実績に変わり始めます。";
   } else if ((p.lifeNo || p.life10) && p.wantPrep) {
-    p2 = "表向きは、大きな不満があるわけではないはずです。ただ「この働き方をあと何年続けられるか」という問いが、消えずに残っている。人に話すほどではない。けれど、ふとした瞬間に戻ってくる。心当たりがあるのではないでしょうか。";
+    p2 = "大きな不満があるわけではない。ただ「この働き方を、この先も続けられるか」という問いを持っている。人に話すほどのことではなくても、ふとした瞬間に戻ってくる問いではないでしょうか。この感覚を持てていること自体が、備えられる人の証拠です。";
   } else if (p.wantTime && (p.t15 || p.t60)) {
-    p2 = "変えたいのは働き方と時間。使える時間は" + (p.t15 ? "1日15分ほど" : "1日1時間まで") + "。時間がないから動けないのではなく、時間がないからこそ変えたい。この順番のはずです。だから、まとまった時間を待つ設計では始まりません。";
+    p2 = "変えたいのは働き方と時間。使える時間は" + (p.t15 ? "1日15分ほど" : "1日1時間まで") + "。時間がないからこそ、時間の使い方を変えたい。この順番のはずです。だからこそ、まとまった時間を待たずに始められる設計が、あなたに合っています。";
   } else if (p.wantEnv && p.envLimit) {
-    p2 = "変えたいのは環境。会社のAI活用にも制約がある。ただ、環境が変わるのを待っているあいだに、自分の手札が増えていかない。その焦りの方が、環境そのものより重いのではないでしょうか。";
+    p2 = "変えたいのは環境。会社のAI活用にも制約がある。ただ、制約の中で作った実績は、環境に左右されない自分の手札になります。環境が整うのを待たずに、いまの裁量の範囲で始められることがある。そこに目が向いているのではないでしょうか。";
   } else if (p.wantValue) {
-    p2 = "変えたいのは、自分の市場価値。いまの会社での評価とは別に「外に出たとき、自分は何者か」を確かめたい気持ちがある。" + (p.outUnsorted ? "実績はある。整理されていないだけです。" : "その答えは、これから作る実績の中にあります。");
+    p2 = "変えたいのは、自分の市場価値。いまの会社での評価とは別に「外に出たとき、自分は何者か」を確かめたい気持ちがある。" + (p.outUnsorted ? "実績はすでにあります。あとは整理して見せる形にするだけです。" : "その答えは、これから作る実績の中にあります。作れる位置に、すでにいます。");
   } else if (p.lifeNo || p.life10) {
-    p2 = "いまの働き方を「ずっと続けられる」とは思っていない。ただ、それを口に出す場面はほとんどないはずです。目の前の仕事は回っている。だからこそ、この問いは後回しにされ続ける。後回しにした分だけ、選択肢は静かに減っていきます。";
+    p2 = "いまの働き方を「ずっと続ける」とは考えていない。目の前の仕事は回っているからこそ、この問いは後回しになりやすい。ただ、こうして診断を受けている時点で、すでに向き合い始めています。その一歩が、いちばん大きい一歩です。";
   } else if (p.wantPrep) {
-    p2 = "いま大きく困っているわけではない。ただ「備えておきたい」と感じている。この感覚を持てていること自体が、実は少数派です。多くの人は必要に迫られてから慌てて動きます。あなたはその前に動ける位置にいます。";
+    p2 = "いま大きく困っているわけではない。ただ「備えておきたい」と感じている。この感覚を持てていること自体が、実は少数派です。多くの人は必要に迫られてから動きます。あなたはその前に動ける位置にいます。";
   } else if (p.roleAssigned || p.roleWill) {
-    p2 = "推進する側に立とうとしている。そして、自分がAIを使えることと、組織で成果を出すことがまったく別の仕事だということも、すでに感じ始めているはずです。全部自分で検証しようとして時間が溶ける。そこが最初の分かれ目です。";
+    p2 = "推進する側に立とうとしている。自分がAIを使えることと、組織で成果を出すことは別の仕事だということも、すでに感じ始めているのではないでしょうか。その感覚がある人ほど、任せる・判断する・展開するの切り分けが早く身につきます。";
   } else {
-    p2 = "「" + esc(p.year1 || "いまより一歩先の状態") + "」。その姿を思い描く一方で、何から手をつければ届くのかが見えていない。意欲の問題ではなく、順番がまだ設計されていないだけです。";
+    p2 = "「" + esc(p.year1 || "いまより一歩先の状態") + "」。目指す姿が見えているのは、それだけで前提が整っているということです。あとは、そこへ届く順番を設計するだけです。";
   }
 
   /* P3 本人が気づいていない強み（最も高い軸＋立ち位置） */
@@ -585,44 +590,46 @@ function buildMessage(name, lv, stage, typeName, td, S, exits, ans){
   else if (p.roleAssigned) p3 += "推進を任されている（任されそう）というのは、周りがすでにその力を見ている、ということです。";
   else if (p.askGoal || p.askDesign) p3 += "AIへの頼み方が整理されているのは、AIの技術ではなく仕事の設計力です。ここは、教えても身につきにくい力です。";
   else if (p.leader) p3 += p.posLabel + "という立場で得てきた「現場を動かす感覚」は、AI活用をチームに広げるときにそのまま効きます。";
-  else if (p.outUnsorted || p.outYes) p3 += "外でも通用する実績を、すでに持っています。足りないのは実績ではなく、その見せ方です。";
+  else if (p.outUnsorted || p.outYes) p3 += "外でも通用する実績を、すでに持っています。あとは、その見せ方です。";
+  else if (p.alone || p.web) p3 += "相談相手がいない中でここまで進めてきた、調べる力と続ける力もあります。";
   else p3 += "ここを土台にすれば、次の力は積み上がります。";
 
-  /* P4 伸ばすべき力（積み上げ順の弱点2つ） */
+  /* P4 伸びしろ（積み上げ順の2つ） */
   var idx = [0,1,2,3,4];
   idx.sort(function(a,b){ return S[a] - S[b]; });
   var ax1 = idx[0], ax2 = idx[1];
-  var p4 = "いま伸ばすべきなのは、AIを「もっと使えるようになること」ではありません。<span class=\"gold\">「" + AXES[ax1] + "」</span>と<span class=\"gold\">「" + AXES[ax2] + "」</span>。" +
+  var p4 = "次に伸ばすと効くのは、AIを「もっと使えるようになること」ではありません。<span class=\"gold\">「" + AXES[ax1] + "」</span>と<span class=\"gold\">「" + AXES[ax2] + "」</span>。" +
     AX_MEAN_LOW[ax1] + "。" + esc(td.redefine);
 
-  /* P5 このまま1年／動き出した場合 */
-  var stay = p.evalNext ? "浮いた時間に次の仕事が乗り続け、忙しさだけが増える"
-           : p.evalSame ? "「使えるのに評価されない」期間が延びていく"
-           : p.aiFar || p.aiSome ? "AIとの距離が縮まらないまま、周りだけが先に進む"
-           : p.alone || p.web ? "独学で調べる時間ばかり増えて、形になるものが残らない"
-           : "いまの延長で、同じ景色が続く";
+  /* P5 90日で動いたとき、最初に変わること */
   var first = p.wantEval ? "評価面談で語れる材料が手元にできること"
-            : p.wantTime ? "浮いた時間が、次の仕事ではなく自分のために残ること"
+            : p.wantTime ? "浮いた時間が、自分のために残るようになること"
             : p.wantValue || p.hopeOuter ? "職務経歴書やプロフィールに書ける1行ができること"
             : p.wantEnv ? "環境に左右されない、自分の手札が1枚増えること"
             : p.wantPrep ? "「いざという時の名刺」が1枚できること"
             : "「何から始めるか」で迷わなくなること";
-  var p5 = "このまま1年が過ぎると、" + stay + "。" +
-    (p.lifeNo || p.life10 ? "そして「いつまで続けられるか」の問いだけが大きくなります。" : "") +
-    "逆に、90日で語れる実績を1本作ると、最初に変わるのは" + first + "です。";
+  var second = p.evalNext ? "浮いた時間の使い道を、自分で決められるようになります"
+             : p.evalSame ? "「使えている」が、周りに見える形になります"
+             : p.aiFar || p.aiSome ? "AIとの距離が、一気に縮まります"
+             : p.alone || p.web ? "調べる時間が、形になる時間に変わります"
+             : "次の一手が、自然に見えてきます";
+  var p5 = "90日で語れる実績を1本作ると、最初に変わるのは" + first + "です。そしてもう1つ、" + second + "。" +
+    (p.lifeNo || p.life10 ? "「この先も続けられるか」という問いに、自分の手で答えを出せるようになります。" : "");
   if (WALL_MSG[p.wall]) p5 += WALL_MSG[p.wall];
 
   var kw = buildKeywords(p);
-  var html = '<p class="kw"><span>KEYWORDS</span>' + kw.map(function(k){ return "「" + esc(k) + "」"; }).join("") + '</p>';
-  html += "<p>" + p1 + "</p><p>" + p2 + "</p><p>" + p3 + "</p><p>" + p4 + "</p><p>" + p5 + "</p>";
-  return html;
+  var kwHtml = '<p class="kw"><span>KEYWORDS</span>' + kw.map(function(k){ return "「" + esc(k) + "」"; }).join("") + '</p>';
+  return {
+    top: kwHtml + "<p>" + p1 + "</p><p>" + p2 + "</p><p>" + p3 + "</p>",
+    rest: "<p>" + p4 + "</p><p>" + p5 + "</p>"
+  };
 }
 
-/* 2枚目：6つの力の読み解き */
+/* 6つの力の読み解き */
 function buildAxisReading(p, stackWeak){
-  return "<b>いちばん高いのは「" + AXES[p.top] + "」（" + p.S[p.top].toFixed(1) + "）。</b>" + AX_MEAN_HIGH[p.top] + "。" +
-    "<b>いちばん低いのは「" + AXES[p.low] + "」（" + p.S[p.low].toFixed(1) + "）。</b>" + AX_MEAN_LOW[p.low] + "。<br>" +
-    "<b>FOCUS｜いま積み上げるべき力：「" + AXES[stackWeak] + "」。</b>AIをキャリアに変える力は、設計力 → AI活用 → 実装 → 巻き込みの順で積み上がります。下の力が抜けたまま進むと「単発の便利」で止まります。";
+  return "<b>いちばん高いのは「" + AXES[p.top] + "」（" + p.S[p.top].toFixed(1) + "）。</b>" + AX_MEAN_HIGH[p.top] + "。<br>" +
+    "<b>いちばん伸びしろがあるのは「" + AXES[p.low] + "」（" + p.S[p.low].toFixed(1) + "）。</b>" + AX_MEAN_LOW[p.low] + "。<br>" +
+    "<b>FOCUS｜次に積み上げる力：「" + AXES[stackWeak] + "」。</b>AIをキャリアに変える力は、設計力 → AI活用 → 実装 → 巻き込みの順で積み上がります。この順番で積むほど、同じ努力が大きな成果になります。";
 }
 
 /* 2枚目：出口ごとの「あなたの場合」 */
@@ -642,27 +649,27 @@ function buildExitReason(p, exitName, rank){
 /* 3枚目：あなたの場合、こう出やすい（回答から3つ） */
 function buildPersonalBullets(p){
   var c = [];
-  if (p.alone || p.web) c.push({w:10, t:"相談相手がいない中で、独学で進めてきたはずです。調べる力はある。ただ「これで合っているのか」の確認が取れず、途中で止まりやすい。止まるのは意志ではなく、確認相手がいないからです。"});
-  if (p.t15) c.push({w:9, t:"使える時間は1日15分ほど。まとまった時間を待つと、永遠に始まりません。15分で終わる単位に業務を切り分けるのが、あなたに向いた設計です。"});
-  if (p.t10h) c.push({w:7, t:"時間は作れる方です。落とし穴はむしろ、手を広げすぎて1本に絞れないこと。90日は「1つの業務・1つの成果」に絞るほど、結果が大きくなります。"});
-  if (p.envLimit) c.push({w:9, t:"会社のAI環境に制約があります。全社を変えようとせず、自分の裁量で完結する業務から始めるのが現実的です。制約の中で作った実績は、むしろ再現性の証明になります。"});
-  if (p.askRaw) c.push({w:8, t:"AIには、思いついたことをそのまま聞いている。出力の質が安定しないのは、AIの限界ではなく頼み方の設計がまだないからです。ここがいちばん早く伸びる部分です。"});
-  if (p.askUnknown) c.push({w:8, t:"「そもそも何を頼めるのか」が見えていない段階。だからこそ、AIの勉強から入らず、毎日やっている業務を1つ選んで当てると、一気に距離が縮まります。"});
-  if (p.askGoal || p.askDesign) c.push({w:6, t:"AIへの頼み方は、すでに整理できています。次の課題は「どの業務をフローごと変えるか」の選定。使い方ではなく、対象業務の選び方で差がつきます。"});
-  if (p.roleAssigned || p.roleWill) c.push({w:8, t:"推進する立場にいる（立とうとしている）。自分で全部検証する時間はありません。任せる業務・判断する業務・展開する業務を先に切り分けるのが、最優先です。"});
-  if (p.outUnsorted) c.push({w:7, t:"実績はある。外向けに整理できていないだけです。「どの業務を、どれくらい変えたか」を数字で言葉にすれば、市場価値は一段上がります。"});
+  if (p.alone || p.web) c.push({w:10, t:"相談相手がいない中で、独学でここまで進めてきました。調べる力と続ける力は、すでにあります。あとは「この順番で合っているか」を確かめられる相手が1人いれば、止まらずに進めます。"});
+  if (p.t15) c.push({w:9, t:"使える時間は1日15分ほど。15分で終わる単位に業務を切り分ける設計が、あなたにいちばん合っています。まとまった時間がなくても、順番が正しければ90日で形になります。"});
+  if (p.t10h) c.push({w:7, t:"時間は作れる方です。だからこそ「1つの業務・1つの成果」に絞るほど、結果が大きくなります。手を広げるより、1本を磨く方が遠くまで届きます。"});
+  if (p.envLimit) c.push({w:9, t:"会社のAI環境に制約があります。自分の裁量で完結する業務から始めるのが、いちばん現実的で、いちばん速い。制約の中で作った実績は、再現性の証明として外でも通用します。"});
+  if (p.askRaw) c.push({w:8, t:"AIには、思いついたことをそのまま聞いている。ここに「目的と条件を整理してから頼む」型が加わると、出力の質が一気に安定します。いちばん早く伸びる部分です。"});
+  if (p.askUnknown) c.push({w:8, t:"「そもそも何を頼めるのか」を、これから見つける段階。AIの勉強から入らず、毎日やっている業務を1つ選んで当ててみると、一気に距離が縮まります。"});
+  if (p.askGoal || p.askDesign) c.push({w:6, t:"AIへの頼み方は、すでに整理できています。次は「どの業務をフローごと変えるか」の選定。使い方ではなく、対象業務の選び方で差がつく段階です。"});
+  if (p.roleAssigned || p.roleWill) c.push({w:8, t:"推進する立場にいる（立とうとしている）。任せる業務・判断する業務・展開する業務を先に切り分けると、自分で全部検証しなくても組織が動き始めます。"});
+  if (p.outUnsorted) c.push({w:7, t:"実績はすでにあります。外向けに整理すれば、そのまま市場価値になります。「どの業務を、どれくらい変えたか」を数字で言葉にするだけです。"});
   if (p.sotoMoving) c.push({w:6, t:"すでに社外へ動き始めています。本業の実績を「外の言葉」に変換する工程を先に置くと、動きが一気に速くなります。"});
-  if (p.wallConf) c.push({w:7, t:"「続けられるか」の不安が先に立つタイプです。ただ、これまで新しい仕事や資格を身につけたときも、最初は同じだったはずです。自信は、始める前には生まれません。"});
-  if (p.wallWhat) c.push({w:7, t:"「何から手をつけるか」で止まりやすい。これは才能ではなく順番の問題です。順番が決まると、迷いは消えます。"});
-  if (p.wallProof) c.push({w:6, t:"「語れる実績がない」と感じている。いまなくて当然です。実績はこれから作るもので、90日あれば最初の1本は作れます。"});
-  if (p.evalNext) c.push({w:8, t:"AIで速くなった分、次の仕事が乗っている。頑張るほど忙しくなる構造の中にいます。浮いた時間を「実績づくり」に確保する設計がないと、この構造は続きます。"});
-  if (p.aiFar) c.push({w:6, t:"AIとの距離はまだ遠い。だからこそ、学習からではなく自分の業務1つから始めると、最初の1ヶ月で景色が変わります。"});
-  if (p.lifeNo || p.life10) c.push({w:5, t:"「いつまで続けられるか」という問いを持っている。備えは、必要になってからでは間に合いません。小さくても外に見せられる実績が、そのまま選択肢になります。"});
-  if (p.fewPeers) c.push({w:4, t:"聞ける同僚・知人が少しいる。それでも「この順番で合っているか」を確かめられる相手は別に必要です。相談相手と伴走者は、役割が違います。"});
+  if (p.wallConf) c.push({w:7, t:"「続けられるか」が気になるタイプ。これまで新しい仕事や資格を身につけたときも、最初は同じだったのではないでしょうか。自信は、始めてから育つものです。"});
+  if (p.wallWhat) c.push({w:7, t:"「何から手をつけるか」が決まると、一気に動ける人です。これは才能ではなく順番の問題で、順番は設計で決められます。"});
+  if (p.wallProof) c.push({w:6, t:"「語れる実績」は、これから作るものです。いまなくて当然で、90日あれば最初の1本は作れます。"});
+  if (p.evalNext) c.push({w:8, t:"AIで速くなった分、次の仕事が乗っている。浮いた時間の一部を「実績づくり」に確保する設計ができると、同じ忙しさが評価に変わり始めます。"});
+  if (p.aiFar) c.push({w:6, t:"AIとの距離はまだ遠い。だからこそ伸びしろが大きく、自分の業務1つから始めると、最初の1ヶ月で景色が変わります。"});
+  if (p.lifeNo || p.life10) c.push({w:5, t:"「この先も続けられるか」という問いを持っている。小さくても外に見せられる実績が1本あると、その問いに自分で答えられるようになります。"});
+  if (p.fewPeers) c.push({w:4, t:"聞ける同僚・知人がいます。それに加えて「この順番で合っているか」を確かめられる相手がいると、さらに速くなります。"});
   c.sort(function(a,b){ return b.w - a.w; });
   var out = [];
   for (var i = 0; i < c.length && out.length < 3; i++) out.push(c[i].t);
-  while (out.length < 3) out.push(["あれこれ手を広げるより、「どの業務を、どれくらい改善したか」を語れる1本を作る方が、結果として遠くまで届きます。","勉強を増やすより、毎日やっている業務にAIを当てる方が、最短で成果になります。","成果は「なんとなく楽になった」で止めず、数字で残す。ここで実績になるかどうかが分かれます。"][out.length]);
+  while (out.length < 3) out.push(["あれこれ手を広げるより、「どの業務を、どれくらい改善したか」を語れる1本を作る方が、結果として遠くまで届きます。","勉強を増やすより、毎日やっている業務にAIを当てる方が、最短で成果になります。","成果は「なんとなく楽になった」で止めず、数字で残す。ここで実績になります。"][out.length]);
   return out;
 }
 
@@ -754,7 +761,7 @@ function openReport(rowNum){
   var closingHtml = buildClosing(name, prof);
 
   var dateStr = String(r[0] || "").split(" ")[0];
-  var msgHtml = buildMessage(name, lv, stage, typeName, td, S, exits, ans);
+  var msg = buildMessage(name, lv, stage, typeName, td, S, exits, ans);
   var nmShort = esc(name) + 'さん｜' + esc(typeName);
 
   /* ---------- 1枚目：表紙＋総合診断 ---------- */
@@ -776,21 +783,21 @@ function openReport(rowNum){
     '</div>' +
     '<div class="cv-body">' +
       '<p class="rp-k">DIAGNOSIS MESSAGE</p><p class="rp-h">' + esc(name) + 'さんへの総合診断</p>' +
-      '<div class="rp-msg">' + msgHtml + '</div>' +
+      '<div class="rp-msg">' + msg.top + '</div>' +
     '</div>' +
     '<span class="pgnum">LEVANCE AI CAREER REPORT｜1 / 4</span>' +
     '</div>';
 
-  /* ---------- 2枚目：スキルバランス ---------- */
+  /* ---------- 2枚目：6つの力＋総合診断つづき＋出口 ---------- */
   var page2 =
     '<div class="a4">' +
-    '<div class="pg-head"><p class="t"><span>SKILL BALANCE</span>6つの力のバランス</p>' +
+    '<div class="pg-head"><p class="t"><span>SKILL BALANCE</span>6つの力と、これから</p>' +
     '<span class="nm">' + nmShort + '</span></div>' +
     '<div class="pg-body">' +
       '<div class="rp-radarwrap">' + radarSVG(S) + '</div>' +
-      '<div class="rp-bars">' + barsHtml + '</div>' +
       '<div class="rp-focus">' + buildAxisReading(prof, stackWeak) + '</div>' +
-      '<div class="rp-sec" style="margin-top:12px"><p class="rp-k">CAREER EXITS</p><p class="rp-h">狙いやすい出口 トップ3</p>' + exitsHtml + '</div>' +
+      '<div class="rp-msg cont">' + msg.rest + '</div>' +
+      '<div class="rp-sec" style="margin-top:10px"><p class="rp-k">CAREER EXITS</p><p class="rp-h">狙いやすい出口 トップ3</p>' + exitsHtml + '</div>' +
     '</div>' +
     '<span class="pgnum">LEVANCE AI CAREER REPORT｜2 / 4</span>' +
     '</div>';

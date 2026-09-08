@@ -1,5 +1,6 @@
 <!doctype html>
 <!-- 最終更新 2026.9.8 -->
+<!-- 2026-09-08 レポート本文を本人の回答から生成する「言い当て」型に刷新（KEYWORDS／5段落の総合診断／6つの力の読み解き／出口ごとの理由／あなたの場合こう出やすい／本人向け90日／LAST WORDS） -->
 <!-- 4タイプ別 AIレベル＆キャリアタイプ診断（旧v2）レポート管理ページ（運営専用・非公開運用） -->
 <!-- 正本。公開は repo saori421/ai-career-shindan に levance-shindan-report-v2.html としてコピーしてpush（2026-09-08〜。v3公開に伴い退避） -->
 <!-- 旧診断v2（〜2026-09-07）の回答＝記録シートのタブ「シート1」専用。旧Chatwork通知のリンク #row= はこのページで開く。現行v3は levance-shindan-report -->
@@ -114,15 +115,15 @@ body{
 .cv-typebar .lb{font-size:11.5px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
 .cv-typebar .tn{font-size:27px;font-weight:900;margin-top:1px}
 .cv-typebar .tt{font-size:14.5px;color:#C6D2E2;margin-top:1px}
-.cv-body{padding:16px 44px 0;flex:1 1 auto;min-height:0}
+.cv-body{padding:12px 44px 0;flex:1 1 auto;min-height:0}
 
 .rp-k{font-size:13px;letter-spacing:.2em;color:var(--gold-deep);font-weight:700;margin-bottom:5px}
 .rp-h{font-size:22px;font-weight:900;color:var(--navy);border-left:4px solid var(--gold);padding-left:12px;margin-bottom:11px;line-height:1.45}
 .rp-msg{
   border:1px solid var(--gold-soft);border-radius:12px;background:#FDFBF5;
-  padding:16px 20px;
+  padding:12px 18px;
 }
-.rp-msg p{font-size:17px;line-height:1.8;color:#26313E;margin-bottom:10px}
+.rp-msg p{font-size:14.6px;line-height:1.66;color:#26313E;margin-bottom:6px}
 .rp-msg p:last-child{margin-bottom:0}
 .rp-msg b{color:var(--navy)}
 .rp-msg .gold{color:var(--gold-deep);font-weight:700}
@@ -139,14 +140,14 @@ body{
 .rp-sec{margin-bottom:17px}
 
 /* 2枚目：スキルバランス */
-.rp-radarwrap{text-align:center;margin:0 0 4px}
-.rp-bars .br{display:flex;align-items:center;gap:14px;padding:3px 0}
-.rp-bars .bn{flex:0 0 116px;font-size:18px;font-weight:700;color:var(--navy)}
-.rp-bars .bt{flex:1;height:13px;background:#EDF1F6;border-radius:7px;overflow:hidden}
+.rp-radarwrap{text-align:center;margin:-6px 0 0}
+.rp-bars .br{display:flex;align-items:center;gap:14px;padding:1.5px 0}
+.rp-bars .bn{flex:0 0 116px;font-size:16px;font-weight:700;color:var(--navy)}
+.rp-bars .bt{flex:1;height:11px;background:#EDF1F6;border-radius:7px;overflow:hidden}
 .rp-bars .bt i{display:block;height:100%;background:linear-gradient(90deg,var(--navy2),var(--navy3));border-radius:7px}
 .rp-bars .br.weak .bt i{background:linear-gradient(90deg,var(--gold-deep),var(--gold))}
-.rp-bars .bv{flex:0 0 46px;text-align:right;font-size:18px;font-weight:900;color:var(--navy)}
-.rp-focus{border:1px solid var(--gold-soft);background:#FCF9F0;border-radius:12px;padding:13px 18px;font-size:16.3px;line-height:1.75;margin-top:10px}
+.rp-bars .bv{flex:0 0 46px;text-align:right;font-size:16px;font-weight:900;color:var(--navy)}
+.rp-focus{border:1px solid var(--gold-soft);background:#FCF9F0;border-radius:12px;padding:10px 16px;font-size:14.4px;line-height:1.65;margin-top:8px}
 .rp-focus b{color:var(--navy)}
 
 /* 3枚目：タイプ */
@@ -155,43 +156,48 @@ body{
 .rp-list{list-style:none}
 .rp-list li{position:relative;padding:4px 0 4px 26px;font-size:16.8px;line-height:1.65}
 .rp-list li::before{content:"";position:absolute;left:2px;top:14px;width:9px;height:9px;border:2px solid var(--gold);border-radius:50%}
-.rp-mind{border:1px solid var(--line);border-radius:12px;padding:13px 18px;margin-bottom:9px;background:#FBFCFE}
+.rp-mind{border:1px solid var(--line);border-radius:12px;padding:11px 18px;margin-bottom:7px;background:#FBFCFE}
 .rp-mind .mh{font-size:17.8px;font-weight:900;color:var(--navy);line-height:1.5}
 .rp-mind .mh::before{content:attr(data-n);color:var(--gold-deep);font-size:13px;margin-right:9px;letter-spacing:.08em}
 .rp-mind p{font-size:15.3px;color:#3D4B5C;margin-top:4px;line-height:1.7}
 
 /* 4枚目：出口・90日・CTA */
 .rp-exit{
-  border:1px solid var(--line);border-radius:12px;padding:7px 14px;background:#FBFCFE;
-  margin-bottom:6px;display:flex;align-items:center;gap:12px;
+  border:1px solid var(--line);border-radius:12px;padding:5px 12px;background:#FBFCFE;
+  margin-bottom:5px;display:flex;align-items:center;gap:12px;
 }
 .rp-exit.first{border:1.5px solid var(--gold);background:#FFFDF6}
 .rp-exit .rk{flex:0 0 auto;font-size:12px;font-weight:900;letter-spacing:.05em;color:var(--navy2);border:1px solid var(--navy2);border-radius:4px;padding:3px 10px}
 .rp-exit.first .rk{background:var(--navy);color:var(--gold-soft);border-color:var(--navy)}
-.rp-exit .en{font-size:18px;font-weight:900;color:var(--navy);line-height:1.5}
-.rp-rstep{border:1px solid var(--line);border-radius:12px;padding:14px 18px;background:#FBFCFE;margin-bottom:10px}
+.rp-exit .en{font-size:17px;font-weight:900;color:var(--navy);line-height:1.45}
+.rp-exit .why{font-size:12.8px;color:#3D4B5C;line-height:1.45;margin-top:1px}
+.rp-msg .kw{font-size:14.5px;color:var(--navy);font-weight:700;margin-bottom:10px;padding-bottom:8px;border-bottom:1px dashed var(--gold-soft)}
+.rp-msg .kw span{font-size:11px;letter-spacing:.22em;color:var(--gold-deep);margin-right:10px}
+.rp-closing{margin-top:10px;border-left:4px solid var(--gold);background:#FCF9F0;padding:10px 16px;font-size:15.5px;line-height:1.65;color:var(--navy);font-weight:700}
+.rp-closing .ck{display:block;font-size:11px;letter-spacing:.24em;color:var(--gold-deep);font-weight:700;margin-bottom:4px}
+.rp-rstep{border:1px solid var(--line);border-radius:12px;padding:9px 16px;background:#FBFCFE;margin-bottom:7px}
 .rp-rstep .rm{font-size:12.5px;letter-spacing:.16em;color:var(--gold-deep);font-weight:700}
-.rp-rstep .rh{font-size:18.5px;font-weight:900;color:var(--navy);margin-top:2px;line-height:1.5}
-.rp-rstep p{font-size:15.5px;color:#3D4B5C;margin-top:3px;line-height:1.65}
-.rp-roadextra{margin-top:2px;background:#F2F6FB;border-radius:10px;padding:14px 18px;font-size:15.5px;color:#33455C;line-height:1.7}
+.rp-rstep .rh{font-size:17.5px;font-weight:900;color:var(--navy);margin-top:2px;line-height:1.5}
+.rp-rstep p{font-size:14.5px;color:#3D4B5C;margin-top:3px;line-height:1.6}
+.rp-roadextra{margin-top:2px;background:#F2F6FB;border-radius:10px;padding:10px 16px;font-size:14.5px;color:#33455C;line-height:1.6}
 
 .rp-cta{
   position:relative;margin-top:auto;flex:0 0 auto;
   background:linear-gradient(150deg,var(--navy) 0%,#123D63 100%);color:#fff;
-  padding:24px 44px 26px;overflow:hidden;
+  padding:16px 44px 16px;overflow:hidden;
 }
 .rp-cta-in{position:relative;z-index:2}
 .rp-cta .ck{font-size:13px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
-.rp-cta .ch{font-size:22.5px;font-weight:900;margin-top:6px;line-height:1.5}
+.rp-cta .ch{font-size:20px;font-weight:900;margin-top:4px;line-height:1.45}
 .rp-cta .ch span{color:var(--gold-soft)}
-.rp-cta .cp{font-size:15.5px;color:#DCE4EF;margin-top:9px;line-height:1.75}
+.rp-cta .cp{font-size:14px;color:#DCE4EF;margin-top:7px;line-height:1.65}
 .rp-cta .cp b{color:#fff}
-.rp-cta-meta{margin-top:13px;font-size:16.5px;color:#E4EAF3;font-weight:700}
+.rp-cta-meta{margin-top:9px;font-size:15px;color:#E4EAF3;font-weight:700}
 .rp-cta-meta span{color:var(--gold-soft)}
-.rp-cta-cap{font-size:14px;color:#C6D2E2;margin-top:5px}
-.rp-cta-link{margin-top:10px;font-size:14.5px;color:#DCE4EF}
+.rp-cta-cap{font-size:12.5px;color:#C6D2E2;margin-top:3px}
+.rp-cta-link{margin-top:7px;font-size:13.5px;color:#DCE4EF}
 .rp-cta-link a{color:var(--gold-soft);font-weight:700;text-decoration:none}
-.rp-cta .dis{font-size:11px;color:#8FA0B8;margin-top:12px;border-top:1px solid rgba(255,255,255,.14);padding-top:8px;line-height:1.55;max-width:66%}
+.rp-cta .dis{font-size:10.5px;color:#8FA0B8;margin-top:8px;border-top:1px solid rgba(255,255,255,.14);padding-top:6px;line-height:1.5;max-width:70%}
 
 /* ---------- 印刷 ---------- */
 @media print{
@@ -409,7 +415,7 @@ function radarSVG(S){
     var rr = R * val / 4;
     return [cx + rr * Math.cos(ang), cy + rr * Math.sin(ang)];
   }
-  var svg = '<svg width="640" height="400" viewBox="0 0 640 400" style="max-width:100%">';
+  var svg = '<svg width="520" height="325" viewBox="0 0 640 400" style="max-width:100%">';
   for (var ring = 1; ring <= 4; ring++) {
     var pts = [];
     for (var i = 0; i < n; i++) pts.push(pt(i, ring).join(","));
@@ -437,41 +443,260 @@ function radarSVG(S){
   return svg;
 }
 
-/* 総合診断メッセージの生成 */
-function buildMessage(name, lv, stage, typeName, td, S, exits, ans){
-  var q1 = ans[0] || "";
-  var q5 = ans[4] || "";
-  var q13 = ans[12] || "";
-  var q15 = ans[14] || "";
-  var q18 = ans[17] || "";
+/* =========================================================
+   本人の回答から「言い当て」を組み立てるプロファイル
+   ans: Q1職種 Q2立場 Q3AI距離 Q4変化 Q5評価 Q6頼み方 Q7環境 Q8立ち位置 Q9相談相手
+        Q10時間 Q11続けられる年数 Q12外で通用 Q13希望 Q14社外展開 Q15一年後 Q16変えたい Q17温度感 Q18壁
+========================================================= */
+function has(s, kw){ return String(s || "").indexOf(kw) >= 0; }
 
+function buildProfile(ans, S, lv, typeName){
+  var q = function(i){ return ans[i - 1] || ""; };
+  var p = {};
+  p.job = q(1); p.pos = q(2);
+  p.freelance = has(p.job, "フリーランス") || has(p.pos, "会社員ではない");
+  p.jobLabel = p.freelance ? "" : (p.job && p.job !== "その他" ? p.job.replace(/（.*?）/, "") : "");
+  p.posLabel = p.freelance ? "" : p.pos;
+  p.aiFar = has(q(3), "ほとんど"); p.aiSome = has(q(3), "たまに"); p.aiDaily = has(q(3), "日常的");
+  p.aiFlow = has(q(3), "フロー"); p.aiAuto = has(q(3), "自動化");
+  p.aiText = q(3);
+  p.noChange = has(q(4), "まだ変化"); p.faster = has(q(4), "速くなった"); p.quality = has(q(4), "質が上がった");
+  p.flowDone = has(q(4), "フローを1つ"); p.teamDone = has(q(4), "チーム");
+  p.evalNext = has(q(5), "次の仕事"); p.evalSame = has(q(5), "評価は変わらない");
+  p.evalRelied = has(q(5), "頼られる"); p.evalMoved = has(q(5), "実際に変わった"); p.evalNone = has(q(5), "実感はない");
+  p.askUnknown = has(q(6), "分からない"); p.askRaw = has(q(6), "そのまま"); p.askGoal = has(q(6), "整理して"); p.askDesign = has(q(6), "分解");
+  p.envLimit = has(q(7), "制約"); p.envSelf = has(q(7), "個人の判断"); p.envPart = has(q(7), "一部"); p.envAll = has(q(7), "全社");
+  p.roleNone = has(q(8), "関わっていない"); p.rolePersonal = has(q(8), "個人的"); p.roleAsked = has(q(8), "聞かれる");
+  p.roleAssigned = has(q(8), "任され"); p.roleWill = has(q(8), "旗を振り");
+  p.alone = has(q(9), "独学"); p.web = has(q(9), "ネット"); p.fewPeers = has(q(9), "少しいる"); p.mentor = has(q(9), "詳しい人");
+  p.t15 = has(q(10), "15分"); p.t60 = has(q(10), "30分"); p.t5h = has(q(10), "週5"); p.t10h = has(q(10), "週10");
+  p.lifeNo = has(q(11), "続けられる気はしない"); p.life10 = has(q(11), "10年後"); p.lifeDoubt = has(q(11), "このままでいいのか"); p.lifeOk = has(q(11), "特に不安");
+  p.outNo = has(q(12), "自信がない"); p.outVague = has(q(12), "言葉にできない"); p.outUnsorted = has(q(12), "整理できていない"); p.outYes = has(q(12), "通用する実績");
+  p.hope = q(13);
+  p.hopeExit = has(p.hope, "評価・役割") ? "昇進・昇給" : has(p.hope, "DX") ? "社内DXポジション確立" : has(p.hope, "異動") ? "社内異動・職種転換"
+             : has(p.hope, "転職") ? "転職" : has(p.hope, "副業") ? "副業" : has(p.hope, "独立") ? "フリーランス・起業" : "";
+  p.hopeOuter = has(p.hope, "転職") || has(p.hope, "副業") || has(p.hope, "独立");
+  p.sotoNo = has(q(14), "まったく"); p.sotoLow = has(q(14), "あまり"); p.sotoMid = has(q(14), "どちらとも");
+  p.sotoYes = has(q(14), "視野に入れている") && !has(q(14), "強く"); p.sotoMoving = has(q(14), "強く");
+  p.year1 = q(15);
+  p.wantEval = has(q(16), "評価"); p.wantTime = has(q(16), "働き方"); p.wantValue = has(q(16), "市場価値");
+  p.wantEnv = has(q(16), "環境"); p.wantPrep = has(q(16), "備えて");
+  p.honkiNow = has(q(17), "今すぐ"); p.honki3m = has(q(17), "1〜3"); p.honki6m = has(q(17), "半年"); p.honkiLater = has(q(17), "いずれ");
+  p.wall = q(18);
+  p.wallTime = has(p.wall, "時間"); p.wallWhat = has(p.wall, "何から"); p.wallProof = has(p.wall, "実績");
+  p.wallConf = has(p.wall, "自信"); p.wallAlone = has(p.wall, "相談");
+  p.leader = has(p.pos, "リーダー") || has(p.pos, "一歩手前") || has(p.pos, "課長");
+  p.manager = has(p.pos, "課長");
+  p.lv = lv; p.type = typeName; p.S = S;
+  var top = 0, low = 0;
+  for (var i = 1; i < 6; i++) { if (S[i] > S[top]) top = i; if (S[i] < S[low]) low = i; }
+  p.top = top; p.low = low;
+  return p;
+}
+
+var AX_MEAN_HIGH = [
+  "業務を分解して言葉にできる。AIの出力の質は頼み方で決まるので、これは土台そのもの",
+  "AIに触れる頻度が高い。手が動く人は、設計さえ加われば一気に成果へ変わる",
+  "個人の時短で終わらせず、業務の流れに組み込めている。ここまで来ている人は多くない",
+  "自分の業務の外に半歩出て、周囲を動かせている。これはAIスキルではなく信頼の力",
+  "成果を「どの業務をどれくらい変えたか」の言葉にできる。評価と単価を動かすのはこの力",
+  "続けられる環境と時間の設計ができている。伸びる人は、意志ではなく環境で続けている"
+];
+var AX_MEAN_LOW = [
+  "業務を分解して言語化する工程。ここが弱いと、AIの出力が安定せず「使えるのに成果にならない」が起きる",
+  "AIに触れる頻度。学習からではなく、毎日の業務の1作業から始めると最短で上がる",
+  "個人の時短を業務フローに組み込む力。「作業が速くなった」の一歩先に、実績になる領域がある",
+  "自分の業務の外に半歩出る力。チーム・周囲を動かした経験が、キャリアの階段になる",
+  "成果を評価の言葉に変換する力。ここが抜けると、成果は出ているのに報われない状態が続く",
+  "続けられる環境の力。独学の時間を減らし、相談できる相手を持つだけで遠回りが消える"
+];
+
+/* あなたを表す3つの言葉 */
+function buildKeywords(p){
+  var kw = [];
+  if (p.evalNext || p.evalSame) kw.push("使えているのに、報われていない");
+  else if (p.evalRelied) kw.push("周りが先に気づき始めている");
+  else if (p.evalMoved) kw.push("すでに評価が動き始めた人");
+  else if (p.aiFar || p.aiSome) kw.push("始める前の、静かな助走");
+  if (p.wantPrep || p.lifeNo || p.life10) kw.push("表には出さない、将来への問い");
+  else if (p.wantValue || (p.hopeOuter && (p.outNo || p.outVague))) kw.push("外に出たいのに、名刺がない");
+  else if (p.wantTime) kw.push("時間を取り戻したい");
+  else if (p.wantEnv) kw.push("環境が変わるのを待てない");
+  else if (p.wantEval) kw.push("評価と役割を、取りにいく");
+  if (p.alone || p.web) kw.push("独学で来た、確認相手のいない道");
+  else if (p.t15) kw.push("15分の積み上げが効く人");
+  else if (p.roleAssigned || p.roleWill) kw.push("組織を動かす側へ");
+  else if (p.askGoal || p.askDesign) kw.push("設計できる人");
+  else kw.push("実績1本で景色が変わる");
+  return kw.slice(0, 3);
+}
+
+/* 1枚目：総合診断（5段落） */
+function buildMessage(name, lv, stage, typeName, td, S, exits, ans){
+  var p = buildProfile(ans, S, lv, typeName);
+  var n = "<b>" + esc(name) + "さん</b>";
+
+  /* P1 現在地の言い当て（事実の反射） */
+  var where = "";
+  if (p.freelance) where = "会社に属さず働く";
+  else if (p.jobLabel && p.posLabel) where = p.jobLabel + "の現場で、" + p.posLabel + "として働く";
+  else if (p.jobLabel) where = p.jobLabel + "の現場で働く";
+  var ai = p.aiFar ? "AIとの距離はまだ遠く、これから触れていく段階"
+         : p.aiSome ? "AIは調べ物や文章づくりで、たまに使う程度"
+         : p.aiDaily ? "AIは資料作成や壁打ちで日常的に使っている"
+         : p.aiFlow ? "AIをすでに業務の一部のフローに組み込んでいる"
+         : p.aiAuto ? "自動化・仕組み化まで自分で作り込んでいる" : "AIと日々向き合っている";
+  var change = p.noChange ? "ただ、目に見える変化はまだ出ていない"
+             : p.faster ? "自分の作業が少し速くなった手応えはある"
+             : p.quality ? "成果物の質が上がった実感もある"
+             : p.flowDone ? "業務フローを1つ改善するところまで来ている"
+             : p.teamDone ? "チーム・部署の業務まで変えている" : "";
+  var emp = EMPATHY_BY_Q5[ans[4]] || "AIとの距離を、これからキャリアの力に変えていく位置にいます。";
+  if (p.evalNone && change) emp = "ただ、その変化がキャリアに効いている実感は、まだないはずです。多くの人がここから始めて、90日で景色を変えています。";
+  var p1 = where + n + "。" + ai + "。" + (change ? change + "。" : "") + emp;
+
+  /* P2 隠れた本音（2つの回答の組み合わせから、矛盾を言語化） */
+  var p2 = "";
+  if (p.hopeOuter && (p.outNo || p.outVague)) {
+    p2 = "「" + esc(p.hope) + "」。この気持ちと同時に、「外で通用すると言い切れない自分」も抱えている。動きたいのに、名刺になる実績がまだ言葉になっていない。この2つが同時にあるから、頭では分かっていても最初の一歩が重くなる。";
+  } else if ((p.evalNext || p.evalSame) && p.wantEval) {
+    p2 = "いちばん変えたいのは、評価と役割。AIを使えているのに、そこが動かない。この「使えているのに報われない」状態が、実は一番消耗します。努力が足りないのではなく、成果が「評価される言葉」に変換されていないだけ、という可能性が高いです。";
+  } else if ((p.lifeNo || p.life10) && p.wantPrep) {
+    p2 = "表向きは、大きな不満があるわけではないはずです。ただ「この働き方をあと何年続けられるか」という問いが、消えずに残っている。人に話すほどではない。けれど、ふとした瞬間に戻ってくる。心当たりがあるのではないでしょうか。";
+  } else if (p.wantTime && (p.t15 || p.t60)) {
+    p2 = "変えたいのは働き方と時間。使える時間は" + (p.t15 ? "1日15分ほど" : "1日1時間まで") + "。時間がないから動けないのではなく、時間がないからこそ変えたい。この順番のはずです。だから、まとまった時間を待つ設計では始まりません。";
+  } else if (p.wantEnv && p.envLimit) {
+    p2 = "変えたいのは環境。会社のAI活用にも制約がある。ただ、環境が変わるのを待っているあいだに、自分の手札が増えていかない。その焦りの方が、環境そのものより重いのではないでしょうか。";
+  } else if (p.wantValue) {
+    p2 = "変えたいのは、自分の市場価値。いまの会社での評価とは別に「外に出たとき、自分は何者か」を確かめたい気持ちがある。" + (p.outUnsorted ? "実績はある。整理されていないだけです。" : "その答えは、これから作る実績の中にあります。");
+  } else if (p.lifeNo || p.life10) {
+    p2 = "いまの働き方を「ずっと続けられる」とは思っていない。ただ、それを口に出す場面はほとんどないはずです。目の前の仕事は回っている。だからこそ、この問いは後回しにされ続ける。後回しにした分だけ、選択肢は静かに減っていきます。";
+  } else if (p.wantPrep) {
+    p2 = "いま大きく困っているわけではない。ただ「備えておきたい」と感じている。この感覚を持てていること自体が、実は少数派です。多くの人は必要に迫られてから慌てて動きます。あなたはその前に動ける位置にいます。";
+  } else if (p.roleAssigned || p.roleWill) {
+    p2 = "推進する側に立とうとしている。そして、自分がAIを使えることと、組織で成果を出すことがまったく別の仕事だということも、すでに感じ始めているはずです。全部自分で検証しようとして時間が溶ける。そこが最初の分かれ目です。";
+  } else {
+    p2 = "「" + esc(p.year1 || "いまより一歩先の状態") + "」。その姿を思い描く一方で、何から手をつければ届くのかが見えていない。意欲の問題ではなく、順番がまだ設計されていないだけです。";
+  }
+
+  /* P3 本人が気づいていない強み（最も高い軸＋立ち位置） */
+  var p3 = "本人が思っているより評価できるのは<span class=\"gold\">「" + AXES[p.top] + "」</span>です。" + AX_MEAN_HIGH[p.top] + "。";
+  if (p.roleAsked) p3 += "周囲からAIについて聞かれることが増えているのは、その証拠です。周りは「AIならこの人」と見始めています。本人が思うより早く。";
+  else if (p.roleAssigned) p3 += "推進を任されている（任されそう）というのは、周りがすでにその力を見ている、ということです。";
+  else if (p.askGoal || p.askDesign) p3 += "AIへの頼み方が整理されているのは、AIの技術ではなく仕事の設計力です。ここは、教えても身につきにくい力です。";
+  else if (p.leader) p3 += p.posLabel + "という立場で得てきた「現場を動かす感覚」は、AI活用をチームに広げるときにそのまま効きます。";
+  else if (p.outUnsorted || p.outYes) p3 += "外でも通用する実績を、すでに持っています。足りないのは実績ではなく、その見せ方です。";
+  else p3 += "ここを土台にすれば、次の力は積み上がります。";
+
+  /* P4 伸ばすべき力（積み上げ順の弱点2つ） */
   var idx = [0,1,2,3,4];
   idx.sort(function(a,b){ return S[a] - S[b]; });
   var ax1 = idx[0], ax2 = idx[1];
+  var p4 = "いま伸ばすべきなのは、AIを「もっと使えるようになること」ではありません。<span class=\"gold\">「" + AXES[ax1] + "」</span>と<span class=\"gold\">「" + AXES[ax2] + "」</span>。" +
+    AX_MEAN_LOW[ax1] + "。" + esc(td.redefine);
 
-  var jobPrefix = "";
-  if (q1 && q1.indexOf("フリーランス") >= 0) jobPrefix = "フリーランスとして働く";
-  else if (q1 && q1 !== "その他") jobPrefix = q1 + "の現場でAIと向き合う";
+  /* P5 このまま1年／動き出した場合 */
+  var stay = p.evalNext ? "浮いた時間に次の仕事が乗り続け、忙しさだけが増える"
+           : p.evalSame ? "「使えるのに評価されない」期間が延びていく"
+           : p.aiFar || p.aiSome ? "AIとの距離が縮まらないまま、周りだけが先に進む"
+           : p.alone || p.web ? "独学で調べる時間ばかり増えて、形になるものが残らない"
+           : "いまの延長で、同じ景色が続く";
+  var first = p.wantEval ? "評価面談で語れる材料が手元にできること"
+            : p.wantTime ? "浮いた時間が、次の仕事ではなく自分のために残ること"
+            : p.wantValue || p.hopeOuter ? "職務経歴書やプロフィールに書ける1行ができること"
+            : p.wantEnv ? "環境に左右されない、自分の手札が1枚増えること"
+            : p.wantPrep ? "「いざという時の名刺」が1枚できること"
+            : "「何から始めるか」で迷わなくなること";
+  var p5 = "このまま1年が過ぎると、" + stay + "。" +
+    (p.lifeNo || p.life10 ? "そして「いつまで続けられるか」の問いだけが大きくなります。" : "") +
+    "逆に、90日で語れる実績を1本作ると、最初に変わるのは" + first + "です。";
+  if (WALL_MSG[p.wall]) p5 += WALL_MSG[p.wall];
 
-  var p1 = jobPrefix + "<b>" + esc(name) + "さん</b>は現在、<b>Lv." + lv + "「" + esc(stage) + "」</b>。" +
-    (EMPATHY_BY_Q5[q5] || "AIとの距離を、これからキャリアの力に変えていく位置にいます。");
-
-  var p2 = "この診断結果から、いま" + esc(name) + "さんが伸ばすべきなのは、AIを“もっと使えるようになること”ではありません。" +
-    "伸ばすべきは<span class=\"gold\">「" + AXES[ax1] + "」</span>（" + AX_SUB[ax1] + "）、" +
-    "そして<span class=\"gold\">「" + AXES[ax2] + "」</span>（" + AX_SUB[ax2] + "）。" +
-    esc(td.redefine);
-
-  var p3 = "";
-  if (q13) p3 += "「<b>" + esc(q13) + "</b>」。この希望への最短の道は、出口でいえば<b>「" + esc(exits[0] || "") + "」</b>です。";
-  else p3 += "最短の道は、出口でいえば<b>「" + esc(exits[0] || "") + "」</b>です。";
-  p3 += "「" + AXES[ax1] + "」を軸に、90日で“語れる実績”を1本作ること。";
-  p3 += "それが、" + (q15 ? "「" + esc(q15) + "」という状態" : "理想とするキャリア") + "へ向かう、確かな一歩目になります。";
-
-  var p4 = WALL_MSG[q18] || "";
-
-  var html = "<p>" + p1 + "</p><p>" + p2 + "</p><p>" + p3 + "</p>";
-  if (p4) html += "<p>" + p4 + "</p>";
+  var kw = buildKeywords(p);
+  var html = '<p class="kw"><span>KEYWORDS</span>' + kw.map(function(k){ return "「" + esc(k) + "」"; }).join("") + '</p>';
+  html += "<p>" + p1 + "</p><p>" + p2 + "</p><p>" + p3 + "</p><p>" + p4 + "</p><p>" + p5 + "</p>";
   return html;
+}
+
+/* 2枚目：6つの力の読み解き */
+function buildAxisReading(p, stackWeak){
+  return "<b>いちばん高いのは「" + AXES[p.top] + "」（" + p.S[p.top].toFixed(1) + "）。</b>" + AX_MEAN_HIGH[p.top] + "。" +
+    "<b>いちばん低いのは「" + AXES[p.low] + "」（" + p.S[p.low].toFixed(1) + "）。</b>" + AX_MEAN_LOW[p.low] + "。<br>" +
+    "<b>FOCUS｜いま積み上げるべき力：「" + AXES[stackWeak] + "」。</b>AIをキャリアに変える力は、設計力 → AI活用 → 実装 → 巻き込みの順で積み上がります。下の力が抜けたまま進むと「単発の便利」で止まります。";
+}
+
+/* 2枚目：出口ごとの「あなたの場合」 */
+function buildExitReason(p, exitName, rank){
+  var inner = has(exitName, "昇進") || has(exitName, "DX") || has(exitName, "異動");
+  if (exitName === p.hopeExit) return "ご希望と一致。いちばん近いルートです";
+  if (has(exitName, "昇進")) return p.evalRelied || p.evalMoved ? "すでに周囲の評価が動いているので、次の評価面談が勝負どころ" : "いまの業務の実績を評価の言葉に変えれば、地続きで狙えます";
+  if (has(exitName, "DX")) return p.roleAsked || p.roleAssigned ? "周囲から聞かれる・任される立場を、正式なポジションに変える段階" : "「AIならこの人」という社内認知を作るところから";
+  if (has(exitName, "異動")) return "いまの職種の実績を、移りたい先でも再現できる形にすれば動きます";
+  if (has(exitName, "転職")) return p.outUnsorted || p.outYes ? "実績はある。職務経歴書に書ける形に整えれば、市場価値は一段上がります" : "まず90日で、職務経歴書に書ける1本を作るのが現実的な準備";
+  if (has(exitName, "副業")) return p.sotoYes || p.sotoMoving ? "社外展開を視野に入れている強みが、そのまま活きます" : "本業の実績を、社外の人にも伝わる言葉にしてから";
+  if (has(exitName, "フリーランス")) return p.freelance ? "すでに外で働いている。AI実績を値付けの根拠にする段階" : "小さな副業で外の実績を作ってから、が現実的な順番";
+  if (has(exitName, "ベンチャー")) return p.manager ? "影響範囲を持つ立場なので、チーム規模の成果が揃えば視野に入ります" : "チーム単位で成果を出す経験を積んでから";
+  return "";
+}
+
+/* 3枚目：あなたの場合、こう出やすい（回答から3つ） */
+function buildPersonalBullets(p){
+  var c = [];
+  if (p.alone || p.web) c.push({w:10, t:"相談相手がいない中で、独学で進めてきたはずです。調べる力はある。ただ「これで合っているのか」の確認が取れず、途中で止まりやすい。止まるのは意志ではなく、確認相手がいないからです。"});
+  if (p.t15) c.push({w:9, t:"使える時間は1日15分ほど。まとまった時間を待つと、永遠に始まりません。15分で終わる単位に業務を切り分けるのが、あなたに向いた設計です。"});
+  if (p.t10h) c.push({w:7, t:"時間は作れる方です。落とし穴はむしろ、手を広げすぎて1本に絞れないこと。90日は「1つの業務・1つの成果」に絞るほど、結果が大きくなります。"});
+  if (p.envLimit) c.push({w:9, t:"会社のAI環境に制約があります。全社を変えようとせず、自分の裁量で完結する業務から始めるのが現実的です。制約の中で作った実績は、むしろ再現性の証明になります。"});
+  if (p.askRaw) c.push({w:8, t:"AIには、思いついたことをそのまま聞いている。出力の質が安定しないのは、AIの限界ではなく頼み方の設計がまだないからです。ここがいちばん早く伸びる部分です。"});
+  if (p.askUnknown) c.push({w:8, t:"「そもそも何を頼めるのか」が見えていない段階。だからこそ、AIの勉強から入らず、毎日やっている業務を1つ選んで当てると、一気に距離が縮まります。"});
+  if (p.askGoal || p.askDesign) c.push({w:6, t:"AIへの頼み方は、すでに整理できています。次の課題は「どの業務をフローごと変えるか」の選定。使い方ではなく、対象業務の選び方で差がつきます。"});
+  if (p.roleAssigned || p.roleWill) c.push({w:8, t:"推進する立場にいる（立とうとしている）。自分で全部検証する時間はありません。任せる業務・判断する業務・展開する業務を先に切り分けるのが、最優先です。"});
+  if (p.outUnsorted) c.push({w:7, t:"実績はある。外向けに整理できていないだけです。「どの業務を、どれくらい変えたか」を数字で言葉にすれば、市場価値は一段上がります。"});
+  if (p.sotoMoving) c.push({w:6, t:"すでに社外へ動き始めています。本業の実績を「外の言葉」に変換する工程を先に置くと、動きが一気に速くなります。"});
+  if (p.wallConf) c.push({w:7, t:"「続けられるか」の不安が先に立つタイプです。ただ、これまで新しい仕事や資格を身につけたときも、最初は同じだったはずです。自信は、始める前には生まれません。"});
+  if (p.wallWhat) c.push({w:7, t:"「何から手をつけるか」で止まりやすい。これは才能ではなく順番の問題です。順番が決まると、迷いは消えます。"});
+  if (p.wallProof) c.push({w:6, t:"「語れる実績がない」と感じている。いまなくて当然です。実績はこれから作るもので、90日あれば最初の1本は作れます。"});
+  if (p.evalNext) c.push({w:8, t:"AIで速くなった分、次の仕事が乗っている。頑張るほど忙しくなる構造の中にいます。浮いた時間を「実績づくり」に確保する設計がないと、この構造は続きます。"});
+  if (p.aiFar) c.push({w:6, t:"AIとの距離はまだ遠い。だからこそ、学習からではなく自分の業務1つから始めると、最初の1ヶ月で景色が変わります。"});
+  if (p.lifeNo || p.life10) c.push({w:5, t:"「いつまで続けられるか」という問いを持っている。備えは、必要になってからでは間に合いません。小さくても外に見せられる実績が、そのまま選択肢になります。"});
+  if (p.fewPeers) c.push({w:4, t:"聞ける同僚・知人が少しいる。それでも「この順番で合っているか」を確かめられる相手は別に必要です。相談相手と伴走者は、役割が違います。"});
+  c.sort(function(a,b){ return b.w - a.w; });
+  var out = [];
+  for (var i = 0; i < c.length && out.length < 3; i++) out.push(c[i].t);
+  while (out.length < 3) out.push(["あれこれ手を広げるより、「どの業務を、どれくらい改善したか」を語れる1本を作る方が、結果として遠くまで届きます。","勉強を増やすより、毎日やっている業務にAIを当てる方が、最短で成果になります。","成果は「なんとなく楽になった」で止めず、数字で残す。ここで実績になるかどうかが分かれます。"][out.length]);
+  return out;
+}
+
+/* 4枚目：本人向けの90日 */
+function buildRoadmap(p){
+  var jobLabel = p.jobLabel ? p.jobLabel + "の" : "いまの";
+  var m1 = jobLabel + "業務の中から、AIで改善しやすいテーマを1つ選びます。" +
+    (p.envLimit ? "会社の制約があるので、自分の裁量で完結する業務に限定します。" : "") +
+    (p.t15 ? "1日15分で回る単位に切り分けるのが前提です。" : p.t60 ? "1日1時間以内で回る単位に切り分けます。" : "");
+  var m2 = (p.askRaw || p.askUnknown ? "まず「目的・条件を整理してから頼む」型を作ります。" : "") +
+    "業務の流れを分解し、AIに任せる部分と人が判断する部分を設計し直して、" +
+    (p.noChange || p.evalNone ? "小さな変化でも作業時間・品質・量を数字で残します。" : "改善した業務の変化を作業時間・品質・量の数字で棚卸しします。");
+  var m3 = has(p.hopeExit, "昇進") ? "評価面談で語れる形に仕上げます。「どの業務を、どれくらい改善したか」の1本です。"
+         : has(p.hopeExit, "転職") ? "職務経歴書に書ける形に仕上げます。外の人が読んで再現性が伝わる1本です。"
+         : has(p.hopeExit, "副業") || has(p.hopeExit, "フリーランス") ? "商談・プロフィールで語れる形に仕上げます。値付けの根拠になる1本です。"
+         : has(p.hopeExit, "DX") ? "社内で提案・共有できる形に仕上げます。チームで再現できる型としての1本です。"
+         : has(p.hopeExit, "異動") ? "移りたい先でも再現できる、と示せる形に仕上げます。"
+         : "評価面談・職務経歴書・商談のどこでも語れる1本に仕上げます。";
+  return [
+    {m:"MONTH 1", h:"対象業務を1つ決めて、小さく実装する", t:m1},
+    {m:"MONTH 2", h:"業務フローを再設計して、変化を記録する", t:m2},
+    {m:"MONTH 3", h:"成果を「評価される言葉」に変換する", t:m3}
+  ];
+}
+
+/* 4枚目：締めの一言（温度感×1年後） */
+function buildClosing(name, p){
+  var when = p.honkiNow ? "いま動き出せば、年内には" : p.honki3m ? "1〜3ヶ月以内に動き出せば、半年後には"
+           : p.honki6m ? "半年以内に動き出すなら、1年後には" : "急ぐ必要はありません。ただ方向だけ先に決めておけば、動きたくなったときに";
+  var goal = p.year1 && !has(p.year1, "模索") ? "「" + esc(p.year1) + "」" : "「いまより一歩先の状態」";
+  var tail = p.honkiLater ? "迷わず進めます。" : "射程に入ります。";
+  var mood = p.honkiNow || p.honki3m ? "動き出すなら、勢いのあるいまがいちばんです。"
+           : "いきなり大きく動く必要はありません。";
+  return esc(name) + "さんが描いた" + goal + "。" + when + tail + mood;
 }
 
 function openReport(rowNum){
@@ -503,24 +728,30 @@ function openReport(rowNum){
       '<span class="bv">' + S[b].toFixed(1) + '</span></div>';
   }
 
+  var prof = buildProfile(ans, S, lv, typeName);
+
   var strengthsHtml = "", stumblesHtml = "", mindsHtml = "";
   for (var st = 0; st < td.strengths.length; st++) strengthsHtml += "<li>" + esc(td.strengths[st]) + "</li>";
-  for (var sm = 0; sm < td.stumbles.length; sm++) stumblesHtml += "<li>" + esc(td.stumbles[sm]) + "</li>";
+  var personal = buildPersonalBullets(prof);
+  for (var sm = 0; sm < personal.length; sm++) stumblesHtml += "<li>" + esc(personal[sm]) + "</li>";
   for (var mi = 0; mi < td.minds.length; mi++) {
     mindsHtml += '<div class="rp-mind"><p class="mh" data-n="0' + (mi + 1) + '">' + esc(td.minds[mi].h) + '</p><p>' + esc(td.minds[mi].t) + '</p></div>';
   }
   var exitsHtml = "";
   for (var ex = 0; ex < 3; ex++) {
     if (!exits[ex]) continue;
+    var reason = buildExitReason(prof, exits[ex], ex);
     exitsHtml += '<div class="rp-exit' + (ex === 0 ? " first" : "") + '">' +
       '<span class="rk">' + (ex === 0 ? "BEST MATCH" : (ex + 1) + "位") + '</span>' +
-      '<p class="en">' + esc(exits[ex]) + '</p></div>';
+      '<div><p class="en">' + esc(exits[ex]) + '</p>' + (reason ? '<p class="why">' + esc(reason) + '</p>' : '') + '</div></div>';
   }
+  var road = buildRoadmap(prof);
   var roadHtml = "";
-  for (var rd = 0; rd < ROADMAP.length; rd++) {
-    roadHtml += '<div class="rp-rstep"><span class="rm">' + ROADMAP[rd].m + '</span>' +
-      '<p class="rh">' + esc(ROADMAP[rd].h) + '</p><p>' + esc(ROADMAP[rd].t) + '</p></div>';
+  for (var rd = 0; rd < road.length; rd++) {
+    roadHtml += '<div class="rp-rstep"><span class="rm">' + road[rd].m + '</span>' +
+      '<p class="rh">' + esc(road[rd].h) + '</p><p>' + esc(road[rd].t) + '</p></div>';
   }
+  var closingHtml = buildClosing(name, prof);
 
   var dateStr = String(r[0] || "").split(" ")[0];
   var msgHtml = buildMessage(name, lv, stage, typeName, td, S, exits, ans);
@@ -558,9 +789,8 @@ function openReport(rowNum){
     '<div class="pg-body">' +
       '<div class="rp-radarwrap">' + radarSVG(S) + '</div>' +
       '<div class="rp-bars">' + barsHtml + '</div>' +
-      '<div class="rp-focus"><b>FOCUS｜いま積み上げるべき力：「' + AXES[stackWeak] + '」</b><br>' +
-      esc(AX_SUB[stackWeak]) + '。AIをキャリアに変える力は、設計力 → AI活用 → 実装 → 巻き込みの順で積み上がります。下の力が抜けたまま進むと「単発の便利」で止まります。</div>' +
-      '<div class="rp-sec" style="margin-top:14px"><p class="rp-k">CAREER EXITS</p><p class="rp-h">狙いやすい出口 トップ3</p>' + exitsHtml + '</div>' +
+      '<div class="rp-focus">' + buildAxisReading(prof, stackWeak) + '</div>' +
+      '<div class="rp-sec" style="margin-top:12px"><p class="rp-k">CAREER EXITS</p><p class="rp-h">狙いやすい出口 トップ3</p>' + exitsHtml + '</div>' +
     '</div>' +
     '<span class="pgnum">LEVANCE AI CAREER REPORT｜2 / 4</span>' +
     '</div>';
@@ -574,7 +804,7 @@ function openReport(rowNum){
       '<p class="tp-name">' + esc(typeName) + '</p><p class="tp-tag">' + esc(td.tag) + '</p>' +
       '<div class="rp-sec"><p class="rp-k">STRENGTHS</p><p class="rp-h">このタイプの強み</p>' +
       '<ul class="rp-list">' + strengthsHtml + '</ul></div>' +
-      '<div class="rp-sec"><p class="rp-k">ATTENTION</p><p class="rp-h">つまずきやすいポイント</p>' +
+      '<div class="rp-sec"><p class="rp-k">IN YOUR CASE</p><p class="rp-h">' + esc(name) + 'さんの場合、こう出やすい</p>' +
       '<ul class="rp-list">' + stumblesHtml + '</ul></div>' +
       '<div class="rp-sec"><p class="rp-k">MINDSET</p><p class="rp-h">いま必要な考え方</p>' + mindsHtml + '</div>' +
     '</div>' +
@@ -589,7 +819,8 @@ function openReport(rowNum){
     '<div class="pg-body">' +
       '<div class="rp-sec"><p class="rp-k">90 DAYS ROADMAP</p><p class="rp-h">最初の90日で「語れる実績」を1本作る</p>' +
       roadHtml +
-      '<div class="rp-roadextra">' + esc(td.road) + '</div></div>' +
+      '<div class="rp-roadextra">' + esc(td.road) + '</div>' +
+      '<div class="rp-closing"><span class="ck">LAST WORDS</span>' + closingHtml + '</div></div>' +
     '</div>' +
     '<div class="rp-cta bp"><div class="rp-cta-in">' +
       '<p class="ck">NEXT STEP｜' + esc(name) + 'さんへのご案内</p>' +

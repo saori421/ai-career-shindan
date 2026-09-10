@@ -85,8 +85,10 @@ body{
   display:flex;flex-direction:column;
 }
 .a4 *{line-height:1.65}
-.pgnum{position:absolute;right:36px;bottom:12px;font-size:17.1px;color:#9AA7B6;letter-spacing:.1em;z-index:5}
+.pgnum{position:absolute;right:36px;bottom:12px;font-size:14px;color:#9AA7B6;letter-spacing:.1em;z-index:5}
 .on-navy .pgnum{color:#8FA0B8}
+/* ご案内の帯が下端に来るページは、ページ番号が濃紺に乗るので明るくする */
+.a4:has(.rp-cta) .pgnum{color:#8FA0B8}
 
 .bp{position:relative;overflow:hidden}
 .bp::before{
@@ -103,50 +105,50 @@ body{
   color:#fff;padding:30px 34px 28px;flex:0 0 auto;
 }
 .cv-toprow{display:flex;justify-content:space-between;align-items:center}
-.cv-brand{font-size:20.2px;letter-spacing:.26em;color:var(--gold-soft);font-weight:500;border:1px solid rgba(201,162,75,.55);padding:6px 16px;border-radius:2px}
-.cv-date{font-size:20.2px;color:#A9B7CB;letter-spacing:.06em}
-.cv-sub{font-size:22px;color:#C6D2E2;margin-top:14px;letter-spacing:.03em}
-.cv-name{font-size:55.4px;font-weight:900;margin-top:2px;line-height:1.3}
-.cv-name span{font-size:31.5px;font-weight:700;color:#C6D2E2;margin-left:8px}
+.cv-brand{font-size:16.6px;letter-spacing:.26em;color:var(--gold-soft);font-weight:500;border:1px solid rgba(201,162,75,.55);padding:6px 16px;border-radius:2px}
+.cv-date{font-size:16.6px;color:#A9B7CB;letter-spacing:.06em}
+.cv-sub{font-size:18px;color:#C6D2E2;margin-top:14px;letter-spacing:.03em}
+.cv-name{font-size:45.4px;font-weight:900;margin-top:2px;line-height:1.3}
+.cv-name span{font-size:25.8px;font-weight:700;color:#C6D2E2;margin-left:8px}
 .cv-lvbox{margin-top:18px}
-.cv-lvbox .l{font-size:22px;color:#A9B7CB;letter-spacing:.08em}
-.cv-lvbox .s{font-size:44px;font-weight:900;margin-top:2px;line-height:1.25}
-.cv-lvbox .s em{display:inline-block;font-style:normal;font-size:22px;font-weight:700;color:var(--gold-soft);margin-left:14px;vertical-align:middle}
+.cv-lvbox .l{font-size:18px;color:#A9B7CB;letter-spacing:.08em}
+.cv-lvbox .s{font-size:36.1px;font-weight:900;margin-top:2px;line-height:1.25}
+.cv-lvbox .s em{display:inline-block;font-style:normal;font-size:18px;font-weight:700;color:var(--gold-soft);margin-left:14px;vertical-align:middle}
 .cv-ring{position:relative;width:184px;height:184px;flex:0 0 184px}
 .cv-ring svg{transform:rotate(-90deg)}
 .cv-ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
-.cv-ring-c .p{font-size:17.1px;letter-spacing:.26em;color:var(--gold-soft);font-weight:700}
-.cv-ring-c .n{font-size:63.5px;font-weight:900}
-.cv-ring-c .d{font-size:18.6px;color:#A9B7CB}
-.cv-lvtext .l{font-size:24.5px;color:#A9B7CB;letter-spacing:.08em}
-.cv-lvtext .s{font-size:46.5px;font-weight:900;margin-top:2px}
+.cv-ring-c .p{font-size:14px;letter-spacing:.26em;color:var(--gold-soft);font-weight:700}
+.cv-ring-c .n{font-size:52.1px;font-weight:900}
+.cv-ring-c .d{font-size:15.3px;color:#A9B7CB}
+.cv-lvtext .l{font-size:20.1px;color:#A9B7CB;letter-spacing:.08em}
+.cv-lvtext .s{font-size:38.1px;font-weight:900;margin-top:2px}
 .lv-steps{display:flex;align-items:center;margin-top:18px}
 .lv-steps .st{
   width:44px;height:44px;border-radius:50%;flex:0 0 44px;
   border:2px solid rgba(201,162,75,.45);background:rgba(255,255,255,.06);
   display:flex;align-items:center;justify-content:center;
 }
-.lv-steps .st i{font-style:normal;font-size:20px;font-weight:900;color:#8FA0B8}
+.lv-steps .st i{font-style:normal;font-size:16.4px;font-weight:900;color:#8FA0B8}
 .lv-steps .st.on{background:var(--orange);border-color:var(--orange)}
 .lv-steps .st.on i{color:#fff}
 .lv-steps .ln{flex:1 1 auto;height:4px;background:rgba(201,162,75,.25)}
 .lv-steps .ln.on{background:var(--orange)}
-.cv-phase{display:inline-block;margin-top:10px;font-size:20.2px;font-weight:700;letter-spacing:.06em;color:var(--gold-soft);border:1px solid rgba(201,162,75,.55);border-radius:4px;padding:5px 13px}
+.cv-phase{display:inline-block;margin-top:10px;font-size:16.6px;font-weight:700;letter-spacing:.06em;color:var(--gold-soft);border:1px solid rgba(201,162,75,.55);border-radius:4px;padding:5px 13px}
 .cv-typebar{
   margin-top:20px;background:rgba(255,255,255,.07);border:1px solid rgba(201,162,75,.45);
   border-radius:12px;padding:12px 20px;
 }
-.cv-typebar .lb{font-size:17.8px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
-.cv-typebar .tn{font-size:40.5px;font-weight:900;margin-top:1px}
-.cv-typebar .tt{font-size:25.4px;color:#C6D2E2;margin-top:1px}
+.cv-typebar .lb{font-size:14.6px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
+.cv-typebar .tn{font-size:33.2px;font-weight:900;margin-top:1px}
+.cv-typebar .tt{font-size:20.8px;color:#C6D2E2;margin-top:1px}
 .cv-body{padding:18px 34px 56px;flex:1 1 auto;min-height:0}
 
 /* 表紙：あなたを表す3つの言葉 */
 .cv-kw{margin-top:20px}
-.cv-kw .lb{font-size:19px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700;margin-bottom:8px}
+.cv-kw .lb{font-size:15.6px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700;margin-bottom:8px}
 .cv-kw ul{list-style:none}
 .cv-kw li{
-  font-size:29px;font-weight:900;color:#fff;line-height:1.45;
+  font-size:23.8px;font-weight:900;color:#fff;line-height:1.45;
   padding:7px 0 7px 32px;position:relative;
 }
 .cv-kw li::before{
@@ -154,27 +156,31 @@ body{
   border:3px solid var(--gold);border-radius:50%;
 }
 
-.rp-k{font-size:20.2px;letter-spacing:.2em;color:var(--gold-deep);font-weight:700;margin-bottom:5px}
-.rp-h{font-size:33px;font-weight:900;color:var(--navy);border-left:6px solid var(--gold);padding-left:16px;margin-bottom:16px;line-height:1.45}
+.rp-k{font-size:16.6px;letter-spacing:.2em;color:var(--gold-deep);font-weight:700;margin-bottom:5px}
+.rp-h{font-size:27.1px;font-weight:900;color:var(--navy);border-left:6px solid var(--gold);padding-left:16px;margin-bottom:16px;line-height:1.45}
 .rp-msg{
   border:1px solid var(--gold-soft);border-radius:12px;background:#FDFBF5;
   padding:20px 24px;
 }
-.rp-msg p{font-size:29.8px;line-height:1.72;color:#26313E;margin-bottom:16px}
+.rp-msg p{font-size:24.4px;line-height:1.72;color:#26313E;margin-bottom:16px}
 .rp-msg.cont{margin-top:0;padding:20px 24px}
-.rp-msg.cont p{font-size:28px;line-height:1.72;margin-bottom:16px}
+.rp-msg.cont p{font-size:23px;line-height:1.72;margin-bottom:16px}
 .rp-msg p:last-child{margin-bottom:0}
 .rp-msg b{color:var(--navy)}
 .rp-msg .gold{color:var(--orange-deep);font-weight:700}
+/* 中面の段落。表紙のリード文だけ枠で見せ、本文ページは枠なしで詰める */
+.rp-para{font-size:24.4px;line-height:1.72;color:#26313E}
+.rp-para b{color:var(--navy)}
+.rp-para .gold{color:var(--orange-deep);font-weight:700}
 
 /* ----- 2〜4枚目共通ヘッダー ----- */
 .pg-head{
   background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 100%);
   color:#fff;padding:16px 34px 18px;flex:0 0 auto;
 }
-.pg-head .t{font-size:33.2px;font-weight:900;display:block;line-height:1.35}
-.pg-head .t span{color:var(--gold-soft);font-size:18.6px;letter-spacing:.22em;display:block;font-weight:700;margin-bottom:2px}
-.pg-head .nm{font-size:20px;color:#AEBFD4;display:block;margin-bottom:6px;letter-spacing:.02em}
+.pg-head .t{font-size:27.2px;font-weight:900;display:block;line-height:1.35}
+.pg-head .t span{color:var(--gold-soft);font-size:15.3px;letter-spacing:.22em;display:block;font-weight:700;margin-bottom:2px}
+.pg-head .nm{font-size:16.4px;color:#AEBFD4;display:block;margin-bottom:6px;letter-spacing:.02em}
 .pg-body{position:relative;padding:24px 34px 56px;flex:1 1 auto;min-height:0;overflow:hidden}
 .pg-inner{transform-origin:top left}
 .rp-sec{margin-bottom:22px}
@@ -186,25 +192,25 @@ body{
 .rp-radarwrap{text-align:center;margin:-8px 0 0}
 .rp-bars{margin-top:6px}
 .rp-bars .br{display:flex;align-items:center;gap:18px;padding:7px 0}
-.rp-bars .bn{flex:0 0 190px;font-size:25px;font-weight:700;color:var(--navy)}
+.rp-bars .bn{flex:0 0 190px;font-size:20.5px;font-weight:700;color:var(--navy)}
 .rp-bars .bt{flex:1;height:20px;background:#EDF1F6;border-radius:10px;overflow:hidden}
 .rp-bars .bt i{display:block;height:100%;background:linear-gradient(90deg,var(--navy2),var(--navy3));border-radius:10px}
 .rp-bars .br.weak .bt i{background:linear-gradient(90deg,var(--orange-deep),var(--orange-soft))}
 .rp-bars .br.weak .bn{color:var(--orange-deep)}
-.rp-bars .bv{flex:0 0 46px;text-align:right;font-size:28px;font-weight:900;color:var(--navy)}
-.rp-focus{border:1px solid var(--gold-soft);background:#FCF9F0;border-radius:12px;padding:20px 24px;font-size:27.1px;line-height:1.7;margin-top:10px}
+.rp-bars .bv{flex:0 0 46px;text-align:right;font-size:23px;font-weight:900;color:var(--navy)}
+.rp-focus{border:1px solid var(--gold-soft);background:#FCF9F0;border-radius:12px;padding:20px 24px;font-size:22.2px;line-height:1.7;margin-top:10px}
 .rp-focus b{color:var(--navy)}
 
 /* 3枚目：タイプ */
-.tp-name{font-size:46.5px;font-weight:900;color:var(--navy);line-height:1.4}
-.tp-tag{font-size:26.2px;color:var(--sub);margin-top:2px;margin-bottom:10px}
+.tp-name{font-size:38.1px;font-weight:900;color:var(--navy);line-height:1.4}
+.tp-tag{font-size:21.5px;color:var(--sub);margin-top:2px;margin-bottom:10px}
 .rp-list{list-style:none}
-.rp-list li{position:relative;padding:9px 0 9px 34px;font-size:28.9px;line-height:1.6}
+.rp-list li{position:relative;padding:9px 0 9px 34px;font-size:23.7px;line-height:1.6}
 .rp-list li::before{content:"";position:absolute;left:2px;top:24px;width:12px;height:12px;border:3px solid var(--gold);border-radius:50%}
 .rp-mind{border:1px solid var(--line);border-radius:12px;padding:16px 22px;margin-bottom:12px;background:#FBFCFE}
-.rp-mind .mh{font-size:30.6px;font-weight:900;color:var(--navy);line-height:1.5}
-.rp-mind .mh::before{content:attr(data-n);color:var(--gold-deep);font-size:20.2px;margin-right:9px;letter-spacing:.08em}
-.rp-mind p{font-size:27.1px;color:#3D4B5C;margin-top:3px;line-height:1.65}
+.rp-mind .mh{font-size:25.1px;font-weight:900;color:var(--navy);line-height:1.5}
+.rp-mind .mh::before{content:attr(data-n);color:var(--gold-deep);font-size:16.6px;margin-right:9px;letter-spacing:.08em}
+.rp-mind p{font-size:22.2px;color:#3D4B5C;margin-top:3px;line-height:1.65}
 
 /* 4枚目：出口・90日・CTA */
 .rp-exit{
@@ -212,14 +218,14 @@ body{
   margin-bottom:14px;display:flex;align-items:center;gap:16px;
 }
 .rp-exit.first{border:2px solid var(--orange);background:#FFF8F1}
-.rp-exit .rk{flex:0 0 auto;font-size:18.6px;font-weight:900;letter-spacing:.05em;color:var(--navy2);border:1px solid var(--navy2);border-radius:4px;padding:3px 10px}
+.rp-exit .rk{flex:0 0 auto;font-size:15.3px;font-weight:900;letter-spacing:.05em;color:var(--navy2);border:1px solid var(--navy2);border-radius:4px;padding:3px 10px}
 .rp-exit.first .rk{background:var(--orange);color:#fff;border-color:var(--orange)}
-.rp-exit .en{font-size:31.5px;font-weight:900;color:var(--navy);line-height:1.45}
-.rp-exit .why{font-size:25.4px;color:#3D4B5C;line-height:1.45;margin-top:1px}
-.rp-msg .kw{font-size:27.1px;color:var(--navy);font-weight:700;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed var(--gold-soft);line-height:1.6}
-.rp-msg .kw span{font-size:17.1px;letter-spacing:.22em;color:var(--gold-deep);margin-right:10px}
-.rp-closing{margin-top:18px;border-left:6px solid var(--gold);background:#FCF9F0;padding:20px 24px;font-size:28.9px;line-height:1.68;color:var(--navy);font-weight:700}
-.rp-closing .ck{display:block;font-size:17.1px;letter-spacing:.24em;color:var(--gold-deep);font-weight:700;margin-bottom:4px}
+.rp-exit .en{font-size:25.8px;font-weight:900;color:var(--navy);line-height:1.45}
+.rp-exit .why{font-size:20.8px;color:#3D4B5C;line-height:1.45;margin-top:1px}
+.rp-msg .kw{font-size:22.2px;color:var(--navy);font-weight:700;margin-bottom:18px;padding-bottom:14px;border-bottom:1px dashed var(--gold-soft);line-height:1.6}
+.rp-msg .kw span{font-size:14px;letter-spacing:.22em;color:var(--gold-deep);margin-right:10px}
+.rp-closing{margin-top:18px;border-left:6px solid var(--gold);background:#FCF9F0;padding:20px 24px;font-size:23.7px;line-height:1.68;color:var(--navy);font-weight:700}
+.rp-closing .ck{display:block;font-size:14px;letter-spacing:.24em;color:var(--gold-deep);font-weight:700;margin-bottom:4px}
 .rp-rstep{position:relative;border:1px solid var(--line);border-radius:12px;padding:16px 22px 16px 26px;background:#FBFCFE;margin-bottom:30px}
 .rp-rstep::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:6px;background:var(--orange);border-radius:0 4px 4px 0}
 /* 矢印はステップ同士のあいだにだけ出す（最後のステップの下は締めの文なので出さない） */
@@ -228,30 +234,30 @@ body{
   width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;
   border-top:14px solid var(--orange-soft);
 }
-.rp-rstep .rm{font-size:19.4px;letter-spacing:.16em;color:var(--orange-deep);font-weight:700}
-.rp-rstep .rh{font-size:33.2px;font-weight:900;color:var(--navy);margin-top:2px;line-height:1.5}
-.rp-rstep p{font-size:27.7px;color:#3D4B5C;margin-top:3px;line-height:1.6}
-.rp-roadextra{margin-top:10px;background:#F2F6FB;border-radius:10px;padding:18px 24px;font-size:27.1px;color:#33455C;line-height:1.65}
+.rp-rstep .rm{font-size:15.9px;letter-spacing:.16em;color:var(--orange-deep);font-weight:700}
+.rp-rstep .rh{font-size:27.2px;font-weight:900;color:var(--navy);margin-top:2px;line-height:1.5}
+.rp-rstep p{font-size:22.7px;color:#3D4B5C;margin-top:3px;line-height:1.6}
+.rp-roadextra{margin-top:10px;background:#F2F6FB;border-radius:10px;padding:18px 24px;font-size:22.2px;color:#33455C;line-height:1.65}
 
-.rp-cta.last{flex:1 1 auto;display:flex;align-items:center}
-.rp-cta.last .rp-cta-in{width:100%}
+/* ご案内は1ページ使わず、最終ページの下端に帯として置く */
+.pg-inner:has(> .rp-cta){display:flex;flex-direction:column;min-height:100%}
+.pg-inner > .rp-cta{margin:26px -34px -56px;border-radius:0}
 .rp-cta{
   position:relative;margin-top:auto;flex:0 0 auto;
   background:linear-gradient(150deg,var(--navy) 0%,#123D63 100%);color:#fff;
-  padding:22px 34px 20px;overflow:hidden;
+  padding:18px 34px 16px;overflow:hidden;
 }
 .rp-cta-in{position:relative;z-index:2}
-.rp-cta .ck{font-size:20.2px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
-.rp-cta .ch{font-size:35px;font-weight:900;margin-top:4px;line-height:1.45}
+.rp-cta .ck{font-size:15px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
+.rp-cta .ch{font-size:23px;font-weight:900;margin-top:3px;line-height:1.45}
 .rp-cta .ch span{color:var(--gold-soft)}
-.rp-cta .cp{font-size:26.2px;color:#DCE4EF;margin-top:7px;line-height:1.65}
+.rp-cta .cp{font-size:18.5px;color:#DCE4EF;margin-top:6px;line-height:1.6}
 .rp-cta .cp b{color:#fff}
-.rp-cta-meta{margin-top:9px;font-size:26.2px;color:#E4EAF3;font-weight:700}
+.rp-cta-meta{margin-top:8px;font-size:19px;color:#E4EAF3;font-weight:700}
 .rp-cta-meta span{color:var(--gold-soft)}
-.rp-cta-cap{font-size:19.4px;color:#C6D2E2;margin-top:3px}
-.rp-cta-link{margin-top:7px;font-size:23.6px;color:#DCE4EF}
+.rp-cta-link{margin-top:5px;font-size:17.5px;color:#DCE4EF}
 .rp-cta-link a{color:var(--gold-soft);font-weight:700;text-decoration:none}
-.rp-cta .dis{font-size:14px;color:#8FA0B8;margin-top:8px;border-top:1px solid rgba(255,255,255,.14);padding-top:6px;line-height:1.5;max-width:62%}
+.rp-cta .dis{font-size:11.5px;color:#8FA0B8;margin-top:7px;border-top:1px solid rgba(255,255,255,.14);padding-top:5px;line-height:1.5}
 
 /* ---------- 印刷 ---------- */
 @media print{
@@ -704,13 +710,10 @@ function buildMessage(name, lv, stage, typeName, td, S, exits, ans){
   p5 += "<b>語れる実績があるかないかで、選べる道の数は変わります。" + esc(name) + "さんには、それを作れる土台がすでにあります。</b>";
 
   var kw = buildKeywords(p);
-  /* 表紙は1段落だけ。2段落載せると、レベル図・タイプ・キーワードと合わせて必ず溢れ、
-     ページ全体が縮小されて文字が読めなくなる（スマホ前提なのでこれは許容できない） */
   return {
     kwList: kw,
-    paras1: [p1],
-    paras2: [p2, p3],
-    paras3: [p4, p5]
+    paras1: [p1, p2],   /* 表紙 */
+    paras2: [p3, p4, p5] /* 2ページ目 */
   };
 }
 
@@ -771,8 +774,8 @@ function buildPersonalBullets(p){
   if (p.fewPeers) c.push({w:4, t:"聞ける同僚・知人がいます。それに加えて「この順番で合っているか」を確かめられる相手がいると、さらに速くなります。"});
   c.sort(function(a,b){ return b.w - a.w; });
   var out = [];
-  for (var i = 0; i < c.length && out.length < 4; i++) out.push(c[i].t);
-  while (out.length < 4) out.push(["あれこれ手を広げるより、「どの業務を、どれくらい改善したか」を語れるものを1つ作る方が、結果として遠くまで届きます。","勉強を増やすより、毎日やっている業務にAIを当てる方が、最短で成果になります。","成果は「なんとなく楽になった」で止めず、数字で残す。ここで実績になります。"][out.length]);
+  for (var i = 0; i < c.length && out.length < 3; i++) out.push(c[i].t);
+  while (out.length < 3) out.push(["あれこれ手を広げるより、「どの業務を、どれくらい改善したか」を語れるものを1つ作る方が、結果として遠くまで届きます。","勉強を増やすより、毎日やっている業務にAIを当てる方が、最短で成果になります。","成果は「なんとなく楽になった」で止めず、数字で残す。ここで実績になります。"][out.length]);
   return out;
 }
 
@@ -942,140 +945,7 @@ function numberPages(host){
 }
 
 
-/* ------------------------------------------------------------------
-   余白に置く図版（自作SVG・人物は使わない）
-   ブランドのネイビー／ゴールド／オレンジのみで構成する
------------------------------------------------------------------- */
-var FIG_LINE = "#D5DEEA", FIG_NAVY = "#143A6B", FIG_NAVY2 = "#1D4E8F",
-    FIG_GOLD = "#C9A24B", FIG_OR = "#E8731E", FIG_PALE = "#E7ECF3";
-
-/* AI＝中心から、仕事のあらゆる接点へつながっていく
-   中央のAIを起点に、業務のアイコンが円周上に並ぶ構図。線画のみで作る */
-function figNetwork(){
-  var CX = 300, CY = 150, RX = 246, RY = 118, R = 27;
-  var ang = [-67.5, -22.5, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5];
-  /* 鍵／クラウド／地球／チャット／歯車／グラフ／メール／通信 */
-  var ic = [
-    '<rect x="-7" y="-1.4" width="14" height="10.6" rx="2.4"/><path d="M-4.1 -1.4 v-2.7 a4.1 4.1 0 0 1 8.2 0 v2.7"/>',
-    '<path d="M-8.4 4.6 h13.1 a4.3 4.3 0 0 0 .3 -8.6 a6.1 6.1 0 0 0 -11.6 -1.2 a4.7 4.7 0 0 0 -1.8 9.8 Z"/>',
-    '<circle cx="0" cy="0" r="8"/><path d="M-8 0 h16"/><ellipse cx="0" cy="0" rx="3.9" ry="8"/>',
-    '<rect x="-8" y="-7.2" width="16" height="12" rx="3"/><path d="M-3.4 4.8 v4.4 l5.2 -4.4"/>',
-    '<circle cx="0" cy="0" r="7.6" stroke-dasharray="3.1 2.9"/><circle cx="0" cy="0" r="3.4"/>',
-    '<path d="M-7 6.4 v-5.6 M0 6.4 v-11 M7 6.4 v-8.2"/>',
-    '<rect x="-8" y="-6" width="16" height="12" rx="2.2"/><path d="M-8 -4.2 l8 6.1 l8 -6.1"/>',
-    '<path d="M-8.4 -1.2 a11.4 11.4 0 0 1 16.8 0"/><path d="M-4.6 2.9 a6.6 6.6 0 0 1 9.2 0"/>'
-  ];
-  var s = '<svg viewBox="0 0 600 300" width="600" height="300" xmlns="http://www.w3.org/2000/svg">';
-
-  /* 外周の軌道 */
-  s += '<ellipse cx="'+CX+'" cy="'+CY+'" rx="'+RX+'" ry="'+RY+'" fill="none" stroke="'+FIG_LINE+'" stroke-width="1.4" stroke-dasharray="2 8"/>';
-
-  /* 中心から各接点へ伸びる線（円は後から白で塗るので、線は自然に隠れる） */
-  var pos = [];
-  for (var i = 0; i < ang.length; i++){
-    var t = ang[i] * Math.PI / 180;
-    pos.push([CX + RX * Math.cos(t), CY + RY * Math.sin(t)]);
-    s += '<line x1="'+CX+'" y1="'+CY+'" x2="'+pos[i][0].toFixed(1)+'" y2="'+pos[i][1].toFixed(1)+'" stroke="'+FIG_LINE+'" stroke-width="1.6"/>';
-  }
-  /* 隣り合う接点どうしも、うっすらつなぐ */
-  for (var j = 0; j < pos.length; j++){
-    var k = (j + 1) % pos.length;
-    s += '<line x1="'+pos[j][0].toFixed(1)+'" y1="'+pos[j][1].toFixed(1)+'" x2="'+pos[k][0].toFixed(1)+'" y2="'+pos[k][1].toFixed(1)+'" stroke="'+FIG_LINE+'" stroke-width="1.1" stroke-dasharray="3 5"/>';
-  }
-
-  /* 接点（2つだけオレンジにして視線の止まりどころを作る） */
-  for (var m = 0; m < pos.length; m++){
-    var col = (m === 1 || m === 5) ? FIG_OR : FIG_NAVY;
-    s += '<circle cx="'+pos[m][0].toFixed(1)+'" cy="'+pos[m][1].toFixed(1)+'" r="'+R+'" fill="#fff" stroke="#C6D2E0" stroke-width="1.6"/>' +
-      '<g transform="translate('+pos[m][0].toFixed(1)+','+pos[m][1].toFixed(1)+')" fill="none" stroke="'+col+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ic[m] + '</g>';
-  }
-
-  /* 中央のAI */
-  s += '<circle cx="'+CX+'" cy="'+CY+'" r="82" fill="none" stroke="'+FIG_GOLD+'" stroke-opacity=".28" stroke-width="1.2"/>' +
-    '<circle cx="'+CX+'" cy="'+CY+'" r="66" fill="none" stroke="'+FIG_OR+'" stroke-opacity=".3" stroke-width="1.6" stroke-dasharray="34 14"/>' +
-    '<circle cx="'+CX+'" cy="'+CY+'" r="50" fill="#fff" stroke="'+FIG_NAVY+'" stroke-width="2.4"/>' +
-    '<text x="'+CX+'" y="'+(CY + 12)+'" text-anchor="middle" font-size="34" font-weight="900" letter-spacing="1.5" fill="'+FIG_NAVY+'" font-family="Helvetica Neue, Arial, sans-serif">AI</text>';
-
-  return s + '</svg>';
-}
-
-/* キャリア＝段階を上がっていく（積み上がるほど、届く高さが変わる） */
-function figSteps(){
-  var s = '<svg viewBox="0 0 600 300" width="600" height="300" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,16)">';
-  var x = [78, 190, 302, 414], y = [206, 172, 130, 80], w = 96;
-  var fil = [FIG_PALE, "#CBD6E4", FIG_NAVY, FIG_OR];
-  s += '<line x1="62" y1="252" x2="526" y2="252" stroke="'+FIG_LINE+'" stroke-width="1.6"/>';
-  for (var i = 0; i < 4; i++){
-    s += '<rect x="'+x[i]+'" y="'+y[i]+'" width="'+w+'" height="'+(252 - y[i])+'" rx="7" fill="'+fil[i]+'"/>';
-  }
-  s += '<path d="M126 176 C238 150 352 108 470 52" stroke="'+FIG_GOLD+'" stroke-width="2.6" fill="none" stroke-dasharray="9 8" stroke-linecap="round"/>' +
-    '<path d="M456 38 L482 44 L466 64 Z" fill="'+FIG_GOLD+'"/>' +
-    '<circle cx="126" cy="176" r="7" fill="#fff" stroke="'+FIG_GOLD+'" stroke-width="2.6"/>';
-  return s + '</g></svg>';
-}
-
-/* 現在地と的＝どこを狙うか */
-function figTarget(){
-  var CX = 356, CY = 138;
-  var s = '<svg viewBox="0 0 600 300" width="600" height="300" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,16)">';
-  var r = [112, 82, 52, 26], st = [FIG_PALE, "#CBD6E4", "#9FB4CC", FIG_GOLD];
-  for (var i = 0; i < 4; i++){
-    s += '<circle cx="'+CX+'" cy="'+CY+'" r="'+r[i]+'" fill="none" stroke="'+st[i]+'" stroke-width="2.2"/>';
-  }
-  s += '<circle cx="'+CX+'" cy="'+CY+'" r="11" fill="'+FIG_OR+'"/>' +
-    '<path d="M62 234 C132 214 196 186 258 156" stroke="'+FIG_NAVY+'" stroke-width="2.6" fill="none" stroke-dasharray="9 8" stroke-linecap="round"/>' +
-    '<circle cx="62" cy="234" r="9" fill="#fff" stroke="'+FIG_NAVY+'" stroke-width="2.8"/>' +
-    '<path d="M262 142 L292 150 L272 172 Z" fill="'+FIG_NAVY+'"/>';
-  return s + '</g></svg>';
-}
-
-/* 業務の流れの中にAIが入り、最後が成果になる */
-function figFlow(){
-  var s = '<svg viewBox="0 0 600 300" width="600" height="300" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,14)">';
-  var x = [46, 226, 406], w = 148;
-  for (var i = 0; i < 3; i++){
-    var isMid = (i === 1);
-    s += '<rect x="'+x[i]+'" y="124" width="'+w+'" height="104" rx="12" fill="#fff" stroke="'+(isMid ? FIG_OR : "#C6D2E0")+'" stroke-width="'+(isMid ? 2.6 : 1.8)+'"/>';
-    if (i < 2){
-      s += '<path d="M'+(x[i]+w+10)+' 176 h26" stroke="'+FIG_LINE+'" stroke-width="2.4" stroke-linecap="round"/>' +
-        '<path d="M'+(x[i]+w+38)+' 176 l-12 -7 v14 Z" fill="#C6D2E0"/>';
-    }
-  }
-  /* 左と中央は書類、右は仕上がった成果 */
-  s += '<g stroke="#C6D2E0" stroke-width="2.4" stroke-linecap="round">' +
-    '<path d="M74 156 h92 M74 178 h92 M74 200 h56"/>' +
-    '<path d="M254 156 h92 M254 178 h92 M254 200 h56"/></g>' +
-    '<path d="M436 178 l22 22 l40 -46" stroke="'+FIG_OR+'" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
-  /* 中央の工程にAIが入る */
-  s += '<path d="M300 124 V92" stroke="'+FIG_LINE+'" stroke-width="1.8" stroke-dasharray="4 6"/>' +
-    '<circle cx="300" cy="60" r="34" fill="#fff" stroke="'+FIG_NAVY+'" stroke-width="2.4"/>' +
-    '<circle cx="300" cy="60" r="45" fill="none" stroke="'+FIG_GOLD+'" stroke-opacity=".3" stroke-width="1.2"/>' +
-    '<text x="300" y="72" text-anchor="middle" font-size="26" font-weight="900" letter-spacing="1.2" fill="'+FIG_NAVY+'" font-family="Helvetica Neue, Arial, sans-serif">AI</text>';
-  return s + '</g></svg>';
-}
-
-var FIG_POOL = [figNetwork, figSteps, figFlow, figTarget];
-
-/* 余白が大きく残ったページにだけ図版を置く（図版はおよそ322px使う） */
-function fillGaps(host){
-  var pages = host.querySelectorAll(".a4");
-  var used = 0;
-  for (var i = 0; i < pages.length; i++){
-    /* 表紙（.cv-body）も対象にする。ここが大きく空くと未完成に見える */
-    var body = pages[i].querySelector(".pg-body") || pages[i].querySelector(".cv-body");
-    var inner = body && body.querySelector(":scope > .pg-inner");
-    if (!body || !inner || inner.style.zoom) continue;
-    if (gapOf(body) < 325) continue;
-    var fig = document.createElement("div");
-    fig.className = "pg-fig";
-    fig.innerHTML = FIG_POOL[used % FIG_POOL.length]();
-    inner.appendChild(fig);
-    if (gapOf(body) < 0) inner.removeChild(fig); else used++;
-  }
-}
-
-/* 図版を入れてもまだ空くページは、ブロックの間隔を広げて余白を全体に散らす。
-   下端だけが大きく空いた「作りかけ」の見え方を避ける */
+/* 残った余白は、ブロックの間隔に均等に散らす。下端だけが空く見え方を避ける */
 function spreadGaps(host){
   var pages = host.querySelectorAll(".a4[data-sec]");
   for (var i = 0; i < pages.length; i++){
@@ -1091,7 +961,7 @@ function spreadGaps(host){
     if (room < 60) continue;
     target.style.display = "flex";
     target.style.flexDirection = "column";
-    target.style.rowGap = Math.min(room / (n - 1), 110).toFixed(1) + "px";
+    target.style.rowGap = Math.min(room / (n - 1), 88).toFixed(1) + "px";
     /* flex化でマージンの相殺がなくなり、想定より伸びることがある */
     if (gapOf(body) < 0){
       target.style.rowGap = "";
@@ -1128,13 +998,7 @@ function openReport(rowNum){
   var allWeak = 0;
   for (var aw = 1; aw < 6; aw++) if (S[aw] < S[allWeak]) allWeak = aw;
 
-  var barsHtml = "";
-  for (var b = 0; b < 6; b++) {
-    barsHtml += '<div class="br' + (b === allWeak ? " weak" : "") + '">' +
-      '<span class="bn">' + AXES[b] + '</span>' +
-      '<span class="bt"><i style="width:' + Math.max(7, S[b] / 4 * 100) + '%"></i></span></div>';
-  }
-
+  /* 6軸の棒グラフはレーダーと同じことを2度見せることになるので置かない */
   var prof = buildProfile(ans, S, lv, typeName);
 
   var strengthsHtml = "";
@@ -1195,51 +1059,41 @@ function openReport(rowNum){
     '</div></div></div>';
   host.appendChild(cover);
 
-  /* ---------- 本編（内容量に応じて自動でページを送る） ---------- */
-  function para(t){ return "<p>" + t + "</p>"; }
-  renderSections(host, [
-    { kicker:"WHERE YOU ARE", title:"いまの現在地", wrap:"rp-msg",
-      blocks: msg.paras2.map(para) },
-
-    { kicker:"YOUR POTENTIAL", title:"伸びしろと、この先", wrap:"rp-msg",
-      blocks: msg.paras3.map(para) },
-
-    { kicker:"SKILL BALANCE", title:"6つの力とこれから",
-      blocks:[ '<div class="rp-radarwrap">' + radarSVG(S) + '</div>',
-               '<div class="rp-bars">' + barsHtml + '</div>',
-               '<div class="rp-focus">' + buildAxisReading(prof, stackWeak) + '</div>' ] },
-
-    { kicker:"CAREER EXITS", title:"狙えるキャリアの出口",
-      blocks: exitBlocks.concat([
-        '<div class="rp-sec2"><p class="rp-k">STRENGTHS</p><p class="rp-h">' + esc(typeName) + 'の強み</p>' +
-        '<ul class="rp-list">' + strengthsHtml + '</ul></div>' ]) },
-
-    /* 「あなたの場合」と「考え方」は、1ページに押し込むと必ず溢れて縮小がかかる。
-       最初から別ページに分けたほうが、文字の大きさも意味の区切りも保てる */
-    { kicker:"YOUR TYPE", title: esc(name) + "さんの場合", blocks: stumbleBlocks },
-
-    { kicker:"MINDSET", title:"いま必要な考え方", blocks: mindBlocks },
-
-    /* タイプ別の締め（td.road）は、次の LAST WORDS と役割が重なるので置かない */
-    { kicker:"NEXT 90 DAYS", title:"最初の90日でやること",
-      blocks: roadBlocks
-              .concat([ '<div class="rp-closing"><span class="ck">LAST WORDS</span>' + closingHtml + '</div>' ]) }
-  ], nmShort);
-
-  /* ---------- 締めとご案内 ---------- */
-  var last = document.createElement("div");
-  last.className = "a4 on-navy";
-  last.innerHTML =
-    '<div class="rp-cta bp last"><div class="rp-cta-in">' +
+  /* ---------- 本編（表紙を含めて5ページに収める配分） ---------- */
+  function para(t){ return '<p class="rp-para">' + t + '</p>'; }
+  var ctaHtml =
+    '<div class="rp-cta bp"><div class="rp-cta-in">' +
       '<p class="ck">NEXT STEP｜' + esc(name) + 'さんへのご案内</p>' +
-      '<p class="ch">あなたの業務・環境に基づいた<span>「進め方」</span>を、<br>一緒に設計する体験セッションをご用意しています。</p>' +
+      '<p class="ch">この先の進め方を、<span>一緒に設計します</span></p>' +
       '<p class="cp">このレポートでお渡しできるのは、共通の地図までです。実際の業務・環境・使える時間に基づいて「どこを目指し、何から始めるか」を一緒に決めるのが、<b>AI特化・個別キャリアコーチングの体験セッション</b>です。</p>' +
       '<p class="rp-cta-meta">約60〜90分｜オンライン（Zoom）｜マンツーマン｜<span>体験1回・無料</span></p>' +
-      '<p class="rp-cta-cap">※専任コーチの稼働枠に限りがあるため、定員に達し次第、受付を終了いたします。</p>' +
-      '<p class="rp-cta-link">お申し込み・詳細：<a href="' + CONSULT_URL + '">' + CONSULT_URL + '</a>（公式LINEからもご案内しています）</p>' +
-      '<p class="dis">※本レポートの内容は現時点での目安であり、成果を保証するものではありません。｜レバンス（LEVANCE）</p>' +
+      '<p class="rp-cta-link">お申し込み・詳細：<a href="' + CONSULT_URL + '">' + CONSULT_URL + '</a></p>' +
+      '<p class="dis">※専任コーチの稼働枠に限りがあるため、定員に達し次第、受付を終了いたします。本レポートの内容は現時点での目安であり、成果を保証するものではありません。｜レバンス（LEVANCE）</p>' +
     '</div></div>';
-  host.appendChild(last);
+
+  renderSections(host, [
+    { kicker:"DIAGNOSIS MESSAGE", title:"強みと伸びしろ",
+      blocks: msg.paras2.map(para)
+              .concat([ '<div class="rp-radarwrap">' + radarSVG(S) + '</div>' ]) },
+
+    { kicker:"CAREER EXITS", title:"6つの力と、キャリアの出口",
+      blocks:[ '<div class="rp-focus">' + buildAxisReading(prof, stackWeak) + '</div>' ]
+             .concat(exitBlocks)
+             .concat([ '<div class="rp-sec2"><p class="rp-k">STRENGTHS</p><p class="rp-h">' + esc(typeName) + 'の強み</p>' +
+                       '<ul class="rp-list">' + strengthsHtml + '</ul></div>' ]) },
+
+    { kicker:"YOUR TYPE", title: esc(name) + "さんの場合",
+      blocks: stumbleBlocks
+              /* 見出しだけがページ末尾に取り残されないよう、最初の1つと一体で送る */
+              .concat([ '<div><div class="rp-sec2"><p class="rp-k">MINDSET</p><p class="rp-h">いま必要な考え方</p></div>' + mindBlocks[0] + '</div>' ])
+              .concat(mindBlocks.slice(1)) },
+
+    /* タイプ別の締め（td.road）は、LAST WORDS と役割が重なるので置かない */
+    { kicker:"NEXT 90 DAYS", title:"最初の90日でやること",
+      blocks: roadBlocks
+              .concat([ '<div class="rp-closing"><span class="ck">LAST WORDS</span>' + closingHtml + '</div>' ])
+              .concat([ ctaHtml ]) }
+  ], nmShort);
 
   /* 仕上げは「レイアウトが確定してから」行う。
      DOMを組んだ直後は高さがまだ確定しておらず、溢れていないページまで
@@ -1253,7 +1107,6 @@ function openReport(rowNum){
         var vb = allPages[vp].querySelector(".pg-body");
         if (vb && gapOf(vb) < 0) shrinkToFit(vb);
       }
-      fillGaps(host);
       spreadGaps(host);
       numberPages(host);
     });

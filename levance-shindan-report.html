@@ -110,8 +110,10 @@ body{
   display:flex;flex-direction:column;
 }
 .a4 *{line-height:1.65}
-.pgnum{position:absolute;right:36px;bottom:16px;font-size:17.1px;color:#9AA7B6;letter-spacing:.1em;z-index:5}
+.pgnum{position:absolute;right:36px;bottom:16px;font-size:14px;color:#9AA7B6;letter-spacing:.1em;z-index:5}
 .on-navy .pgnum{color:#8FA0B8}
+/* ご案内の帯が下端に来るページは、ページ番号が濃紺に乗るので明るくする */
+.a4:has(.rp-cta) .pgnum{color:#8FA0B8}
 
 .bp{position:relative;overflow:hidden}
 .bp::before{
@@ -125,48 +127,48 @@ body{
 /* ----- 1枚目（表紙＋総合診断） ----- */
 .cv-head{
   background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 100%);
-  color:#fff;padding:40px 44px 46px;flex:0 0 auto;
+  color:#fff;padding:54px 44px 76px;flex:0 0 auto;
 }
 .cv-toprow{display:flex;justify-content:space-between;align-items:center}
-.cv-brand{font-size:20.2px;letter-spacing:.26em;color:var(--gold-soft);font-weight:500;border:1px solid rgba(201,162,75,.55);padding:6px 16px;border-radius:2px}
-.cv-date{font-size:20.2px;color:#A9B7CB;letter-spacing:.06em}
-.cv-sub{font-size:28px;color:#C6D2E2;margin-top:30px;letter-spacing:.04em}
-.cv-name{font-size:51.3px;font-weight:900;margin-top:2px;line-height:1.3}
-.cv-name span{font-size:35px;font-weight:700;color:#C6D2E2;margin-left:8px}
+.cv-brand{font-size:16.6px;letter-spacing:.26em;color:var(--gold-soft);font-weight:500;border:1px solid rgba(201,162,75,.55);padding:6px 16px;border-radius:2px}
+.cv-date{font-size:16.6px;color:#A9B7CB;letter-spacing:.06em}
+.cv-sub{font-size:23px;color:#C6D2E2;margin-top:50px;letter-spacing:.04em}
+.cv-name{font-size:42.1px;font-weight:900;margin-top:2px;line-height:1.3}
+.cv-name span{font-size:28.7px;font-weight:700;color:#C6D2E2;margin-left:8px}
 .cv-type{
-  margin-top:34px;background:rgba(255,255,255,.07);border:1px solid rgba(201,162,75,.45);
-  border-radius:12px;padding:26px 30px 30px;
+  margin-top:50px;background:rgba(255,255,255,.07);border:1px solid rgba(201,162,75,.45);
+  border-radius:12px;padding:36px 34px 40px;
 }
-.cv-type .lb{font-size:17.8px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
-.cv-type .tn{font-size:54px;font-weight:900;margin-top:2px;line-height:1.3}
-.cv-type .te{font-size:20.2px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700;margin-top:2px}
-.cv-type .tt{font-size:28px;color:#C6D2E2;margin-top:4px}
-.cv-lvrow{display:flex;gap:26px;align-items:center;margin-top:34px}
+.cv-type .lb{font-size:14.6px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
+.cv-type .tn{font-size:44.3px;font-weight:900;margin-top:2px;line-height:1.3}
+.cv-type .te{font-size:16.6px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700;margin-top:2px}
+.cv-type .tt{font-size:23px;color:#C6D2E2;margin-top:4px}
+.cv-lvrow{display:flex;gap:26px;align-items:center;margin-top:52px}
 .cv-ring{position:relative;width:150px;height:150px;flex:0 0 150px}
 .cv-ring svg{transform:rotate(-90deg)}
 .cv-ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
 /* リングの内側に収まる幅にする（大きくすると文字が円周に重なる） */
-.cv-ring-c .p{font-size:9.5px;letter-spacing:.06em;color:var(--gold-soft);font-weight:700}
-.cv-ring-c .n{font-size:48px;font-weight:900}
-.cv-ring-c .d{font-size:14px;color:#A9B7CB}
-.cv-lvtext .l{font-size:20.2px;color:#A9B7CB;letter-spacing:.08em}
-.cv-lvtext .s{font-size:37.5px;font-weight:900;margin-top:1px}
-.cv-phase{display:inline-block;margin-top:6px;font-size:18.6px;font-weight:700;letter-spacing:.06em;color:var(--gold-soft);border:1px solid rgba(201,162,75,.55);border-radius:4px;padding:4px 12px}
+.cv-ring-c .p{font-size:7.8px;letter-spacing:.06em;color:var(--gold-soft);font-weight:700}
+.cv-ring-c .n{font-size:39.4px;font-weight:900}
+.cv-ring-c .d{font-size:11.5px;color:#A9B7CB}
+.cv-lvtext .l{font-size:16.6px;color:#A9B7CB;letter-spacing:.08em}
+.cv-lvtext .s{font-size:30.7px;font-weight:900;margin-top:1px}
+.cv-phase{display:inline-block;margin-top:6px;font-size:15.3px;font-weight:700;letter-spacing:.06em;color:var(--gold-soft);border:1px solid rgba(201,162,75,.55);border-radius:4px;padding:4px 12px}
 /* 中身は .pg-inner に入れる。外枠を固定したまま中身だけ測る／縮めるため */
-.cv-body{padding:22px 44px 56px;flex:1 1 auto;min-height:0;overflow:hidden;position:relative}
+.cv-body{padding:38px 44px 56px;flex:1 1 auto;min-height:0;overflow:hidden;position:relative}
 
-.rp-k{font-size:20.2px;letter-spacing:.2em;color:var(--gold-deep);font-weight:700;margin-bottom:5px}
-.rp-h{font-size:33px;font-weight:900;color:var(--navy);border-left:4px solid var(--gold);padding-left:12px;margin-bottom:11px;line-height:1.45}
+.rp-k{font-size:16.6px;letter-spacing:.2em;color:var(--gold-deep);font-weight:700;margin-bottom:5px}
+.rp-h{font-size:27.1px;font-weight:900;color:var(--navy);border-left:4px solid var(--gold);padding-left:12px;margin-bottom:11px;line-height:1.45}
 .rp-msg{
   border:1px solid var(--gold-soft);border-radius:12px;background:#FDFBF5;
   padding:16px 20px;
 }
-.rp-msg p{font-size:28.9px;line-height:1.85;color:#26313E;margin-bottom:10px}
+.rp-msg p{font-size:23.7px;line-height:1.85;color:#26313E;margin-bottom:10px}
 .rp-msg p:last-child{margin-bottom:0}
-.rp-msg p.lead{font-size:32.4px;font-weight:900;color:var(--navy);line-height:1.7}
+.rp-msg p.lead{font-size:26.6px;font-weight:900;color:var(--navy);line-height:1.7}
 .rp-lvnote{margin-top:14px;background:#F2F6FB;border-radius:10px;padding:13px 18px}
-.rp-lvnote .k{display:block;font-size:18.6px;letter-spacing:.14em;color:var(--gold-deep);font-weight:700;margin-bottom:3px}
-.rp-lvnote p{font-size:26.2px;color:#33455C;line-height:1.75}
+.rp-lvnote .k{display:block;font-size:15.3px;letter-spacing:.14em;color:var(--gold-deep);font-weight:700;margin-bottom:3px}
+.rp-lvnote p{font-size:21.5px;color:#33455C;line-height:1.75}
 
 /* ----- 2〜4枚目共通ヘッダー ----- */
 /* 横並びにすると、名前の長い方で見出しが折り返されるので縦積みにする */
@@ -174,9 +176,9 @@ body{
   background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 100%);
   color:#fff;padding:16px 44px 18px;flex:0 0 auto;
 }
-.pg-head .t{font-size:33.2px;font-weight:900;display:block;line-height:1.35}
-.pg-head .t span{color:var(--gold-soft);font-size:18.6px;letter-spacing:.22em;display:block;font-weight:700;margin-bottom:2px}
-.pg-head .nm{font-size:20px;color:#AEBFD4;display:block;margin-bottom:6px;letter-spacing:.02em}
+.pg-head .t{font-size:27.2px;font-weight:900;display:block;line-height:1.35}
+.pg-head .t span{color:var(--gold-soft);font-size:15.3px;letter-spacing:.22em;display:block;font-weight:700;margin-bottom:2px}
+.pg-head .nm{font-size:16.4px;color:#AEBFD4;display:block;margin-bottom:6px;letter-spacing:.02em}
 .pg-body{padding:24px 44px 56px;flex:1 1 auto;min-height:0;overflow:hidden;position:relative}
 .pg-inner{transform-origin:top left}
 .pg-fig{margin-top:30px;padding:0 12px}
@@ -184,82 +186,84 @@ body{
 .rp-sec{margin-bottom:14px}
 
 /* 2枚目：6つの傾向（両極スライダー） */
-.ax-note{font-size:20.2px;color:var(--sub);margin:-4px 0 4px;line-height:1.6}
+.ax-note{font-size:16.6px;color:var(--sub);margin:-4px 0 4px;line-height:1.6}
 .ax-row{padding:5px 0 6px;border-bottom:1px dashed var(--line)}
 .ax-row:last-child{border-bottom:none}
-.ax-name{font-size:28px;font-weight:900;color:var(--navy);line-height:1.5}
-.ax-name .en{font-size:16.3px;letter-spacing:.2em;color:var(--gold-deep);margin-left:8px;font-weight:700}
+.ax-name{font-size:23px;font-weight:900;color:var(--navy);line-height:1.5}
+.ax-name .en{font-size:13.4px;letter-spacing:.2em;color:var(--gold-deep);margin-left:8px;font-weight:700}
 .ax-track{position:relative;height:16px;background:#EDF1F6;border-radius:8px;margin:10px 0 7px}
 .ax-track::before{content:"";position:absolute;left:50%;top:-5px;bottom:-5px;width:2px;background:#C5CFDB}
 .ax-fill{position:absolute;top:0;height:100%;background:linear-gradient(90deg,var(--navy2),var(--navy3));border-radius:8px}
 .ax-dot{position:absolute;top:50%;width:28px;height:28px;border-radius:50%;background:#fff;border:3.5px solid var(--gold);transform:translate(-50%,-50%);box-shadow:0 2px 8px rgba(11,29,58,.2)}
-.ax-poles{display:flex;justify-content:space-between;font-size:23.6px;color:var(--sub);line-height:1.5}
+.ax-poles{display:flex;justify-content:space-between;font-size:19.4px;color:var(--sub);line-height:1.5}
 .ax-poles b{color:var(--navy);font-weight:900}
-.ax-read{font-size:20.2px;color:#33455C;margin-top:4px;line-height:1.55;background:#F7F9FC;border-radius:8px;padding:4px 11px}
+.ax-read{font-size:16.6px;color:#33455C;margin-top:4px;line-height:1.55;background:#F7F9FC;border-radius:8px;padding:4px 11px}
 /* 横3列だと文字を大きくしたときに読めないので、縦に積んで理由を添える */
 .ex-sec{margin-top:12px}
 .ex-card{border:1px solid var(--line);border-radius:12px;padding:14px 20px 16px;background:#FBFCFE;margin-bottom:14px}
 .ex-card.first{border:2px solid var(--orange);background:#FFF6EE}
-.ex-card .rk{display:inline-block;font-size:17.1px;font-weight:900;letter-spacing:.06em;color:var(--navy2);border:1px solid var(--navy2);border-radius:4px;padding:2px 12px;line-height:1.5}
+.ex-card .rk{display:inline-block;font-size:14px;font-weight:900;letter-spacing:.06em;color:var(--navy2);border:1px solid var(--navy2);border-radius:4px;padding:2px 12px;line-height:1.5}
 .ex-card.first .rk{background:var(--orange);color:#fff;border-color:var(--orange)}
-.ex-card .en{font-size:29.8px;font-weight:900;color:var(--navy);margin-top:6px;line-height:1.4}
-.ex-card .why{font-size:24.5px;color:#3D4B5C;margin-top:4px;line-height:1.65}
+.ex-card .en{font-size:24.4px;font-weight:900;color:var(--navy);margin-top:6px;line-height:1.4}
+.ex-card .why{font-size:20.1px;color:#3D4B5C;margin-top:4px;line-height:1.65}
 
 /* 3枚目：タイプ */
-.tp-name{font-size:42px;font-weight:900;color:var(--navy);line-height:1.4}
-.tp-name .tp-en{font-size:18.6px;letter-spacing:.22em;color:var(--gold-deep);font-weight:700;margin-left:10px}
-.tp-tag{font-size:25.4px;color:var(--sub);margin-top:1px}
-.tg-axes{font-size:19.4px;color:var(--sub);margin-top:6px;line-height:1.6}
+.tp-name{font-size:34.4px;font-weight:900;color:var(--navy);line-height:1.4}
+.tp-name .tp-en{font-size:15.3px;letter-spacing:.22em;color:var(--gold-deep);font-weight:700;margin-left:10px}
+.tp-tag{font-size:20.8px;color:var(--sub);margin-top:1px}
+.tg-axes{font-size:15.9px;color:var(--sub);margin-top:6px;line-height:1.6}
 .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
 .tg-cell{border:1px solid var(--line);border-radius:10px;padding:8px 13px;background:#FBFCFE;position:relative}
-.tg-cell .n{font-size:24.5px;font-weight:900;color:#8B99A9;line-height:1.5}
-.tg-cell .t{font-size:17.1px;color:#A5B1BF;margin-top:1px;line-height:1.5}
+.tg-cell .n{font-size:20.1px;font-weight:900;color:#8B99A9;line-height:1.5}
+.tg-cell .t{font-size:14px;color:#A5B1BF;margin-top:1px;line-height:1.5}
 .tg-cell.on{background:linear-gradient(150deg,var(--navy),var(--navy2));border:1px solid var(--gold);box-shadow:0 6px 18px rgba(11,29,58,.2)}
 .tg-cell.on .n{color:#fff}
 .tg-cell.on .t{color:#C6D2E2}
-.tg-badge{position:absolute;top:-9px;right:12px;background:var(--gold);color:var(--navy);font-size:14px;font-weight:900;letter-spacing:.16em;border-radius:3px;padding:2px 9px;line-height:1.5}
+.tg-badge{position:absolute;top:-9px;right:12px;background:var(--gold);color:var(--navy);font-size:11.5px;font-weight:900;letter-spacing:.16em;border-radius:3px;padding:2px 9px;line-height:1.5}
 .rp-list{list-style:none}
-.rp-list li{position:relative;padding:8px 0 8px 34px;font-size:27.1px;line-height:1.6}
+.rp-list li{position:relative;padding:8px 0 8px 34px;font-size:22.2px;line-height:1.6}
 .rp-list li::before{content:"";position:absolute;left:2px;top:23px;width:12px;height:12px;border:3px solid var(--gold);border-radius:50%}
 .rp-mind{border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:7px;background:#FBFCFE}
-.rp-mind .mh{font-size:28.9px;font-weight:900;color:var(--navy);line-height:1.5}
-.rp-mind .mh::before{content:attr(data-n);color:var(--gold-deep);font-size:19.4px;margin-right:9px;letter-spacing:.08em}
-.rp-mind p{font-size:24.8px;color:#3D4B5C;margin-top:3px;line-height:1.65}
-.rp-detour{margin-top:2px;background:#F2F6FB;border-radius:10px;padding:11px 16px;font-size:24.5px;color:#33455C;line-height:1.7}
+.rp-mind .mh{font-size:23.7px;font-weight:900;color:var(--navy);line-height:1.5}
+.rp-mind .mh::before{content:attr(data-n);color:var(--gold-deep);font-size:15.9px;margin-right:9px;letter-spacing:.08em}
+.rp-mind p{font-size:20.3px;color:#3D4B5C;margin-top:3px;line-height:1.65}
+.rp-detour{margin-top:2px;background:#F2F6FB;border-radius:10px;padding:11px 16px;font-size:20.1px;color:#33455C;line-height:1.7}
 
 /* 90日ロードマップ・締め・CTA */
-.rp-rstep{position:relative;border:1px solid var(--line);border-radius:12px;padding:16px 22px 16px 26px;background:#FBFCFE;margin-bottom:30px}
+.rp-rstep{position:relative;border:1px solid var(--line);border-radius:12px;padding:16px 22px 16px 26px;background:#FBFCFE;margin-bottom:22px}
 .rp-rstep::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:6px;background:var(--orange);border-radius:0 4px 4px 0}
 /* 矢印はステップ同士のあいだにだけ出す */
 .rp-rstep:has(+ .rp-rstep)::after{
-  content:"";position:absolute;left:50%;bottom:-24px;transform:translateX(-50%);
+  content:"";position:absolute;left:50%;bottom:-18px;transform:translateX(-50%);
   width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;
   border-top:14px solid var(--orange-soft);
 }
-.rp-closing{margin-top:18px;border-left:6px solid var(--gold);background:#FCF9F0;padding:20px 24px;font-size:28.9px;line-height:1.68;color:var(--navy);font-weight:700}
-.rp-closing .ck{display:block;font-size:17.1px;letter-spacing:.24em;color:var(--gold-deep);font-weight:700;margin-bottom:4px}
-.rp-rstep .rm{font-size:19.4px;letter-spacing:.16em;color:var(--orange-deep);font-weight:700}
-.rp-rstep .rh{font-size:32.4px;font-weight:900;color:var(--navy);margin-top:2px;line-height:1.5}
-.rp-rstep p{font-size:27.1px;color:#3D4B5C;margin-top:3px;line-height:1.65}
-.rp-roadextra{margin-top:2px;background:#F2F6FB;border-radius:10px;padding:14px 18px;font-size:27.1px;color:#33455C;line-height:1.7}
+.rp-closing{margin-top:18px;border-left:6px solid var(--gold);background:#FCF9F0;padding:20px 24px;font-size:23.7px;line-height:1.68;color:var(--navy);font-weight:700}
+.rp-closing .ck{display:block;font-size:14px;letter-spacing:.24em;color:var(--gold-deep);font-weight:700;margin-bottom:4px}
+.rp-rstep .rm{font-size:15.9px;letter-spacing:.16em;color:var(--orange-deep);font-weight:700}
+.rp-rstep .rh{font-size:26.6px;font-weight:900;color:var(--navy);margin-top:2px;line-height:1.5}
+.rp-rstep p{font-size:22.2px;color:#3D4B5C;margin-top:3px;line-height:1.65}
+.rp-roadextra{margin-top:2px;background:#F2F6FB;border-radius:10px;padding:14px 18px;font-size:22.2px;color:#33455C;line-height:1.7}
 
+/* ご案内は1ページ使わず、最終ページの下端に帯として置く */
+.pg-inner:has(> .rp-cta){display:flex;flex-direction:column}
+.pg-inner > .rp-cta{margin:26px -44px -56px;border-radius:0}
 .rp-cta{
   position:relative;margin-top:auto;flex:0 0 auto;
   background:linear-gradient(150deg,var(--navy) 0%,#123D63 100%);color:#fff;
-  padding:24px 44px 26px;overflow:hidden;
+  padding:18px 44px 16px;overflow:hidden;
 }
 .rp-cta-in{position:relative;z-index:2}
-.rp-cta .ck{font-size:20.2px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
-.rp-cta .ch{font-size:33.8px;font-weight:900;margin-top:6px;line-height:1.5}
+.rp-cta .ck{font-size:15px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
+.rp-cta .ch{font-size:23px;font-weight:900;margin-top:3px;line-height:1.45}
 .rp-cta .ch span{color:var(--gold-soft)}
-.rp-cta .cp{font-size:27.1px;color:#DCE4EF;margin-top:9px;line-height:1.75}
+.rp-cta .cp{font-size:18.5px;color:#DCE4EF;margin-top:6px;line-height:1.6}
 .rp-cta .cp b{color:#fff}
-.rp-cta-meta{margin-top:13px;font-size:28.9px;color:#E4EAF3;font-weight:700}
+.rp-cta-meta{margin-top:8px;font-size:19px;color:#E4EAF3;font-weight:700}
 .rp-cta-meta span{color:var(--gold-soft)}
-.rp-cta-cap{font-size:24.5px;color:#C6D2E2;margin-top:5px}
-.rp-cta-link{margin-top:10px;font-size:25.4px;color:#DCE4EF}
+.rp-cta-link{margin-top:5px;font-size:17.5px;color:#DCE4EF}
 .rp-cta-link a{color:var(--gold-soft);font-weight:700;text-decoration:none}
-.rp-cta .dis{font-size:17.1px;color:#8FA0B8;margin-top:12px;border-top:1px solid rgba(255,255,255,.14);padding-top:8px;line-height:1.55;max-width:66%}
+.rp-cta .dis{font-size:11.5px;color:#8FA0B8;margin-top:7px;border-top:1px solid rgba(255,255,255,.14);padding-top:5px;line-height:1.5}
 
 /* ---------- 印刷 ---------- */
 @media print{
@@ -855,140 +859,7 @@ function numberPages(host){
 }
 
 
-/* ------------------------------------------------------------------
-   余白に置く図版（自作SVG・人物は使わない）
-   ブランドのネイビー／ゴールド／オレンジのみで構成する
------------------------------------------------------------------- */
-var FIG_LINE = "#D5DEEA", FIG_NAVY = "#143A6B", FIG_NAVY2 = "#1D4E8F",
-    FIG_GOLD = "#C9A24B", FIG_OR = "#E8731E", FIG_PALE = "#E7ECF3";
-
-/* AI＝中心から、仕事のあらゆる接点へつながっていく
-   中央のAIを起点に、業務のアイコンが円周上に並ぶ構図。線画のみで作る */
-function figNetwork(){
-  var CX = 300, CY = 150, RX = 246, RY = 118, R = 27;
-  var ang = [-67.5, -22.5, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5];
-  /* 鍵／クラウド／地球／チャット／歯車／グラフ／メール／通信 */
-  var ic = [
-    '<rect x="-7" y="-1.4" width="14" height="10.6" rx="2.4"/><path d="M-4.1 -1.4 v-2.7 a4.1 4.1 0 0 1 8.2 0 v2.7"/>',
-    '<path d="M-8.4 4.6 h13.1 a4.3 4.3 0 0 0 .3 -8.6 a6.1 6.1 0 0 0 -11.6 -1.2 a4.7 4.7 0 0 0 -1.8 9.8 Z"/>',
-    '<circle cx="0" cy="0" r="8"/><path d="M-8 0 h16"/><ellipse cx="0" cy="0" rx="3.9" ry="8"/>',
-    '<rect x="-8" y="-7.2" width="16" height="12" rx="3"/><path d="M-3.4 4.8 v4.4 l5.2 -4.4"/>',
-    '<circle cx="0" cy="0" r="7.6" stroke-dasharray="3.1 2.9"/><circle cx="0" cy="0" r="3.4"/>',
-    '<path d="M-7 6.4 v-5.6 M0 6.4 v-11 M7 6.4 v-8.2"/>',
-    '<rect x="-8" y="-6" width="16" height="12" rx="2.2"/><path d="M-8 -4.2 l8 6.1 l8 -6.1"/>',
-    '<path d="M-8.4 -1.2 a11.4 11.4 0 0 1 16.8 0"/><path d="M-4.6 2.9 a6.6 6.6 0 0 1 9.2 0"/>'
-  ];
-  var s = '<svg viewBox="0 0 600 300" width="600" height="300" xmlns="http://www.w3.org/2000/svg">';
-
-  /* 外周の軌道 */
-  s += '<ellipse cx="'+CX+'" cy="'+CY+'" rx="'+RX+'" ry="'+RY+'" fill="none" stroke="'+FIG_LINE+'" stroke-width="1.4" stroke-dasharray="2 8"/>';
-
-  /* 中心から各接点へ伸びる線（円は後から白で塗るので、線は自然に隠れる） */
-  var pos = [];
-  for (var i = 0; i < ang.length; i++){
-    var t = ang[i] * Math.PI / 180;
-    pos.push([CX + RX * Math.cos(t), CY + RY * Math.sin(t)]);
-    s += '<line x1="'+CX+'" y1="'+CY+'" x2="'+pos[i][0].toFixed(1)+'" y2="'+pos[i][1].toFixed(1)+'" stroke="'+FIG_LINE+'" stroke-width="1.6"/>';
-  }
-  /* 隣り合う接点どうしも、うっすらつなぐ */
-  for (var j = 0; j < pos.length; j++){
-    var k = (j + 1) % pos.length;
-    s += '<line x1="'+pos[j][0].toFixed(1)+'" y1="'+pos[j][1].toFixed(1)+'" x2="'+pos[k][0].toFixed(1)+'" y2="'+pos[k][1].toFixed(1)+'" stroke="'+FIG_LINE+'" stroke-width="1.1" stroke-dasharray="3 5"/>';
-  }
-
-  /* 接点（2つだけオレンジにして視線の止まりどころを作る） */
-  for (var m = 0; m < pos.length; m++){
-    var col = (m === 1 || m === 5) ? FIG_OR : FIG_NAVY;
-    s += '<circle cx="'+pos[m][0].toFixed(1)+'" cy="'+pos[m][1].toFixed(1)+'" r="'+R+'" fill="#fff" stroke="#C6D2E0" stroke-width="1.6"/>' +
-      '<g transform="translate('+pos[m][0].toFixed(1)+','+pos[m][1].toFixed(1)+')" fill="none" stroke="'+col+'" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + ic[m] + '</g>';
-  }
-
-  /* 中央のAI */
-  s += '<circle cx="'+CX+'" cy="'+CY+'" r="82" fill="none" stroke="'+FIG_GOLD+'" stroke-opacity=".28" stroke-width="1.2"/>' +
-    '<circle cx="'+CX+'" cy="'+CY+'" r="66" fill="none" stroke="'+FIG_OR+'" stroke-opacity=".3" stroke-width="1.6" stroke-dasharray="34 14"/>' +
-    '<circle cx="'+CX+'" cy="'+CY+'" r="50" fill="#fff" stroke="'+FIG_NAVY+'" stroke-width="2.4"/>' +
-    '<text x="'+CX+'" y="'+(CY + 12)+'" text-anchor="middle" font-size="34" font-weight="900" letter-spacing="1.5" fill="'+FIG_NAVY+'" font-family="Helvetica Neue, Arial, sans-serif">AI</text>';
-
-  return s + '</svg>';
-}
-
-/* キャリア＝段階を上がっていく（積み上がるほど、届く高さが変わる） */
-function figSteps(){
-  var s = '<svg viewBox="0 0 600 300" width="600" height="300" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,16)">';
-  var x = [78, 190, 302, 414], y = [206, 172, 130, 80], w = 96;
-  var fil = [FIG_PALE, "#CBD6E4", FIG_NAVY, FIG_OR];
-  s += '<line x1="62" y1="252" x2="526" y2="252" stroke="'+FIG_LINE+'" stroke-width="1.6"/>';
-  for (var i = 0; i < 4; i++){
-    s += '<rect x="'+x[i]+'" y="'+y[i]+'" width="'+w+'" height="'+(252 - y[i])+'" rx="7" fill="'+fil[i]+'"/>';
-  }
-  s += '<path d="M126 176 C238 150 352 108 470 52" stroke="'+FIG_GOLD+'" stroke-width="2.6" fill="none" stroke-dasharray="9 8" stroke-linecap="round"/>' +
-    '<path d="M456 38 L482 44 L466 64 Z" fill="'+FIG_GOLD+'"/>' +
-    '<circle cx="126" cy="176" r="7" fill="#fff" stroke="'+FIG_GOLD+'" stroke-width="2.6"/>';
-  return s + '</g></svg>';
-}
-
-/* 現在地と的＝どこを狙うか */
-function figTarget(){
-  var CX = 356, CY = 138;
-  var s = '<svg viewBox="0 0 600 300" width="600" height="300" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,16)">';
-  var r = [112, 82, 52, 26], st = [FIG_PALE, "#CBD6E4", "#9FB4CC", FIG_GOLD];
-  for (var i = 0; i < 4; i++){
-    s += '<circle cx="'+CX+'" cy="'+CY+'" r="'+r[i]+'" fill="none" stroke="'+st[i]+'" stroke-width="2.2"/>';
-  }
-  s += '<circle cx="'+CX+'" cy="'+CY+'" r="11" fill="'+FIG_OR+'"/>' +
-    '<path d="M62 234 C132 214 196 186 258 156" stroke="'+FIG_NAVY+'" stroke-width="2.6" fill="none" stroke-dasharray="9 8" stroke-linecap="round"/>' +
-    '<circle cx="62" cy="234" r="9" fill="#fff" stroke="'+FIG_NAVY+'" stroke-width="2.8"/>' +
-    '<path d="M262 142 L292 150 L272 172 Z" fill="'+FIG_NAVY+'"/>';
-  return s + '</g></svg>';
-}
-
-/* 業務の流れの中にAIが入り、最後が成果になる */
-function figFlow(){
-  var s = '<svg viewBox="0 0 600 300" width="600" height="300" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0,14)">';
-  var x = [46, 226, 406], w = 148;
-  for (var i = 0; i < 3; i++){
-    var isMid = (i === 1);
-    s += '<rect x="'+x[i]+'" y="124" width="'+w+'" height="104" rx="12" fill="#fff" stroke="'+(isMid ? FIG_OR : "#C6D2E0")+'" stroke-width="'+(isMid ? 2.6 : 1.8)+'"/>';
-    if (i < 2){
-      s += '<path d="M'+(x[i]+w+10)+' 176 h26" stroke="'+FIG_LINE+'" stroke-width="2.4" stroke-linecap="round"/>' +
-        '<path d="M'+(x[i]+w+38)+' 176 l-12 -7 v14 Z" fill="#C6D2E0"/>';
-    }
-  }
-  /* 左と中央は書類、右は仕上がった成果 */
-  s += '<g stroke="#C6D2E0" stroke-width="2.4" stroke-linecap="round">' +
-    '<path d="M74 156 h92 M74 178 h92 M74 200 h56"/>' +
-    '<path d="M254 156 h92 M254 178 h92 M254 200 h56"/></g>' +
-    '<path d="M436 178 l22 22 l40 -46" stroke="'+FIG_OR+'" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
-  /* 中央の工程にAIが入る */
-  s += '<path d="M300 124 V92" stroke="'+FIG_LINE+'" stroke-width="1.8" stroke-dasharray="4 6"/>' +
-    '<circle cx="300" cy="60" r="34" fill="#fff" stroke="'+FIG_NAVY+'" stroke-width="2.4"/>' +
-    '<circle cx="300" cy="60" r="45" fill="none" stroke="'+FIG_GOLD+'" stroke-opacity=".3" stroke-width="1.2"/>' +
-    '<text x="300" y="72" text-anchor="middle" font-size="26" font-weight="900" letter-spacing="1.2" fill="'+FIG_NAVY+'" font-family="Helvetica Neue, Arial, sans-serif">AI</text>';
-  return s + '</g></svg>';
-}
-
-var FIG_POOL = [figNetwork, figSteps, figFlow, figTarget];
-
-/* 余白が大きく残ったページにだけ図版を置く（図版はおよそ322px使う） */
-function fillGaps(host){
-  var pages = host.querySelectorAll(".a4");
-  var used = 0;
-  for (var i = 0; i < pages.length; i++){
-    /* 表紙（.cv-body）も対象にする。ここが大きく空くと未完成に見える */
-    var body = pages[i].querySelector(".pg-body") || pages[i].querySelector(".cv-body");
-    var inner = body && body.querySelector(":scope > .pg-inner");
-    if (!body || !inner || inner.style.zoom) continue;
-    if (gapOf(body) < 325) continue;
-    var fig = document.createElement("div");
-    fig.className = "pg-fig";
-    fig.innerHTML = FIG_POOL[used % FIG_POOL.length]();
-    inner.appendChild(fig);
-    if (gapOf(body) < 0) inner.removeChild(fig); else used++;
-  }
-}
-
-/* 図版を入れてもまだ空くページは、ブロックの間隔を広げて余白を全体に散らす。
-   下端だけが大きく空いた「作りかけ」の見え方を避ける */
+/* 残った余白は、ブロックの間隔に均等に散らす。下端だけが空く見え方を避ける */
 function spreadGaps(host){
   var pages = host.querySelectorAll(".a4[data-sec]");
   for (var i = 0; i < pages.length; i++){
@@ -1004,7 +875,7 @@ function spreadGaps(host){
     if (room < 60) continue;
     target.style.display = "flex";
     target.style.flexDirection = "column";
-    target.style.rowGap = Math.min(room / (n - 1), 110).toFixed(1) + "px";
+    target.style.rowGap = Math.min(room / (n - 1), 88).toFixed(1) + "px";
     /* flex化でマージンの相殺がなくなり、想定より伸びることがある */
     if (gapOf(body) < 0){
       target.style.rowGap = "";
@@ -1116,56 +987,52 @@ function openReport(rowNum){
       '</div>' +
     '</div>' +
     '<div class="cv-body"><div class="pg-inner">' +
-      '<div class="rp-msg"><p class="lead">' + esc(t.summary) + '</p></div>' +
+      '<div class="rp-msg"><p class="lead">' + esc(t.summary) + '</p>' +
+      '<p>' + esc(t.desc) + '</p></div>' +
     '</div></div>';
   host.appendChild(cover);
 
-  /* ---------- 本編（量に応じて自動でページを送る） ---------- */
+  /* ---------- 本編（表紙を含めて5ページに収める配分） ---------- */
+  var ctaHtml =
+    '<div class="rp-cta bp"><div class="rp-cta-in">' +
+      '<p class="ck">NEXT STEP｜' + esc(name) + 'さんへのご案内</p>' +
+      '<p class="ch">この先の進め方を、<span>一緒に設計します</span></p>' +
+      '<p class="cp">実際の業務・環境・使える時間に基づいて「どこを目指し、何から始めるか」を一緒に決めるのが、<b>AI特化・個別キャリアコーチングの体験セッション</b>です。</p>' +
+      '<p class="rp-cta-meta">約60〜90分｜オンライン（Zoom）｜マンツーマン｜<span>体験1回・無料</span></p>' +
+      '<p class="rp-cta-link">お申し込み・詳細：<a href="' + CONSULT_URL + '">' + CONSULT_URL + '</a></p>' +
+      '<p class="dis">※専任コーチの稼働枠に限りがあるため、定員に達し次第、受付を終了いたします。本レポートの内容は現時点での目安であり、成果を保証するものではありません。｜レバンス（LEVANCE）</p>' +
+    '</div></div>';
+
   renderSections(host, [
-    { kicker:"DIAGNOSIS MESSAGE", title: esc(name) + "さんへの総合診断",
-      blocks:[ '<div class="rp-msg"><p>' + esc(t.desc) + '</p></div>',
-               '<div class="rp-lvnote"><span class="k">AI LEVEL｜Lv.' + lvNum + '「' + esc(stage) + '」の現在地</span><p>' + esc(lvData.note) + '</p></div>',
-               '<div class="rp-sec"><p class="rp-k">STRENGTHS</p><p class="rp-h">このタイプの強み</p>' +
-               '<ul class="rp-list">' + strengthsHtml + '</ul></div>' ] },
-
-    { kicker:"YOUR STYLE", title:"あなたに合った進め方",
-      blocks:[ '<p class="ax-note">どちらが良い・悪いではありません。自分の傾向に合ったやり方を選ぶほど、同じ努力で遠くまで届きます。</p>' ]
+    { kicker:"YOUR STYLE", title:"いまの現在地と、進め方",
+      blocks:[ '<div class="rp-lvnote"><span class="k">AI LEVEL｜Lv.' + lvNum + '「' + esc(stage) + '」の現在地</span><p>' + esc(lvData.note) + '</p></div>',
+               '<p class="ax-note">以下はどちらが良い・悪いではありません。自分の傾向に合ったやり方を選ぶほど、同じ努力で遠くまで届きます。</p>' ]
              .concat(axisBlocks) },
-
-    { kicker:"CAREER PATHS", title:"相性の良い進み方", blocks: exitBlocks },
 
     { kicker:"YOUR TYPE", title:"あなたのキャリアタイプ",
       blocks:[ '<div><p class="tp-name">' + esc(typeName) + '<span class="tp-en">' + esc(t.en) + '</span></p>' +
                '<p class="tp-tag">' + esc(t.tag) + '</p>' +
                '<p class="tg-axes">「動機の向き（攻め・守り）」と「進め方（自走・伴走）」の組み合わせで、4つのタイプに分かれます。</p></div>',
                '<div class="type-grid">' + gridHtml + '</div>',
-               '<div class="rp-sec"><p class="rp-k">ATTENTION</p><p class="rp-h">このタイプが気をつけたいこと</p>' +
+               '<div class="rp-sec"><p class="rp-k">STRENGTHS</p><p class="rp-h">このタイプの強み</p>' +
+               '<ul class="rp-list">' + strengthsHtml + '</ul></div>',
+               '<div class="rp-sec"><p class="rp-k">ATTENTION</p><p class="rp-h">気をつけたいこと</p>' +
                '<ul class="rp-list">' + stumblesHtml + '</ul></div>',
                '<div class="rp-detour">' + esc(t.detour) + '</div>' ] },
 
-    { kicker:"MINDSET", title:"いま必要な考え方", blocks: mindBlocks },
+    { kicker:"CAREER PATHS", title:"相性の良い進み方と、考え方",
+      blocks: exitBlocks
+              /* 見出しだけがページ末尾に取り残されないよう、最初の1つと一体で送る */
+              .concat([ '<div><div class="rp-sec"><p class="rp-k">MINDSET</p><p class="rp-h">いま必要な考え方</p></div>' + mindBlocks[0] + '</div>' ])
+              .concat(mindBlocks.slice(1)) },
 
     { kicker:"NEXT 90 DAYS", title:"最初の90日でやること",
       /* タイプ別の締めと共通の締めは、分けると2ページ目がほぼ空になるのでひとつにまとめる */
       blocks: roadBlocks
               .concat([ '<div class="rp-closing"><span class="ck">LAST WORDS</span>' + esc(t.road) +
-                        '<br>AIを使える人はこの2年で増えましたが、業務そのものを設計し直すところまで踏み込んでいる人は、まだ多くありません。<b>いま手をつけた分が、そのまま差になります。</b></div>' ]) }
+                        '<br>ここまで踏み込んでいる人は、まだ多くありません。<b>いま手をつけた分が、そのまま差になります。</b></div>' ])
+              .concat([ ctaHtml ]) }
   ], nmShort);
-
-  /* ---------- 締めとご案内 ---------- */
-  var last = document.createElement("div");
-  last.className = "a4 on-navy";
-  last.innerHTML =
-    '<div class="rp-cta bp last"><div class="rp-cta-in">' +
-      '<p class="ck">NEXT STEP｜' + esc(name) + 'さんへのご案内</p>' +
-      '<p class="ch">あなたの業務・環境に基づいた<span>「進め方」</span>を、<br>一緒に設計する体験セッションをご用意しています。</p>' +
-      '<p class="cp">このレポートでお渡しできるのは、共通の地図までです。実際の業務内容・職場環境・使える時間に基づいて、どこを目指し、まず何から始めればいいか。その方向づけを行う<b>AI特化・個別キャリアコーチングの体験セッション</b>を、1回無料でご用意しています。</p>' +
-      '<p class="rp-cta-meta">約60〜90分｜オンライン（Zoom）｜マンツーマン｜<span>体験1回・無料</span></p>' +
-      '<p class="rp-cta-cap">※専任コーチの稼働枠に限りがあるため、定員に達し次第、受付を終了いたします。</p>' +
-      '<p class="rp-cta-link">お申し込み・詳細：<a href="' + CONSULT_URL + '">' + CONSULT_URL + '</a>（公式LINEからもご案内しています）</p>' +
-      '<p class="dis">※本レポートの内容は現時点での目安であり、成果を保証するものではありません。｜レバンス（LEVANCE）</p>' +
-    '</div></div>';
-  host.appendChild(last);
 
   /* 仕上げは「レイアウトが確定してから」行う。
      DOMを組んだ直後は高さがまだ確定しておらず、溢れていないページまで縮小してしまう。 */
@@ -1177,7 +1044,6 @@ function openReport(rowNum){
         var vb = allPages[vp].querySelector(".pg-body") || allPages[vp].querySelector(".cv-body");
         if (vb && gapOf(vb) < 0) shrinkToFit(vb);
       }
-      fillGaps(host);
       spreadGaps(host);
       numberPages(host);
     });

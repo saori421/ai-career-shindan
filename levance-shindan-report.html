@@ -143,7 +143,20 @@ body{
 .cv-type .tn{font-size:44.3px;font-weight:900;margin-top:2px;line-height:1.3}
 .cv-type .te{font-size:16.6px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700;margin-top:2px}
 .cv-type .tt{font-size:23px;color:#C6D2E2;margin-top:4px}
-.cv-lvrow{display:flex;gap:26px;align-items:center;margin-top:52px}
+.cv-lvrow{margin-top:52px}
+/* リングだと「5段階のどこか」が伝わらないので、段階を並べて現在地を示す */
+.lv-steps{display:flex;align-items:flex-start;margin-top:24px}
+.lv-st{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto}
+.lv-st .n{
+  width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,.28);
+  display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#A9B7CB;
+}
+.lv-st.on .n{background:var(--orange);border-color:var(--orange);color:#fff}
+.lv-st.cur .n{box-shadow:0 0 0 6px rgba(232,115,30,.22)}
+.lv-st .t{font-size:14px;color:#93A3B8;white-space:nowrap;letter-spacing:.02em}
+.lv-st.cur .t{color:#fff;font-weight:700}
+.lv-ln{flex:1 1 auto;height:2px;background:rgba(255,255,255,.16);margin:17px 8px 0}
+.lv-ln.on{background:var(--orange)}
 .cv-ring{position:relative;width:150px;height:150px;flex:0 0 150px}
 .cv-ring svg{transform:rotate(-90deg)}
 .cv-ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
@@ -169,6 +182,16 @@ body{
 .rp-lvnote{margin-top:14px;background:#F2F6FB;border-radius:10px;padding:13px 18px}
 .rp-lvnote .k{display:block;font-size:15.3px;letter-spacing:.14em;color:var(--gold-deep);font-weight:700;margin-bottom:3px}
 .rp-lvnote p{font-size:21.5px;color:#33455C;line-height:1.75}
+.rp-lvnote .nx{margin-top:8px;font-size:21.5px;color:var(--navy);font-weight:700}
+.rp-lvnote .nx b{color:var(--orange-deep)}
+.lv-list{margin-top:12px;border-top:1px solid var(--line)}
+.lv-li{display:flex;align-items:baseline;gap:14px;padding:11px 4px;border-bottom:1px solid var(--line);font-size:20.5px;color:#5B6B7B;line-height:1.5}
+.lv-li .lv{flex:0 0 auto;font-size:18px;font-weight:900;color:#8B99A9;letter-spacing:.04em}
+.lv-li .nm{flex:0 0 92px;font-weight:900;color:var(--navy)}
+.lv-li .ds{flex:1 1 auto}
+.lv-li.cur{background:#FFF6EE}
+.lv-li.cur .lv,.lv-li.cur .nm{color:var(--orange-deep)}
+.lv-li .now{flex:0 0 auto;font-size:16px;font-weight:900;color:#fff;background:var(--orange);border-radius:4px;padding:3px 11px;letter-spacing:.04em}
 
 /* ----- 2〜4枚目共通ヘッダー ----- */
 /* 横並びにすると、名前の長い方で見出しが折り返されるので縦積みにする */
@@ -386,11 +409,11 @@ var PHASES = [
   {en:"PHASE 3｜ORG DRIVER", ja:"組織を動かす"}
 ];
 var LEVELS = [
-  {lv:1, name:"情報収集ステージ", phase:0, note:"AIが気になり、情報を集め始めた段階です。勉強を増やすより「自分の業務のどこに使うか」を1つ決めるだけで、次のステージに進めます。"},
-  {lv:2, name:"個人活用ステージ", phase:0, note:"個人の時短にAIを使えている段階です。次は、毎日の業務フローに組み込むこと。ここから、便利に使う人と成果に変える人が分かれます。"},
-  {lv:3, name:"業務実装ステージ", phase:1, note:"業務の一部にAIを組み込めている段階です。次は、成果を「どの業務を、どれくらい改善したか」の形に変換することです。"},
-  {lv:4, name:"仕組み化ステージ", phase:1, note:"再現できる型まで作り込めている段階です。次は、その型をチーム・周囲に広げること。個人の生産性から組織の生産性へ進みます。"},
-  {lv:5, name:"組織展開ステージ", phase:2, note:"チーム・組織にAI活用を広げられている段階です。推進実績をキャリアの言葉に変換して、狙う出口を取りにいく段階です。"}
+  {lv:1, name:"情報収集ステージ", phase:0, short:"AIが気になり、情報を集め始めた段階", note:"AIが気になり、情報を集め始めた段階です。勉強を増やすより「自分の業務のどこに使うか」を1つ決めるだけで、次のステージに進めます。"},
+  {lv:2, name:"個人活用ステージ", phase:0, short:"自分の作業時間をAIで短縮できている", note:"個人の時短にAIを使えている段階です。次は、毎日の業務フローに組み込むこと。ここから、便利に使う人と成果に変える人が分かれます。"},
+  {lv:3, name:"業務実装ステージ", phase:1, short:"業務の一部にAIを組み込めている", note:"業務の一部にAIを組み込めている段階です。次は、成果を「どの業務を、どれくらい改善したか」の形に変換することです。"},
+  {lv:4, name:"仕組み化ステージ", phase:1, short:"再現できる型まで作り込めている", note:"再現できる型まで作り込めている段階です。次は、その型をチーム・周囲に広げること。個人の生産性から組織の生産性へ進みます。"},
+  {lv:5, name:"組織展開ステージ", phase:2, short:"チーム・組織に活用を広げられている", note:"チーム・組織にAI活用を広げられている段階です。推進実績をキャリアの言葉に変換して、狙う出口を取りにいく段階です。"}
 ];
 
 var TYPES = {
@@ -618,6 +641,32 @@ function renderList(){
 /* =========================================================
    レポート生成の補助
 ========================================================= */
+/* 5段階それぞれが何を指すのかを並べる。現在地と次の段階が同時に見える */
+function levelListHTML(lv){
+  var h = '<div class="rp-sec"><p class="rp-k">AI LEVEL</p><p class="rp-h">いまの段階と、この先</p><div class="lv-list">';
+  for (var i = 1; i <= 5; i++){
+    var L = LEVELS[i - 1], cur = (i === lv);
+    h += '<div class="lv-li' + (cur ? " cur" : "") + '">' +
+      '<span class="lv">Lv.' + i + '</span>' +
+      '<span class="nm">' + esc(L.name.replace("ステージ", "")) + '</span>' +
+      '<span class="ds">' + esc(L.short) + '</span>' +
+      (cur ? '<span class="now">いまここ</span>' : '') + '</div>';
+  }
+  return h + '</div></div>';
+}
+
+/* AIレベルの5段階を並べて、いまどこにいるかを一目で示す */
+function levelStepsHTML(lv){
+  var h = '<div class="lv-steps">';
+  for (var i = 1; i <= 5; i++){
+    var cls = (i <= lv ? " on" : "") + (i === lv ? " cur" : "");
+    h += '<div class="lv-st' + cls + '"><span class="n">' + i + '</span>' +
+      '<span class="t">' + esc(LEVELS[i - 1].name.replace("ステージ", "")) + '</span></div>';
+    if (i < 5) h += '<span class="lv-ln' + (i < lv ? " on" : "") + '"></span>';
+  }
+  return h + '</div>';
+}
+
 function ringSVG(lv){
   var C = 2 * Math.PI * 63;
   var off = C * (1 - lv / 5);
@@ -980,10 +1029,10 @@ function openReport(rowNum){
         '<p class="te">' + esc(t.en) + '</p>' +
         '<p class="tt">' + esc(t.tag) + '</p></div>' +
       '<div class="cv-lvrow">' +
-        '<div class="cv-ring">' + ringSVG(lvNum) +
-          '<div class="cv-ring-c"><span class="p">AI LEVEL</span><span class="n">' + lvNum + '</span><span class="d">of 5</span></div></div>' +
-        '<div class="cv-lvtext"><p class="l">あなたのAIレベル（5段階）</p><p class="s">' + esc(stage) + '</p>' +
+        '<div class="cv-lvtext"><p class="l">あなたのAIレベル（5段階）</p>' +
+        '<p class="s">Lv.' + lvNum + '　' + esc(stage) + '</p>' +
         '<span class="cv-phase">' + esc(phase) + '</span></div>' +
+        levelStepsHTML(lvNum) +
       '</div>' +
     '</div>' +
     '<div class="cv-body"><div class="pg-inner">' +
@@ -1005,7 +1054,12 @@ function openReport(rowNum){
 
   renderSections(host, [
     { kicker:"YOUR STYLE", title:"いまの現在地と、進め方",
-      blocks:[ '<div class="rp-lvnote"><span class="k">AI LEVEL｜Lv.' + lvNum + '「' + esc(stage) + '」の現在地</span><p>' + esc(lvData.note) + '</p></div>',
+      blocks:[ levelListHTML(lvNum),
+               '<div class="rp-lvnote"><span class="k">Lv.' + lvNum + '「' + esc(stage) + '」の現在地</span><p>' + esc(lvData.note) + '</p>' +
+               (LEVELS[lvNum]
+                 ? '<p class="nx">次の段階は <b>Lv.' + (lvNum + 1) + '「' + esc(LEVELS[lvNum].name) + '」</b>です。</p>'
+                 : '<p class="nx">5段階の最上位です。ここからは、<b>推進した実績をキャリアの言葉に変える</b>段階になります。</p>') +
+               '</div>',
                '<p class="ax-note">以下はどちらが良い・悪いではありません。自分の傾向に合ったやり方を選ぶほど、同じ努力で遠くまで届きます。</p>' ]
              .concat(axisBlocks) },
 

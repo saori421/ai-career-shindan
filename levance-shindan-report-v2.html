@@ -242,6 +242,10 @@ body{
 /* ご案内は1ページ使わず、最終ページの下端に帯として置く */
 .pg-inner:has(> .rp-cta){display:flex;flex-direction:column;min-height:100%}
 .pg-inner > .rp-cta{margin:26px -34px -56px;border-radius:0}
+/* 最終ページが少しだけ溢れるときの詰め（矢印の位置は margin-bottom 基準なので padding だけ触る） */
+.pg-tight .rp-rstep{padding-top:11px;padding-bottom:11px}
+.pg-tight .rp-closing{margin-top:12px;padding-top:13px;padding-bottom:13px}
+.pg-tight .pg-inner > .rp-cta{margin-top:16px;padding-top:14px;padding-bottom:12px}
 .rp-cta{
   position:relative;margin-top:auto;flex:0 0 auto;
   background:linear-gradient(150deg,var(--navy) 0%,#123D63 100%);color:#fff;
@@ -890,6 +894,10 @@ function reflowOverflow(host){
       /* ブロックが1つしかないページは、これ以上分けられない */
       if (!target || target.children.length < 2) continue;
 
+      /* コーチング案内の帯だけが次ページに押し出されると、ほぼ空のページができる。
+         最終ページは送らずに shrinkToFit で少し縮めて収める */
+      if (target.lastElementChild.classList.contains("rp-cta")) continue;
+
       var sec = pg.getAttribute("data-sec");
       var next = pg.nextElementSibling;
       if (!next || next.getAttribute("data-sec") !== sec){
@@ -922,6 +930,8 @@ function shrinkToFit(body){
   if (!inner) return;
   inner.style.zoom = "";
   if (gapOf(body) >= 0) return;
+  /* min-height:100% は zoom 後に 1/zoom 倍へ膨らみ、いくら縮めても溢れ判定が消えない */
+  inner.style.minHeight = "0";
   var z = 1, guard = 0;
   while (gapOf(body) < 0 && guard < 24){
     z -= 0.02;
@@ -1105,6 +1115,9 @@ function openReport(rowNum){
       var allPages = host.querySelectorAll(".a4");
       for (var vp = 0; vp < allPages.length; vp++){
         var vb = allPages[vp].querySelector(".pg-body");
+        /* 最終ページ（案内の帯あり）は、縮小の前に余白だけ詰めて収める。
+           実データでは数px〜数十pxの超過がほとんどで、縮小すると文字が小さくなりすぎる */
+        if (vb && gapOf(vb) < 0 && vb.querySelector(".rp-cta")) allPages[vp].classList.add("pg-tight");
         if (vb && gapOf(vb) < 0) shrinkToFit(vb);
       }
       spreadGaps(host);

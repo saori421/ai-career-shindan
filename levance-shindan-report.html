@@ -271,6 +271,10 @@ body{
 /* ご案内は1ページ使わず、最終ページの下端に帯として置く */
 .pg-inner:has(> .rp-cta){display:flex;flex-direction:column}
 .pg-inner > .rp-cta{margin:26px -44px -56px;border-radius:0}
+/* 最終ページが少しだけ溢れるときの詰め（矢印の位置は margin-bottom 基準なので padding だけ触る） */
+.pg-tight .rp-rstep{padding-top:11px;padding-bottom:11px}
+.pg-tight .rp-closing{margin-top:12px;padding-top:13px;padding-bottom:13px}
+.pg-tight .pg-inner > .rp-cta{margin-top:16px;padding-top:14px;padding-bottom:12px}
 .rp-cta{
   position:relative;margin-top:auto;flex:0 0 auto;
   background:linear-gradient(150deg,var(--navy) 0%,#123D63 100%);color:#fff;
@@ -852,6 +856,9 @@ function reflowOverflow(host){
       var target = pg.querySelector(".pg-inner > .rp-msg") || pg.querySelector(".pg-inner");
       /* ブロックが1つしかないページは、これ以上分けられない */
       if (!target || target.children.length < 2) continue;
+      /* コーチング案内の帯だけが次ページに押し出されると、ほぼ空のページができる。
+         最終ページは送らずに余白詰め→shrinkToFit で収める */
+      if (target.lastElementChild.classList.contains("rp-cta")) continue;
 
       var sec = pg.getAttribute("data-sec");
       var next = pg.nextElementSibling;
@@ -1096,6 +1103,7 @@ function openReport(rowNum){
       var allPages = host.querySelectorAll(".a4");
       for (var vp = 0; vp < allPages.length; vp++){
         var vb = allPages[vp].querySelector(".pg-body") || allPages[vp].querySelector(".cv-body");
+        if (vb && gapOf(vb) < 0 && vb.querySelector(".rp-cta")) allPages[vp].classList.add("pg-tight");
         if (vb && gapOf(vb) < 0) shrinkToFit(vb);
       }
       spreadGaps(host);

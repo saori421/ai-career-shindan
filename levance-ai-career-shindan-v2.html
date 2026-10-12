@@ -1,8 +1,8 @@
 <!doctype html>
-<!-- 最終更新 2026.9.7 -->
+<!-- 最終更新 2026.10.12 -->
 <!-- 4タイプ別 AIキャリアタイプ診断（v3：面談前に「人物タイプ」を掴む診断）｜レバンス -->
 <!-- 正本。公開は GitHub repo saori421/ai-career-shindan に levance-ai-career-shindan-v2.html として上書きpush（公開URLは v2 のまま据え置き） -->
-<!-- 設計の正本: レバンス/2026-09-07_AIキャリアタイプ診断v3_設計案.md -->
+<!-- 設計の正本: レバンス/2026-09-07_AIキャリアタイプ診断v3_設計案.md（2026-10-12改修の差分は同ファイル末尾「8. 2026-10-12 改修」） -->
 <!-- TODO: 結果レポート受け取りボタンの href を公式LINEのURLに差し替える（LINE_URL で検索） -->
 <html lang="ja">
 <head>
@@ -12,159 +12,224 @@
 <title>4タイプ別 AIキャリアタイプ診断｜LEVANCE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --navy:#0B1D3A;
-  --navy2:#143A6B;
-  --navy3:#1D4E8F;
-  --gold:#C9A24B;
-  --gold-soft:#E3D3A8;
-  --gold-deep:#B08A2E;
-  --orange:#FF7A00;
-  --ink:#1C2733;
-  --sub:#5B6B7B;
-  --line:#E6EBF2;
-  --bg:#F5F7FA;
+  --ink:#171C40;
+  --head:#141A5C;
+  --sub:#5A6389;
+  --line:#DFE4FA;
+  --bg:#F1F3FF;
   --card:#FFFFFF;
-  --warn:#B95E1B;
+  --tint:#EEF1FF;
+  --deep:#161B78;
+  --blue:#2546F0;
+  --blue2:#3D6BFF;
+  --violet:#6F5BFF;
+  --pink:#B46CFF;
+  --cyan:#6FD8FF;
+  --orange:#FF7A1A;
+  --warn:#B4541A;
+  --err:#D43C4E;
+  --grad:linear-gradient(120deg,#2546F0 0%,#6A5BFF 55%,#B46CFF 100%);
+  --grad-text:linear-gradient(100deg,#8AE2FF 0%,#BDB8FF 55%,#E6BEFF 100%);
+  --en:"Outfit","Noto Sans JP","Hiragino Sans",sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
 body{
   font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
   background:var(--bg);color:var(--ink);line-height:1.85;
-  -webkit-font-smoothing:antialiased;font-size:15.5px;
+  -webkit-font-smoothing:antialiased;font-size:15.5px;overflow-x:hidden;
 }
 img,svg{max-width:100%}
 .wrap{max-width:720px;margin:0 auto;padding:0 18px}
+.nb{display:inline-block}
+h1,h2,h3,.q-title,.nc-title,.tl-item b,.mind .m-h,.hero-tagline{text-wrap:balance}
+.opt-in,.q-hint,.section-head p,.learn-item p,.tp-list li{text-wrap:pretty}
+.gt{text-shadow:none;background:var(--grad-text);-webkit-background-clip:text;background-clip:text;color:transparent}
 
 /* ---------- progress ---------- */
-#progressWrap{position:fixed;top:0;left:0;right:0;height:4px;background:rgba(11,29,58,.12);z-index:50}
-#progressBar{height:100%;width:0%;background:linear-gradient(90deg,var(--navy2),var(--gold));transition:width .3s ease}
+#progressWrap{position:fixed;top:0;left:0;right:0;height:5px;background:rgba(37,70,240,.14);z-index:50}
+#progressBar{height:100%;width:0%;background:linear-gradient(90deg,#3D6BFF,#8A5CFF,#D07BFF);border-radius:0 3px 3px 0;transition:width .3s ease}
+#progressCount{
+  position:fixed;top:5px;left:0;right:0;z-index:49;height:30px;
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  font-family:var(--en);font-size:13px;font-weight:700;letter-spacing:.04em;color:var(--blue);
+  background:rgba(255,255,255,.93);border-bottom:1px solid var(--line);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  opacity:0;transform:translateY(-36px);pointer-events:none;transition:opacity .25s ease,transform .25s ease;
+}
+#progressCount.show{opacity:1;transform:none}
+#progressCount small{font-family:"Noto Sans JP",sans-serif;font-size:11.5px;font-weight:700;color:var(--sub);margin-right:6px}
+#progressCount em{font-family:"Noto Sans JP",sans-serif;font-style:normal;font-size:11.5px;font-weight:500;color:var(--sub);margin-left:10px}
 
-/* ---------- 設計図グリッド ---------- */
-.blueprint{position:relative;overflow:hidden}
-.blueprint::before{
+/* ---------- オーロラ背景（ヒーロー・結果・CTA共通） ---------- */
+.aurora{
+  position:relative;overflow:hidden;color:#fff;
+  background:
+    radial-gradient(110% 85% at 100% 0%,rgba(196,112,255,.78) 0%,rgba(196,112,255,0) 58%),
+    radial-gradient(95% 80% at 0% 100%,rgba(64,170,255,.55) 0%,rgba(64,170,255,0) 60%),
+    linear-gradient(135deg,#161B78 0%,#2340E0 50%,#4A3FE6 100%);
+}
+.aurora::before{
   content:"";position:absolute;inset:0;pointer-events:none;
-  background-image:
-    repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 46px),
-    repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 46px);
+  background-image:radial-gradient(rgba(255,255,255,.26) 1px,transparent 1.5px);
+  background-size:14px 14px;
+  -webkit-mask-image:radial-gradient(70% 75% at 0% 0%,#000 0%,transparent 72%);
+          mask-image:radial-gradient(70% 75% at 0% 0%,#000 0%,transparent 72%);
+}
+.aurora::after{
+  content:"";position:absolute;pointer-events:none;left:-30%;right:-30%;bottom:-55%;height:110%;
+  background:
+    linear-gradient(168deg,transparent 47%,rgba(255,255,255,.16) 50%,transparent 53%),
+    linear-gradient(160deg,transparent 56%,rgba(140,220,255,.14) 59%,transparent 62%);
+}
+.aurora.deep{
+  background:
+    radial-gradient(110% 85% at 100% 0%,rgba(168,96,255,.62) 0%,rgba(168,96,255,0) 58%),
+    radial-gradient(95% 80% at 0% 100%,rgba(52,140,255,.45) 0%,rgba(52,140,255,0) 60%),
+    linear-gradient(135deg,#10145C 0%,#1C2FB8 55%,#3A2FC8 100%);
 }
 
 /* ---------- hero ---------- */
-.hero{background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 100%);color:#fff;padding:44px 0 52px}
+.hero{padding:46px 0 62px}
 .hero-inner{position:relative;z-index:2}
 .brandbadge{
-  display:inline-block;font-size:11px;letter-spacing:.28em;font-weight:500;
-  color:var(--gold-soft);border:1px solid rgba(201,162,75,.55);
-  padding:5px 14px;border-radius:2px;margin-bottom:22px;
+  display:inline-block;font-family:var(--en);font-size:11px;letter-spacing:.24em;font-weight:600;
+  color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.38);
+  padding:5px 14px;border-radius:999px;margin-bottom:22px;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
 }
-.hero h1{font-size:27px;font-weight:900;line-height:1.45;letter-spacing:.02em}
-.hero h1 .small{display:block;font-size:15px;font-weight:700;color:var(--gold-soft);margin-bottom:10px;letter-spacing:.12em}
-.hero-tagline{margin-top:10px;font-size:14px;font-weight:700;color:var(--gold-soft);letter-spacing:.06em}
-.hero .lead{margin-top:14px;font-size:13.5px;line-height:1.9;color:#DCE4EF}
-.hero .lead strong{color:#fff;font-weight:700}
-.hero-meta{margin-top:14px;font-size:11.5px;color:#A9B7CB;letter-spacing:.06em}
-.hero-goldline{width:44px;height:2px;background:var(--gold);margin:16px 0 0}
+.hero h1{font-size:33px;font-weight:900;line-height:1.38;letter-spacing:.02em;text-shadow:0 4px 22px rgba(12,16,90,.35)}
+.hero h1 .small{display:block;font-size:15px;font-weight:700;color:#CFE9FF;margin-bottom:8px;letter-spacing:.14em;text-shadow:none}
+.hero-tagline{margin-top:12px;font-size:15px;font-weight:700;color:#fff;letter-spacing:.04em}
+.hero .lead{margin-top:14px;font-size:14px;line-height:1.95;color:rgba(255,255,255,.9)}
+.hero .lead strong{color:#fff;font-weight:700;background:linear-gradient(transparent 62%,rgba(111,216,255,.42) 62%)}
+.hero-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.hero-chips span{
+  font-size:12.5px;font-weight:700;color:#fff;line-height:1.5;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.32);
+  border-radius:999px;padding:5px 13px;
+}
+.hero-chips b{font-family:var(--en);font-size:15px;font-weight:700;margin:0 2px}
 
 /* ---------- learn box ---------- */
 .learnbox{
-  background:var(--card);border:1px solid var(--line);border-top:2px solid var(--gold);
-  border-radius:12px;padding:26px 24px;margin:-26px auto 0;position:relative;z-index:3;
-  box-shadow:0 10px 34px rgba(11,29,58,.10);
+  background:var(--card);border-radius:20px;padding:26px 22px 20px;margin:-34px auto 0;
+  position:relative;z-index:3;overflow:hidden;
+  box-shadow:0 18px 44px rgba(36,52,170,.18);
 }
-.learnbox h2{font-size:15px;font-weight:900;color:var(--navy);margin-bottom:14px;letter-spacing:.04em}
-.learn-item{display:flex;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.learnbox::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:var(--grad)}
+.learnbox h2{font-size:16px;font-weight:900;color:var(--head);margin-bottom:10px;letter-spacing:.04em}
+.learn-item{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--line);align-items:flex-start}
 .learn-item:last-child{border-bottom:none}
 .learn-num{
-  flex:0 0 26px;height:26px;border:1px solid var(--gold);color:var(--gold-deep);
+  flex:0 0 28px;height:28px;background:var(--grad);color:#fff;font-family:var(--en);
   border-radius:50%;display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:700;margin-top:3px;
+  font-size:13.5px;font-weight:700;margin-top:2px;box-shadow:0 4px 10px rgba(96,88,255,.3);
 }
-.learn-item b{color:var(--navy);font-weight:700}
+.learn-item b{color:var(--head);font-weight:700;font-size:15px}
 .learn-item p{font-size:13.5px;color:var(--sub);line-height:1.75}
 
 /* ---------- form ---------- */
-main{padding:30px 0 60px}
-.section-head{margin:38px 0 6px}
+main{padding:0 0 60px}
+.section-head{margin:46px 0 6px}
 .section-step{
-  display:inline-block;font-size:11px;letter-spacing:.22em;color:var(--gold-deep);
-  font-weight:700;border-bottom:1px solid var(--gold);padding-bottom:3px;margin-bottom:8px;
+  display:inline-block;font-family:var(--en);font-size:11.5px;letter-spacing:.2em;color:#fff;
+  font-weight:700;background:var(--grad);border-radius:999px;padding:4px 14px;margin-bottom:10px;
 }
-.section-head h2{font-size:19px;font-weight:900;color:var(--navy);line-height:1.5}
-.section-head p{font-size:13px;color:var(--sub);margin-top:4px}
+.section-head h2{font-size:21px;font-weight:900;color:var(--head);line-height:1.45}
+.section-head p{font-size:13.5px;color:var(--sub);margin-top:5px;line-height:1.75}
 
-.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;margin-top:16px;scroll-margin-top:70px}
-.q.unanswered{border-color:#C0392B}
-.q.unanswered .q-title{color:#C0392B}
-.q-no{font-size:11px;color:var(--gold-deep);font-weight:700;letter-spacing:.14em;margin-bottom:4px}
-.q-scene{font-size:11px;letter-spacing:.2em;color:var(--sub);font-weight:700;margin-left:10px}
-.q-title{font-size:15.5px;font-weight:700;color:var(--navy);line-height:1.6;margin-bottom:14px}
-.opt{display:block;position:relative;margin-top:8px;cursor:pointer}
+.q{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px 20px;
+  margin-top:16px;scroll-margin-top:80px;box-shadow:0 8px 26px rgba(40,56,160,.07);
+}
+.q.unanswered{border-color:var(--err);box-shadow:0 0 0 3px rgba(212,60,78,.13)}
+.q.unanswered .q-title{color:var(--err)}
+.q.unanswered .q-no::after{content:"未回答です";margin-left:10px;color:var(--err);letter-spacing:.04em;font-family:"Noto Sans JP",sans-serif}
+.q-no{font-family:var(--en);font-size:12.5px;color:var(--violet);font-weight:700;letter-spacing:.12em;margin-bottom:6px}
+.q-title{font-size:16.5px;font-weight:700;color:var(--head);line-height:1.6;margin-bottom:14px}
+.q-hint{font-size:12.5px;color:var(--sub);line-height:1.7;margin:-8px 0 14px}
+.opt{display:block;position:relative;margin-top:9px;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .opt input{position:absolute;opacity:0;pointer-events:none}
 .opt .opt-in{
-  display:block;border:1.5px solid var(--line);border-radius:9px;
-  padding:12px 14px;font-size:14px;line-height:1.6;color:var(--ink);
-  background:#FBFCFE;transition:all .15s ease;
+  display:flex;align-items:center;gap:12px;min-height:52px;
+  border:1.5px solid var(--line);border-radius:13px;
+  padding:12px 14px;font-size:15px;line-height:1.55;color:var(--ink);
+  background:#FAFBFF;transition:border-color .15s ease,background .15s ease,box-shadow .15s ease;
 }
-.opt:hover .opt-in{border-color:#B9C6D6}
+.opt .opt-in::before{
+  content:"";flex:0 0 20px;width:20px;height:20px;border-radius:50%;
+  border:2px solid #C2C9EE;background:#fff;transition:all .15s ease;
+}
+.opt:hover .opt-in{border-color:#B4BEF2}
+.opt input:focus-visible + .opt-in{outline:2px solid var(--blue2);outline-offset:2px}
 .opt input:checked + .opt-in{
-  border-color:var(--navy2);background:#EEF3FA;font-weight:700;color:var(--navy);
-  box-shadow:inset 3px 0 0 var(--gold);
+  border-color:transparent;font-weight:700;color:var(--head);
+  background:linear-gradient(#F0F2FF,#F0F2FF) padding-box,var(--grad) border-box;
+  box-shadow:0 6px 16px rgba(84,84,255,.18);
 }
+.opt input:checked + .opt-in::before{
+  border-color:var(--violet);
+  background:radial-gradient(circle,var(--violet) 0 5px,#fff 5.6px);
+}
+.opt.none .opt-in{background:transparent;border-style:dashed;color:var(--sub);font-size:14px;min-height:46px;padding:9px 14px}
+.opt.none input:checked + .opt-in{border-style:solid;color:var(--head)}
 
 /* ---------- 連絡先カード ---------- */
 .namecard{
-  background:var(--card);border:1px solid var(--line);border-radius:12px;
-  padding:22px;margin-top:30px;scroll-margin-top:70px;
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:24px 20px;margin-top:34px;scroll-margin-top:72px;box-shadow:0 8px 26px rgba(40,56,160,.07);
 }
-.namecard.unanswered{border-color:#C0392B}
+.namecard.unanswered{border-color:var(--err);box-shadow:0 0 0 3px rgba(212,60,78,.13)}
 .nc-step{
-  display:inline-block;font-size:11px;letter-spacing:.22em;color:var(--gold-deep);
-  font-weight:700;border-bottom:1px solid var(--gold);padding-bottom:3px;margin-bottom:8px;
+  display:inline-block;font-family:var(--en);font-size:11.5px;letter-spacing:.2em;color:#fff;
+  font-weight:700;background:var(--grad);border-radius:999px;padding:4px 14px;margin-bottom:10px;
 }
-.nc-title{font-size:16.5px;font-weight:900;color:var(--navy);line-height:1.6}
-.nc-lead{font-size:12.5px;color:var(--sub);line-height:1.75;margin-top:6px}
-.nc-field{margin-top:18px}
-.namecard label{font-size:13.5px;font-weight:700;color:var(--navy);display:block;margin-bottom:8px}
-.namecard span{font-weight:400;color:var(--sub);font-size:12px}
+.nc-title{font-size:17px;font-weight:900;color:var(--head);line-height:1.6}
+.nc-lead{font-size:13.5px;color:var(--sub);line-height:1.75;margin-top:6px}
+.nc-field{margin-top:20px}
+.namecard label{font-size:14px;font-weight:700;color:var(--head);display:block;margin-bottom:8px}
 .req{
-  display:inline-block;font-size:10.5px;font-weight:700;color:#fff;background:var(--navy2);
-  border-radius:3px;padding:1px 7px;margin-left:7px;letter-spacing:.06em;vertical-align:2px;
+  display:inline-block;font-size:10.5px;font-weight:700;color:#fff;background:var(--violet);
+  border-radius:4px;padding:1px 7px;margin-left:7px;letter-spacing:.06em;vertical-align:2px;
 }
 .namecard input[type="text"],.namecard input[type="email"]{
-  width:100%;border:1px solid var(--line);border-radius:8px;padding:12px 14px;
-  font-size:16px;font-family:inherit;background:#FBFCFE;color:var(--ink);
+  width:100%;border:1.5px solid var(--line);border-radius:12px;padding:14px 14px;
+  font-size:16px;font-family:inherit;background:#FAFBFF;color:var(--ink);-webkit-appearance:none;appearance:none;
 }
-.namecard input:focus{outline:none;border-color:var(--navy2)}
-.namecard input.bad{border-color:#C0392B;background:#FEF7F6}
-.nc-err{display:none;font-size:12.5px;font-weight:700;color:#C0392B;margin-top:8px;line-height:1.7}
-.nc-ages{display:flex;flex-wrap:wrap;gap:8px}
-.agechip{position:relative;cursor:pointer;flex:1 1 28%}
+.namecard input:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(111,91,255,.16)}
+.namecard input.bad{border-color:var(--err);background:#FFF6F7}
+.nc-err{display:none;font-size:13px;font-weight:700;color:var(--err);margin-top:10px;line-height:1.7}
+.nc-ages{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.namecard .agechip{position:relative;cursor:pointer;margin:0;-webkit-tap-highlight-color:transparent}
 .agechip input{position:absolute;opacity:0;pointer-events:none}
 .agechip .agechip-in{
-  display:block;text-align:center;border:1.5px solid var(--line);border-radius:9px;
-  padding:11px 6px;font-size:14px;line-height:1.4;color:var(--ink);
-  background:#FBFCFE;transition:all .15s ease;
+  display:block;text-align:center;border:1.5px solid var(--line);border-radius:12px;
+  padding:13px 6px;font-size:15px;font-weight:400;line-height:1.4;color:var(--ink);
+  background:#FAFBFF;transition:all .15s ease;
 }
-.agechip:hover .agechip-in{border-color:#B9C6D6}
+.agechip:hover .agechip-in{border-color:#B4BEF2}
 .agechip input:checked + .agechip-in{
-  border-color:var(--navy2);background:#EEF3FA;font-weight:700;color:var(--navy);
-  box-shadow:inset 3px 0 0 var(--gold);
+  border-color:transparent;font-weight:700;color:var(--head);
+  background:linear-gradient(#F0F2FF,#F0F2FF) padding-box,var(--grad) border-box;
+  box-shadow:0 6px 16px rgba(84,84,255,.18);
 }
-.nc-ages.bad .agechip-in{border-color:#C0392B;background:#FEF7F6}
+.nc-ages.bad .agechip-in{border-color:var(--err);background:#FFF6F7}
 
-.diagnose-area{margin-top:36px;text-align:center}
+.diagnose-area{margin-top:34px;text-align:center}
 .btn-main{
-  display:inline-block;width:100%;max-width:440px;
-  background:var(--orange);color:#fff;font-weight:900;font-size:17px;
-  border:1px solid var(--gold);border-radius:10px;padding:18px 20px;
-  cursor:pointer;font-family:inherit;letter-spacing:.04em;
-  box-shadow:0 6px 18px rgba(255,122,0,.28);transition:transform .12s ease,box-shadow .12s ease;
+  display:inline-block;width:100%;max-width:460px;
+  background:linear-gradient(180deg,#FF9A3D 0%,#FF6A00 100%);color:#fff;font-weight:900;font-size:18px;
+  border:none;border-radius:14px;padding:19px 20px;
+  cursor:pointer;font-family:inherit;letter-spacing:.05em;-webkit-appearance:none;appearance:none;
+  box-shadow:0 10px 26px rgba(255,106,0,.38);transition:transform .12s ease,box-shadow .12s ease;
 }
-.btn-main:hover{transform:translateY(-1px);box-shadow:0 9px 22px rgba(255,122,0,.34)}
-.diagnose-note{font-size:12px;color:var(--sub);margin-top:10px}
+.btn-main:hover{transform:translateY(-1px);box-shadow:0 13px 30px rgba(255,106,0,.44)}
+.btn-main:active{transform:translateY(1px)}
+.diagnose-note{font-size:12.5px;color:var(--sub);margin-top:12px}
 
 /* ---------- result 共通 ---------- */
 #result{display:none}
@@ -174,186 +239,219 @@ main{padding:30px 0 60px}
 #result > *:nth-child(3){animation-delay:.14s}
 #result > *:nth-child(n+4){animation-delay:.2s}
 .card{
-  background:var(--card);border:1px solid var(--line);border-radius:16px;
-  padding:28px 26px;margin-top:22px;box-shadow:0 4px 20px rgba(11,29,58,.05);
+  background:var(--card);border:1px solid var(--line);border-radius:20px;
+  padding:28px 26px;margin-top:22px;box-shadow:0 8px 28px rgba(40,56,160,.08);
 }
-.card-kicker{font-size:11px;letter-spacing:.24em;color:var(--gold-deep);font-weight:700;margin-bottom:6px}
-.card h3{font-size:18px;font-weight:900;color:var(--navy);line-height:1.55;margin-bottom:8px}
-.card .note{font-size:12.5px;color:var(--sub);margin-bottom:14px}
-.goldline{width:36px;height:2px;background:var(--gold);margin:10px 0 16px}
+.card-kicker{font-family:var(--en);font-size:11.5px;letter-spacing:.22em;color:var(--violet);font-weight:700;margin-bottom:6px}
+.card h3{font-size:20px;font-weight:900;color:var(--head);line-height:1.5;margin-bottom:8px}
+.card .note{font-size:13.5px;color:var(--sub);margin-bottom:14px;line-height:1.8}
+.gline{width:44px;height:4px;border-radius:2px;background:var(--grad);margin:10px 0 16px}
 
 /* ---------- result hero ---------- */
-.r-hero{
-  background:linear-gradient(150deg,var(--navy) 0%,var(--navy2) 100%);
-  border-radius:18px;color:#fff;padding:38px 28px;margin-top:34px;
-  box-shadow:0 14px 40px rgba(11,29,58,.28);
-}
+.r-hero{border-radius:22px;padding:38px 28px;margin-top:38px;box-shadow:0 18px 46px rgba(36,48,180,.34)}
 .r-inner{position:relative;z-index:2}
-.r-kicker{font-size:11px;letter-spacing:.3em;color:var(--gold-soft);font-weight:700;margin-bottom:12px}
-.r-name{font-size:13px;color:#C6D2E2;margin-bottom:18px}
-.r-typelabel{font-size:10.5px;letter-spacing:.26em;color:var(--gold-soft);font-weight:700}
-.r-typename{font-size:30px;font-weight:900;line-height:1.35;margin-top:4px}
-.r-typeen{font-size:11.5px;letter-spacing:.24em;color:var(--gold-soft);margin-top:4px;font-weight:700}
-.r-typetag{font-size:13.5px;color:#C6D2E2;margin-top:8px}
-.r-summary{margin-top:18px;font-size:14px;line-height:2.05;color:#E4EAF3}
+.r-kicker{font-family:var(--en);font-size:11.5px;letter-spacing:.3em;color:#CFE9FF;font-weight:700;margin-bottom:12px}
+.r-name{font-size:14px;color:rgba(255,255,255,.86);margin-bottom:18px}
+.r-typelabel{font-family:var(--en);font-size:11px;letter-spacing:.26em;color:#CFE9FF;font-weight:700}
+.r-typename{font-size:34px;font-weight:900;line-height:1.3;margin-top:4px;text-shadow:0 4px 22px rgba(12,16,90,.3)}
+.r-typeen{font-family:var(--en);font-size:12.5px;letter-spacing:.22em;margin-top:6px;font-weight:700;display:inline-block}
+.r-typetag{font-size:14.5px;color:#fff;margin-top:10px;font-weight:700}
+.r-summary{margin-top:16px;font-size:14.5px;line-height:2;color:rgba(255,255,255,.92)}
 .r-lvbox{
-  margin-top:22px;background:rgba(255,255,255,.07);border:1px solid rgba(201,162,75,.45);
-  border-radius:12px;padding:14px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+  margin-top:22px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.34);
+  border-radius:16px;padding:16px 18px;display:flex;gap:16px;align-items:center;flex-wrap:wrap;
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
 }
 .ringwrap{flex:0 0 86px;position:relative;width:86px;height:86px}
 .ringwrap svg{transform:rotate(-90deg)}
 .ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
-.ring-center .lv-pre{font-size:8.5px;letter-spacing:.24em;color:var(--gold-soft);font-weight:700}
-.ring-center .lv-num{font-size:27px;font-weight:900;color:#fff}
-.r-lvtext{flex:1;min-width:180px}
-.r-lv-label{font-size:11px;color:#A9B7CB;letter-spacing:.1em}
-.r-stage{font-size:17px;font-weight:900;line-height:1.4;margin-top:2px}
+.ring-center .lv-pre{font-family:var(--en);font-size:7.5px;letter-spacing:.14em;color:#CFE9FF;font-weight:700}
+.ring-center .lv-num{font-family:var(--en);font-size:30px;font-weight:700;color:#fff}
+.r-lvtext{flex:1;min-width:170px}
+.r-lv-label{font-size:12px;color:rgba(255,255,255,.8);letter-spacing:.06em}
+.r-stage{font-size:18px;font-weight:900;line-height:1.4;margin-top:2px}
 .phase-chip{
-  display:inline-block;margin-top:6px;font-size:10.5px;font-weight:700;letter-spacing:.1em;
-  color:var(--gold-soft);border:1px solid rgba(201,162,75,.55);border-radius:3px;padding:3px 10px;
+  display:inline-block;margin-top:7px;font-family:var(--en);font-size:11px;font-weight:700;letter-spacing:.08em;
+  color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:3px 12px;
 }
-.r-lvnote{font-size:12px;color:#C6D2E2;margin-top:8px;line-height:1.8;flex-basis:100%}
+.phase-ja{display:block;font-size:12.5px;color:rgba(255,255,255,.86);margin-top:5px;line-height:1.5}
+.r-lvnote{font-size:13.5px;color:rgba(255,255,255,.9);margin-top:6px;line-height:1.85;flex-basis:100%}
 
 /* ---------- tendency sliders ---------- */
 .tend{margin-top:6px}
-.tend-row{padding:14px 0;border-bottom:1px dashed var(--line)}
+.tend-row{padding:16px 0;border-bottom:1px solid var(--line)}
 .tend-row:last-child{border-bottom:none}
-.tend-name{font-size:13px;font-weight:900;color:var(--navy);letter-spacing:.04em}
-.tend-name .en{font-size:10px;letter-spacing:.2em;color:var(--gold-deep);margin-left:8px;font-weight:700}
-.tend-track{position:relative;height:10px;background:#EDF1F6;border-radius:5px;margin:12px 0 8px}
-.tend-track::before{content:"";position:absolute;left:50%;top:-4px;bottom:-4px;width:1px;background:#C5CFDB}
+.tend-name{font-size:14.5px;font-weight:900;color:var(--head);letter-spacing:.04em}
+.tend-name .en{font-family:var(--en);font-size:10.5px;letter-spacing:.2em;color:var(--violet);margin-left:8px;font-weight:700}
+.tend-track{position:relative;height:10px;background:#E7EAFB;border-radius:5px;margin:14px 0 9px}
+.tend-track::before{content:"";position:absolute;left:50%;top:-4px;bottom:-4px;width:1px;background:#B9C1E6}
 @keyframes fillGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes dotIn{from{opacity:0}to{opacity:1}}
-.tend-fill{position:absolute;top:0;height:100%;background:linear-gradient(90deg,var(--navy2),var(--navy3));border-radius:5px;animation:fillGrow .9s cubic-bezier(.2,.7,.3,1) both}
+.tend-fill{position:absolute;top:0;height:100%;background:linear-gradient(90deg,#3D6BFF,#9A5CFF);border-radius:5px;animation:fillGrow .9s cubic-bezier(.2,.7,.3,1) both}
 .tend-fill.pos{transform-origin:left center}
-.tend-fill.neg{transform-origin:right center}
-.tend-dot{position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:#fff;border:2.5px solid var(--gold);transform:translate(-50%,-50%);box-shadow:0 2px 8px rgba(11,29,58,.2);animation:dotIn .9s ease both}
-.tend-poles{display:flex;justify-content:space-between;font-size:12px;color:var(--sub)}
-.tend-poles b{color:var(--navy);font-weight:900}
-.tend-read{font-size:13px;color:#33455C;margin-top:6px;line-height:1.8;background:#F7F9FC;border-radius:8px;padding:8px 12px}
+.tend-fill.neg{transform-origin:right center;background:linear-gradient(90deg,#9A5CFF,#3D6BFF)}
+.tend-dot{position:absolute;top:50%;width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--violet);transform:translate(-50%,-50%);box-shadow:0 3px 10px rgba(84,84,255,.35);animation:dotIn .9s ease both}
+.tend-poles{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;color:var(--sub);line-height:1.5}
+.tend-poles span:last-child{text-align:right}
+.tend-poles b{color:var(--blue);font-weight:900}
+.tend-read{font-size:14px;color:#2F3760;margin-top:9px;line-height:1.85;background:var(--tint);border-radius:12px;padding:10px 14px}
 
 /* ---------- type ---------- */
 .type-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 22px}
-.tg-cell{border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:#FBFCFE;position:relative}
-.tg-cell .n{font-size:13.5px;font-weight:900;color:#8B99A9}
-.tg-cell .t{font-size:10.5px;color:#A5B1BF;margin-top:2px;line-height:1.5}
-.tg-cell.on{background:linear-gradient(150deg,var(--navy),var(--navy2));border:1px solid var(--gold);box-shadow:0 8px 22px rgba(11,29,58,.22)}
+.tg-cell{border:1px solid var(--line);border-radius:14px;padding:13px 15px;background:#FAFBFF;position:relative}
+.tg-cell .n{font-size:14px;font-weight:900;color:#8B93B8}
+.tg-cell .t{font-size:11.5px;color:#A1A8C8;margin-top:3px;line-height:1.55}
+.tg-cell.on{background:linear-gradient(135deg,#1C2496 0%,#3D4BEA 55%,#8A5CFF 100%);border-color:transparent;box-shadow:0 10px 24px rgba(52,64,200,.3)}
 .tg-cell.on .n{color:#fff}
-.tg-cell.on .t{color:#C6D2E2}
-.tg-badge{position:absolute;top:-9px;right:12px;background:var(--gold);color:var(--navy);font-size:9px;font-weight:900;letter-spacing:.16em;border-radius:3px;padding:2px 9px}
-.tg-axes{font-size:11.5px;color:var(--sub);margin-bottom:6px;line-height:1.7}
-.tp-block{margin-top:18px}
-.tp-h{font-size:13.5px;font-weight:900;color:var(--navy);border-left:3px solid var(--gold);padding-left:10px;margin-bottom:8px}
+.tg-cell.on .t{color:rgba(255,255,255,.86)}
+.tg-badge{position:absolute;top:-10px;right:12px;font-family:var(--en);background:#fff;color:var(--blue);font-size:10px;font-weight:700;letter-spacing:.16em;border-radius:999px;padding:2px 10px;box-shadow:0 3px 10px rgba(52,64,200,.28)}
+.tg-axes{font-size:13px;color:var(--sub);margin-bottom:6px;line-height:1.75}
+.tp-desc{font-size:15px;line-height:2}
+.tp-block{margin-top:20px}
+.tp-h{font-size:15px;font-weight:900;color:var(--head);border-left:4px solid var(--violet);padding-left:10px;margin-bottom:8px;line-height:1.5}
 .tp-list{list-style:none}
-.tp-list li{position:relative;padding:5px 0 5px 20px;font-size:13.8px;line-height:1.8}
-.tp-list li::before{content:"";position:absolute;left:2px;top:14px;width:7px;height:7px;border:1.5px solid var(--gold);border-radius:50%}
-.mind{margin-top:14px;border:1px solid var(--line);border-radius:12px;padding:17px 19px;background:#FBFCFE}
-.mind .m-h{font-size:14.5px;font-weight:900;color:var(--navy);line-height:1.6}
-.mind .m-h::before{content:attr(data-n);color:var(--gold-deep);font-size:12px;letter-spacing:.1em;margin-right:8px}
-.mind p{font-size:13.5px;color:#3D4B5C;margin-top:6px;line-height:1.9}
-.detour{margin-top:16px;background:#F2F6FB;border-radius:10px;padding:14px 16px;font-size:13.5px;line-height:1.9;color:#33455C}
+.tp-list li{position:relative;padding:5px 0 5px 22px;font-size:14.5px;line-height:1.8}
+.tp-list li::before{content:"";position:absolute;left:2px;top:15px;width:9px;height:9px;background:var(--grad);border-radius:50%}
+.mind{margin-top:12px;border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:#FAFBFF}
+.mind .m-h{font-size:15px;font-weight:900;color:var(--head);line-height:1.6}
+.mind .m-h::before{content:attr(data-n);font-family:var(--en);color:var(--violet);font-size:13px;letter-spacing:.08em;margin-right:8px}
+.mind p{font-size:14px;color:#3A4268;margin-top:6px;line-height:1.9}
+.detour{margin-top:16px;background:var(--tint);border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.9;color:#2F3760}
 
 /* ---------- exits ---------- */
-.exit-card{border:1px solid var(--line);border-radius:12px;padding:18px;margin-top:12px;background:#FBFCFE}
-.exit-card.first{border:1.5px solid var(--gold);background:linear-gradient(180deg,#FFFDF6,#FFFFFF);box-shadow:0 6px 20px rgba(201,162,75,.14)}
-.exit-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.rankb{flex:0 0 auto;font-size:11px;font-weight:900;letter-spacing:.06em;border:1px solid var(--navy2);color:var(--navy2);border-radius:3px;padding:2px 9px}
-.exit-card.first .rankb{background:var(--navy);color:var(--gold-soft);border-color:var(--navy)}
-.exit-name{font-size:16px;font-weight:900;color:var(--navy)}
-.exit-group{font-size:11px;color:var(--sub);border:1px solid var(--line);border-radius:999px;padding:1px 9px}
-.tier-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.chip{font-size:11.5px;border-radius:4px;padding:3px 10px;font-weight:700}
-.chip.cur{background:#EDF1F6;color:var(--sub)}
-.chip.lev{background:var(--navy);color:#fff;border:1px solid var(--gold)}
-.exit-text{font-size:13.8px;line-height:1.9;margin-top:10px}
-.exit-note{font-size:12.5px;color:var(--warn);margin-top:8px;line-height:1.7}
+.exit-card{border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:12px;background:#FAFBFF}
+.exit-card.first{
+  border:2px solid transparent;
+  background:linear-gradient(180deg,#F6F5FF,#FFFFFF) padding-box,var(--grad) border-box;
+  box-shadow:0 10px 26px rgba(96,88,255,.18);
+}
+.exit-top{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap}
+.rankb{flex:0 0 auto;font-family:var(--en);font-size:11.5px;font-weight:700;letter-spacing:.06em;border:1px solid #B4BEF2;color:var(--blue);border-radius:999px;padding:2px 11px}
+.exit-card.first .rankb{background:var(--grad);color:#fff;border-color:transparent}
+.exit-name{font-size:16.5px;font-weight:900;color:var(--head)}
+.exit-group{font-size:11.5px;color:var(--sub);border:1px solid var(--line);border-radius:999px;padding:1px 10px;background:#fff}
+.tier-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.chip{font-size:12px;border-radius:6px;padding:4px 10px;font-weight:700;line-height:1.5}
+.chip.cur{background:#E9ECFA;color:var(--sub)}
+.chip.lev{background:var(--grad);color:#fff}
+.exit-text{font-size:14.5px;line-height:1.9;margin-top:10px}
+.exit-note{font-size:13px;color:var(--warn);margin-top:8px;line-height:1.75}
 details.allexits{margin-top:14px}
-details.allexits summary{cursor:pointer;font-size:13.5px;font-weight:700;color:var(--navy2);padding:10px 0;list-style:none}
-details.allexits summary::before{content:"▸ ";color:var(--gold)}
+details.allexits summary{cursor:pointer;font-size:14.5px;font-weight:700;color:var(--blue);padding:12px 0;list-style:none}
+details.allexits summary::-webkit-details-marker{display:none}
+details.allexits summary::before{content:"▸ ";color:var(--violet)}
 details.allexits[open] summary::before{content:"▾ "}
 
 /* ---------- roadmap ---------- */
-.tl{position:relative;padding-left:58px;margin-top:8px}
-.tl::before{content:"";position:absolute;left:20px;top:12px;bottom:26px;width:2px;background:linear-gradient(180deg,var(--gold) 0%,rgba(201,162,75,.15) 100%)}
+.tl{position:relative;padding-left:60px;margin-top:10px}
+.tl::before{content:"";position:absolute;left:21px;top:12px;bottom:26px;width:2px;background:linear-gradient(180deg,#3D6BFF 0%,#B46CFF 60%,rgba(180,108,255,.12) 100%)}
 .tl-item{position:relative;padding-bottom:26px}
 .tl-item:last-child{padding-bottom:4px}
 .tl-node{
-  position:absolute;left:-58px;top:-2px;width:42px;height:42px;border:1.5px solid var(--gold);
-  border-radius:50%;background:#fff;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;line-height:1;box-shadow:0 4px 12px rgba(201,162,75,.2);
+  position:absolute;left:-60px;top:-2px;width:44px;height:44px;border-radius:50%;
+  background:var(--grad);color:#fff;display:flex;flex-direction:column;font-family:var(--en);
+  align-items:center;justify-content:center;line-height:1;box-shadow:0 6px 14px rgba(96,88,255,.34);
 }
-.tl-node .m{font-size:7.5px;letter-spacing:.14em;color:var(--gold-deep);font-weight:700}
-.tl-node .d{font-size:15px;font-weight:900;color:var(--navy);margin-top:2px}
-.tl-item b{display:block;font-size:14.5px;font-weight:900;color:var(--navy);line-height:1.6}
-.tl-item p{font-size:13.5px;color:#3D4B5C;margin-top:4px;line-height:1.85}
-.road-extra{margin-top:18px;background:#F2F6FB;border-radius:10px;padding:13px 16px;font-size:13.5px;line-height:1.85;color:#33455C}
+.tl-node .m{font-size:6.5px;letter-spacing:.06em;font-weight:600;opacity:.9}
+.tl-node .d{font-size:17px;font-weight:700;margin-top:2px}
+.tl-item b{display:block;font-size:15.5px;font-weight:900;color:var(--head);line-height:1.6}
+.tl-item p{font-size:14px;color:#3A4268;margin-top:4px;line-height:1.85}
+.road-extra{margin-top:18px;background:var(--tint);border-radius:12px;padding:14px 16px;font-size:14px;line-height:1.85;color:#2F3760}
 
 /* ---------- CTA ---------- */
-.cta{background:linear-gradient(150deg,var(--navy) 0%,#123D63 100%);border-radius:18px;color:#fff;padding:38px 28px;margin-top:26px;box-shadow:0 14px 40px rgba(11,29,58,.28)}
+.cta{border-radius:22px;padding:38px 28px;margin-top:26px;box-shadow:0 18px 46px rgba(28,36,150,.36)}
 .cta-inner{position:relative;z-index:2}
-.cta-kicker{font-size:11px;letter-spacing:.28em;color:var(--gold-soft);font-weight:700}
-.cta h3{font-size:21px;font-weight:900;line-height:1.6;margin-top:10px}
-.cta .cta-lead{font-size:14px;line-height:2.05;color:#DCE4EF;margin-top:12px}
-.cta-items{margin-top:18px;border-top:1px solid rgba(201,162,75,.4);padding-top:6px}
-.cta-item{display:flex;gap:12px;padding:10px 0;border-bottom:1px dashed rgba(255,255,255,.15);align-items:flex-start}
+.cta-kicker{font-family:var(--en);font-size:11.5px;letter-spacing:.28em;color:#CFE9FF;font-weight:700}
+.cta h3{font-size:22px;font-weight:900;line-height:1.55;margin-top:10px}
+.cta .cta-lead{font-size:14.5px;line-height:2;color:rgba(255,255,255,.9);margin-top:12px}
+.cta .cta-lead b{color:#fff;background:linear-gradient(transparent 62%,rgba(111,216,255,.42) 62%)}
+.cta-items{margin-top:18px;border-top:1px solid rgba(255,255,255,.3);padding-top:6px}
+.cta-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.16);align-items:flex-start}
 .cta-item:last-child{border-bottom:none}
-.cta-item .n{flex:0 0 24px;height:24px;border:1px solid var(--gold);color:var(--gold-soft);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:4px}
-.cta-item b{display:block;font-size:14.5px;font-weight:900}
-.cta-item p{font-size:12.8px;color:#C6D2E2;line-height:1.8;margin-top:2px}
-.cta-meta{margin-top:14px;font-size:12px;color:#A9B7CB;letter-spacing:.05em}
-.cta-anshin{margin-top:14px;background:rgba(255,255,255,.06);border-radius:8px;padding:12px 15px;font-size:13px;line-height:1.9;color:#DCE4EF}
-.cta-honki{margin-top:14px;font-size:13.5px;line-height:1.95;color:#E4EAF3}
+.cta-item .n{flex:0 0 26px;height:26px;font-family:var(--en);background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;margin-top:3px}
+.cta-item b{display:block;font-size:15px;font-weight:900}
+.cta-item p{font-size:13.5px;color:rgba(255,255,255,.86);line-height:1.8;margin-top:2px}
+.cta-meta{margin-top:14px;font-size:12.5px;color:rgba(255,255,255,.8);letter-spacing:.03em;line-height:1.8}
+.cta-anshin{margin-top:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:13px 15px;font-size:14px;line-height:1.9;color:rgba(255,255,255,.94)}
+.cta-honki{margin-top:14px;font-size:14.5px;line-height:1.95;color:rgba(255,255,255,.94)}
 .cta-btnwrap{margin-top:24px;text-align:center}
 .cta-btn{
-  display:block;background:var(--orange);color:#fff;text-decoration:none;
-  font-weight:900;font-size:16.5px;border:1px solid var(--gold);border-radius:10px;
-  padding:18px;letter-spacing:.03em;box-shadow:0 6px 18px rgba(0,0,0,.3);transition:transform .12s ease;
+  display:block;background:linear-gradient(180deg,#FF9A3D 0%,#FF6A00 100%);color:#fff;text-decoration:none;
+  font-weight:900;font-size:17px;border-radius:14px;line-height:1.5;
+  padding:18px 14px;letter-spacing:.03em;box-shadow:0 12px 28px rgba(8,10,70,.4);transition:transform .12s ease;
 }
 .cta-btn:hover{transform:translateY(-1px)}
-.cta-sub{font-size:12px;color:#A9B7CB;margin-top:10px}
-.cta-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(201,162,75,.55),transparent);margin:30px 0 20px}
+.cta-sub{font-size:12.5px;color:rgba(255,255,255,.8);margin-top:10px}
+.cta-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);margin:30px 0 20px}
 .report-area{text-align:center}
-.report-lead{font-size:13px;color:#C6D2E2}
-.btn-ghost{display:inline-block;margin-top:12px;border:1px solid rgba(201,162,75,.7);color:var(--gold-soft);border-radius:8px;padding:12px 26px;font-size:13.5px;font-weight:700;text-decoration:none;letter-spacing:.03em;transition:background .15s ease}
-.btn-ghost:hover{background:rgba(201,162,75,.1)}
-.report-note{font-size:11.5px;color:#A9B7CB;margin-top:12px;line-height:1.9;text-align:left}
+.report-lead{font-size:13.5px;color:rgba(255,255,255,.86)}
+.btn-ghost{display:inline-block;margin-top:12px;border:1px solid rgba(255,255,255,.6);color:#fff;border-radius:12px;padding:12px 26px;font-size:14px;font-weight:700;text-decoration:none;letter-spacing:.03em;transition:background .15s ease}
+.btn-ghost:hover{background:rgba(255,255,255,.12)}
+.report-note{font-size:12.5px;color:rgba(255,255,255,.8);margin-top:12px;line-height:1.9;text-align:left}
 .retake{margin-top:22px;text-align:center}
-.retake button{background:none;border:1px solid var(--line);border-radius:8px;color:var(--sub);font-size:13px;padding:11px 26px;cursor:pointer;font-family:inherit}
+.retake button{background:#fff;border:1.5px solid var(--line);border-radius:12px;color:var(--sub);font-size:14px;padding:13px 28px;cursor:pointer;font-family:inherit;-webkit-appearance:none;appearance:none}
 footer{border-top:1px solid var(--line);padding:26px 0 40px;margin-top:50px}
-footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
+footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
 
 @media (max-width:480px){
   body{font-size:15px}
-  .hero h1{font-size:22px;line-height:1.4}
-  .hero h1 .small{font-size:12px;margin-bottom:6px}
-  .hero{padding:28px 0 42px}
-  .brandbadge{font-size:10px;padding:4px 11px;margin-bottom:14px;letter-spacing:.22em}
-  .hero-tagline{margin-top:8px;font-size:12.5px}
-  .hero .lead{margin-top:10px;font-size:12.5px;line-height:1.8}
+  .wrap{padding:0 16px}
+  .hero{padding:34px 0 56px}
+  .hero h1{font-size:28px;line-height:1.36}
+  .hero h1 .small{font-size:13px;margin-bottom:6px}
+  .brandbadge{font-size:9.5px;padding:4px 11px;margin-bottom:16px;letter-spacing:.18em}
+  .hero-tagline{margin-top:10px;font-size:14px;line-height:1.65}
+  .hero .lead{margin-top:12px;font-size:13.5px;line-height:1.9}
   .hero .lead br{display:none}
-  .hero-goldline{margin:12px 0 0;width:36px}
-  .hero-meta{margin-top:10px;font-size:11px}
-  .card{padding:23px 18px}
-  .r-hero,.cta{padding:30px 20px}
-  .r-typename{font-size:25px}
+  .hero-chips{margin-top:16px;gap:6px}
+  .hero-chips span{font-size:12px;padding:4px 11px}
+  .learnbox{padding:24px 18px 16px}
+  .section-head{margin-top:40px}
+  .section-head h2{font-size:20px}
+  .q{padding:20px 16px}
+  .namecard{padding:22px 16px}
+  .card{padding:24px 18px}
+  .card h3{font-size:19px}
+  .r-hero,.cta{padding:30px 20px;border-radius:20px}
+  .r-typename{font-size:30px}
+  .r-lvbox{padding:14px 14px;gap:14px}
+  .ringwrap{flex-basis:78px;width:78px;height:78px}
+  .ringwrap svg{width:78px;height:78px}
+  .r-lvtext{min-width:150px}
   .type-grid{gap:8px}
-  .tg-cell{padding:11px 12px}
-  .tg-cell .n{font-size:12.5px}
+  .tg-cell{padding:12px 11px}
+  .tg-cell .n{font-size:13.5px}
+  .tg-cell .t{font-size:11px}
+  .exit-card{padding:16px 14px}
+  .tl{padding-left:54px}
+  .tl-node{left:-54px;width:40px;height:40px}
+  .tl::before{left:19px}
+  .cta h3{font-size:20px}
+  .cta-btn{font-size:16px;padding:17px 10px}
 }
-@media print{.hero,.diagnose-area,.retake,#progressWrap{display:none}}
+@media (max-width:359px){
+  .hero h1{font-size:25px}
+  .opt .opt-in{font-size:14.5px;padding:11px 12px;gap:10px}
+  .r-typename{font-size:27px}
+  .cta-btn{font-size:15px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important}
+}
+@media print{.hero,.diagnose-area,.retake,#progressWrap,#progressCount{display:none}}
 </style>
 </head>
 <body>
 <div id="progressWrap"><div id="progressBar"></div></div>
+<div id="progressCount" aria-live="polite"><small>回答済み</small><span id="progressNum">0</span> / 20<em id="progressLeft"></em></div>
 
-<header class="hero blueprint">
+<header class="hero aurora">
   <div class="wrap hero-inner">
     <span class="brandbadge">LEVANCE｜AI CAREER DIAGNOSIS 3.0</span>
-    <h1><span class="small">4タイプ別</span>AIキャリアタイプ診断</h1>
+    <h1><span class="small">4タイプ別</span><span class="gt">AI</span>キャリア<br><span class="gt">タイプ</span>診断</h1>
     <p class="hero-tagline">AIを「使える」で終わらせない人の、進め方を知る。</p>
     <p class="lead">同じAIスキルでも、キャリアが動く人と動かない人がいます。<br>分かれ目はスキルの差ではなく、<strong>自分に合った「進め方・決め方」</strong>で積み上げているかどうか。<br>20の質問で、あなたのタイプと、いちばん力が出る進め方を診断します。</p>
-    <div class="hero-goldline"></div>
-    <p class="hero-meta">全20問｜所要 約3分｜結果はその場で表示されます</p>
+    <div class="hero-chips"><span>全<b>20</b>問</span><span>約<b>3</b>分</span><span>結果はその場で表示</span></div>
   </div>
 </header>
 
@@ -407,20 +505,21 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
     <!-- ================= 結果 ================= -->
     <div id="result">
 
-      <div class="r-hero blueprint">
+      <div class="r-hero aurora">
         <div class="r-inner">
           <p class="r-kicker">YOUR RESULT</p>
           <p class="r-name" id="rName"></p>
           <p class="r-typelabel">YOUR TYPE</p>
-          <p class="r-typename" id="rTypeName"></p>
-          <p class="r-typeen" id="rTypeEn"></p>
+          <p class="r-typename"><span class="gt" id="rTypeName"></span></p>
+          <p class="r-typeen gt" id="rTypeEn"></p>
           <p class="r-typetag" id="rTypeTag"></p>
           <p class="r-summary" id="rSummary"></p>
           <div class="r-lvbox">
             <div class="ringwrap">
               <svg width="86" height="86" viewBox="0 0 86 86" aria-hidden="true">
-                <circle cx="43" cy="43" r="37" fill="none" stroke="rgba(201,162,75,.22)" stroke-width="5"/>
-                <circle id="ringProg" cx="43" cy="43" r="37" fill="none" stroke="#C9A24B" stroke-width="5"
+                <defs><linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8AE2FF"/><stop offset="1" stop-color="#E6BEFF"/></linearGradient></defs>
+                <circle cx="43" cy="43" r="37" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="6"/>
+                <circle id="ringProg" cx="43" cy="43" r="37" fill="none" stroke="url(#ringGrad)" stroke-width="6"
                         stroke-linecap="round" stroke-dasharray="232.5" stroke-dashoffset="232.5"
                         style="transition:stroke-dashoffset 1.1s cubic-bezier(.2,.7,.3,1)"/>
               </svg>
@@ -432,7 +531,7 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
             <div class="r-lvtext">
               <p class="r-lv-label">あなたのAIレベル（5段階）</p>
               <p class="r-stage" id="rLvName"></p>
-              <span class="phase-chip" id="rPhase"></span>
+              <span class="phase-chip" id="rPhase"></span><span class="phase-ja" id="rPhaseJa"></span>
             </div>
             <p class="r-lvnote" id="rLvNote"></p>
           </div>
@@ -449,10 +548,10 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
       <div class="card">
         <p class="card-kicker">YOUR TYPE</p>
         <h3 id="tpTitle"></h3>
-        <div class="goldline"></div>
+        <div class="gline"></div>
         <p class="tg-axes">「動機の向き（攻め・守り）」と「進め方（自走・伴走）」の組み合わせで、4つのタイプに分かれます。</p>
         <div class="type-grid" id="typeGrid"></div>
-        <p id="tpDesc" style="font-size:14px;line-height:2"></p>
+        <p id="tpDesc" class="tp-desc"></p>
         <div class="tp-block"><p class="tp-h">このタイプの強み</p><ul class="tp-list" id="tpStrengths"></ul></div>
         <div class="tp-block"><p class="tp-h">つまずきやすいポイント</p><ul class="tp-list" id="tpStumbles"></ul></div>
         <div class="tp-block"><p class="tp-h">いま必要な考え方</p><div id="tpMindset"></div></div>
@@ -462,7 +561,7 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
       <div class="card">
         <p class="card-kicker">CAREER PATHS</p>
         <h3>相性の良い進み方 トップ3</h3>
-        <p class="note">ご希望とタイプ、いまの立場から相性の良い順に並べました。到達目安は「いまのまま独学で進んだ場合」と「伴走者と進んだ場合」の2つで示しています。</p>
+        <p class="note">ご希望とタイプ、いまの働き方から相性の良い順に並べました。到達目安は「いまのまま独学で進んだ場合」と「伴走者と進んだ場合」の2つで示しています。</p>
         <div id="exitTop3"></div>
         <details class="allexits">
           <summary>7つの出口すべての相性を見る</summary>
@@ -478,7 +577,7 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
         <div class="road-extra" id="roadExtra"></div>
       </div>
 
-      <div class="cta blueprint">
+      <div class="cta aurora deep">
         <div class="cta-inner">
           <p class="cta-kicker">YOUR NEXT STEP</p>
           <h3>この診断が示せるのは、<br>「タイプ別の地図」まで。</h3>
@@ -492,7 +591,7 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
           <div class="cta-anshin">「自分にできるか分からない」のままで大丈夫です。設計図はお持ち帰りいただき、判断はそれからで構いません。</div>
           <p class="cta-honki" id="ctaHonki"></p>
           <div class="cta-btnwrap">
-            <a class="cta-btn" href="https://sb.levance-inc.jp/page/DBM0LvBChW0C" target="_blank" rel="noopener">AI特化・個別キャリアコーチングを体験する</a>
+            <a class="cta-btn" href="https://sb.levance-inc.jp/page/DBM0LvBChW0C" target="_blank" rel="noopener"><span class="nb">AI特化・個別キャリアコーチングを</span><span class="nb">体験する</span></a>
             <p class="cta-sub">この診断結果をもとに、次の一手を一緒に設計します。</p>
           </div>
           <div class="cta-divider"></div>
@@ -529,143 +628,170 @@ footer p{font-size:11.5px;color:var(--sub);line-height:1.9;text-align:center}
 ========================================================= */
 
 var SECTIONS = [
-  {step:"STEP 1", title:"いまのあなた", desc:"現在地を確認します"},
-  {step:"STEP 2", title:"ふだんの仕事の進め方", desc:"いちばん近いものを選んでください。正解はありません"},
+  {step:"STEP 1", title:"いまのあなた", desc:"現在地を確認します。会社員・フリーランス・経営者など、働き方は問いません"},
+  {step:"STEP 2", title:"ふだんの仕事の進め方", desc:"いちばん近いものを選んでください。正解はありません。「チーム」「周り」は、取引先や仕事仲間に読み替えて構いません"},
   {step:"STEP 3", title:"これからの方向", desc:"どこへ向かいたいかを整理します"}
 ];
 
+/* none:true ＝「どれにも当てはまらない」系の選択肢（配点なし・控えめな見た目で表示） */
+var NONE_T = "どれにも当てはまらない";
+
 var QUESTIONS = [
   /* ---------- STEP 1 ---------- */
-  { id:"shokushu", sec:0, title:"現在の職種に、いちばん近いものは？", opts:[
-    {t:"営業", d:{}, job:"営業"},
-    {t:"企画・マーケティング", d:{}, job:"企画・マーケティング"},
-    {t:"経営企画・事業企画", d:{}, job:"企画"},
-    {t:"IT・DX推進", d:{}, job:"IT・DX推進"},
-    {t:"管理部門（人事・総務・経理など）", d:{}, job:"管理部門"},
-    {t:"現場・技術・製造", d:{}, job:"現場・技術"},
-    {t:"カスタマーサポート・事務", d:{}, job:"事務・サポート"},
-    {t:"フリーランス・個人事業", d:{}, job:"いま", flag:"notEmployee"},
-    {t:"その他", d:{}, job:"いま"}
+  { id:"shokushu", sec:0, title:"現在の仕事内容に、いちばん近いものは？", hint:"いま働いていない方は、直近のお仕事で構いません", opts:[
+    {t:"営業・販売・接客", d:{}, job:"営業・販売"},
+    {t:"企画・マーケティング・広報", d:{}, job:"企画・マーケティング"},
+    {t:"経営・事業企画・マネジメント", d:{}, job:"経営・企画"},
+    {t:"IT・エンジニア・DX推進", d:{}, job:"IT・DX"},
+    {t:"管理部門（人事・総務・経理・法務など）", d:{}, job:"管理部門"},
+    {t:"事務・アシスタント・カスタマーサポート", d:{}, job:"事務・サポート"},
+    {t:"制作・クリエイティブ（デザイン・ライティング・動画など）", d:{}, job:"制作"},
+    {t:"専門職（医療・福祉・教育・士業・コンサルなど）", d:{}, job:"専門職"},
+    {t:"現場・技術・製造・物流", d:{}, job:"現場・技術"},
+    {t:"その他・" + NONE_T, d:{}, job:"いま", none:true}
   ]},
-  { id:"tachiba", sec:0, title:"現在の立場に、いちばん近いものは？", opts:[
-    {t:"一般職", d:{}, pos:0},
-    {t:"リーダー・主任クラス", d:{}, pos:1},
-    {t:"管理職の一歩手前", d:{}, pos:2},
-    {t:"課長以上の管理職", d:{}, pos:3, flag:"kanri"},
-    {t:"会社員ではない", d:{}, pos:1, flag:"notEmployee"}
+  { id:"tachiba", sec:0, title:"現在の働き方・立場に、いちばん近いものは？", opts:[
+    {t:"会社員・公務員（一般・メンバー）", d:{}, pos:0},
+    {t:"会社員・公務員（リーダー・主任）", d:{}, pos:1},
+    {t:"会社員・公務員（管理職）", d:{}, pos:3, flag:"kanri"},
+    {t:"経営者・役員", d:{}, pos:3, flag:"notEmployee", flag2:"selfEmp"},
+    {t:"フリーランス・個人事業主", d:{}, pos:1, flag:"notEmployee", flag2:"selfEmp"},
+    {t:"パート・アルバイト・派遣・契約社員", d:{}, pos:0},
+    {t:"いまは働いていない（求職中・育休中・家事など）", d:{}, pos:0, flag:"notEmployee"},
+    {t:"その他・" + NONE_T, d:{}, pos:0, flag:"notEmployee", none:true}
   ]},
   { id:"katsuyo", sec:0, title:"AIとの現在の距離感は？", opts:[
     {t:"ほとんど使ったことがない", d:{S2:0}},
     {t:"調べ物や文章づくりで、たまに使う", d:{S2:1}},
     {t:"資料作成・壁打ちなど、日常的に使っている", d:{S2:2}},
-    {t:"業務の一部のフローに組み込んでいる", d:{S2:3}},
+    {t:"仕事の一部の流れ（業務フロー）に組み込んでいる", d:{S2:3}},
     {t:"自動化・仕組み化まで作り込んでいる", d:{S2:4}}
   ]},
   { id:"seika", sec:0, title:"AIで出せている変化に、いちばん近いものは？", opts:[
     {t:"まだ変化はない", d:{S3:0}},
     {t:"自分の作業が少し速くなった", d:{S3:1}},
     {t:"成果物の質が上がった", d:{S3:2}},
-    {t:"業務フローを1つ改善できた", d:{S3:3}},
-    {t:"チーム・部署の業務が変わった", d:{S3:4}}
+    {t:"仕事の流れ（業務フロー）を1つ改善できた", d:{S3:3}},
+    {t:"チームやお客様など、自分以外の人の仕事まで変わった", d:{S3:4}},
+    {t:NONE_T, d:{S3:0}, none:true}
   ]},
   { id:"jikan", sec:0, title:"学び・実践に使えそうな時間は？", opts:[
-    {t:"1日15分くらいなら作れそう", d:{H:1}},
-    {t:"1日30分〜1時間", d:{H:2}},
-    {t:"週5〜10時間", d:{H:3}},
+    {t:"いまは、ほとんど時間が取れない", d:{H:1}},
+    {t:"1日15〜30分くらいなら作れそう", d:{H:1}},
+    {t:"1日30分〜1時間くらい", d:{H:2}},
+    {t:"週に5〜10時間（平日に少し＋週末など）", d:{H:3}},
     {t:"週10時間以上", d:{H:4}}
   ]},
 
-  /* ---------- STEP 2: ふだんの仕事の場面（購入場面は使わない） ---------- */
-  { id:"s_page", sec:1, title:"新しい仕事や役割を任されたとき、最初に知りたいのは？", opts:[
+  /* ---------- STEP 2: ふだんの仕事の場面（購入場面は使わない／会社員に限定しない） ---------- */
+  { id:"s_page", sec:1, title:"新しい仕事や役割を引き受けるとき、最初に知りたいのは？", opts:[
     {t:"結局なにを達成すればいいか。ゴールと全体像", d:{A:2}},
     {t:"なぜそれをやるのか。背景と理由", d:{A:-2}},
     {t:"前にやった人や、周りの進め方", d:{A:-1}},
-    {t:"期限・条件・任される範囲", d:{A:1,B:-1}}
+    {t:"期限・条件・任される範囲", d:{A:1,B:-1}},
+    {t:NONE_T, d:{}, none:true}
   ]},
   { id:"s_explain", sec:1, title:"仕事で、人から説明や提案を受けるとき心地よいのは？", opts:[
     {t:"先に要点を聞き、気になる点だけ質問する", d:{A:2}},
     {t:"経緯から順を追って、丁寧に説明してもらう", d:{A:-2}},
     {t:"まずこちらの考えを聞いてもらってから、話してほしい", d:{C:1,A:-1}},
-    {t:"資料をもらい、自分のペースで読んで考えたい", d:{B:-1,E:1}}
+    {t:"資料をもらい、自分のペースで読んで考えたい", d:{B:-1,E:1}},
+    {t:NONE_T, d:{}, none:true}
   ]},
   { id:"s_decide", sec:1, title:"仕事で大きめの判断を求められたとき、ふだんは？", opts:[
     {t:"必要だと思えば、その場で決めることが多い", d:{B:2}},
     {t:"いったん持ち帰り、情報を集めてから決める", d:{B:-2}},
     {t:"周りの意見を聞いてから決める", d:{B:-1}},
-    {t:"自分で期限を決めて、それまでに判断する", d:{}, hintDeadline:1}
+    {t:"自分で期限を決めて、それまでに判断する", d:{}, hintDeadline:1},
+    {t:"内容や影響の大きさによって、決め方を変える", d:{}},
+    {t:NONE_T, d:{}, none:true}
   ]},
-  { id:"s_open", sec:1, title:"職場で、困っていることや本音を口にするのは？", opts:[
+  { id:"s_open", sec:1, title:"仕事で関わる人に、困っていることや本音を口にするのは？", opts:[
     {t:"わりと早い段階で、率直に話す", d:{C:2}},
     {t:"信頼できる相手にだけ話す", d:{C:1}},
     {t:"聞かれれば答えるが、自分からは言わない", d:{C:-1}},
-    {t:"そもそも、うまく言葉にできない", d:{C:-2}, flag:"lowVerbal"}
+    {t:"そもそも、うまく言葉にできない", d:{C:-2}, flag:"lowVerbal"},
+    {t:NONE_T, d:{}, none:true}
   ]},
   { id:"s_result", sec:1, title:"仕事で思うように成果が出ないとき、まず頭に浮かぶのは？", opts:[
     {t:"自分のやり方の、どこを変えるか", d:{F:2}},
-    {t:"会社の方針や環境に、原因があると感じる", d:{F:-2}},
+    {t:"組織の方針や、取引先・市場などの環境に原因があると感じる", d:{F:-2}},
     {t:"時間や人手が足りないのだから仕方ない", d:{F:-1}},
-    {t:"誰かに相談して、原因を整理したい", d:{F:1,E:-1}}
+    {t:"誰かに相談して、原因を整理したい", d:{F:1,E:-1}},
+    {t:"原因を決めつけず、まず数字や事実を確かめる", d:{F:1,A:-1}},
+    {t:NONE_T, d:{}, none:true}
   ]},
-  { id:"s_tool", sec:1, title:"職場に新しいツールや仕組みが入ったのに、周りが使ってくれないとき", opts:[
+  { id:"s_tool", sec:1, title:"チームや仕事仲間と使い始めた新しいツールや仕組みを、周りがなかなか使ってくれないとき", opts:[
     {t:"自分がまず使い、成果で示す", d:{F:2,D:1}},
-    {t:"上が号令をかけない限り、動かないと思う", d:{F:-2}},
+    {t:"決める立場の人が動かない限り、広まらないと思う", d:{F:-2}},
     {t:"使いやすい形に整えてから広める", d:{F:1,E:1}},
-    {t:"無理に広めず、様子を見る", d:{F:-1,D:-1}}
+    {t:"使わない理由を、まず周りに聞いてみる", d:{F:1,E:-1}},
+    {t:"無理に広めず、様子を見る", d:{F:-1,D:-1}},
+    {t:NONE_T, d:{}, none:true}
   ]},
   { id:"s_stop", sec:1, title:"新しい習慣や取り組みが途中で止まったとき、振り返ると原因は？", opts:[
     {t:"自分で優先順位を下げてしまった", d:{F:1}},
     {t:"忙しくて時間が取れなかった", d:{F:-1}},
     {t:"何から手をつけるか、分からなくなった", d:{E:-1}, hintAnx:"judge"},
     {t:"一緒に進める相手や、締切がなかった", d:{E:-2}},
-    {t:"止まった経験は、あまりない", d:{E:2,F:1}}
+    {t:"止まった経験は、あまりない", d:{E:2,F:1}},
+    {t:NONE_T, d:{}, none:true}
   ]},
   { id:"s_learn", sec:1, title:"新しいスキルを身につけるとき、いちばんうまくいくのは？", opts:[
     {t:"自分で調べて、自分なりの型を作る", d:{E:2}},
     {t:"道筋があれば、一人で進められる", d:{E:1}},
     {t:"一緒に進める相手がいると続く", d:{E:-2}},
-    {t:"締切や約束があると動ける", d:{E:-1}, hintDeadline:1}
+    {t:"締切や約束があると動ける", d:{E:-1}, hintDeadline:1},
+    {t:"まず触ってみて、つまずいたら人に聞く", d:{}},
+    {t:NONE_T, d:{}, none:true}
   ]},
   { id:"s_why", sec:1, title:"AIをキャリアに活かしたい、いちばんの理由は？", opts:[
     {t:"役割・評価・収入を上げたい", d:{D:2}},
     {t:"新しいことに挑戦したい", d:{D:1}},
     {t:"いざという時に困らないよう、備えたい", d:{D:-2}},
-    {t:"いまの仕事を楽に、長く続けやすくしたい", d:{D:-1}}
+    {t:"いまの仕事を楽に、長く続けやすくしたい", d:{D:-1}},
+    {t:"まだはっきりしていない・" + NONE_T, d:{}, none:true}
   ]},
   { id:"s_leader", sec:1, title:"もし明日、周囲から「AI活用の旗振り役をやってほしい」と言われたら？", opts:[
     {t:"ぜひやりたい。むしろ待っていた", d:{D:2,F:1}},
     {t:"範囲や条件を確認してから、引き受ける", d:{D:1,A:-1}},
     {t:"正直、荷が重い。裏方で支える方が向いている", d:{D:-2}},
-    {t:"自分にできるか、という不安が先に立つ", d:{D:-1}, hintAnx:"confidence"}
+    {t:"自分にできるか、という不安が先に立つ", d:{D:-1}, hintAnx:"confidence"},
+    {t:NONE_T, d:{}, none:true}
   ]},
 
   /* ---------- STEP 3 ---------- */
   { id:"decision", sec:2, title:"仕事や学びに関わる大きめの決断は、ふだん誰と決めますか？", opts:[
     {t:"自分で決める", d:{}, decision:"自分だけで決められる"},
     {t:"家族・パートナーと相談して決める", d:{}, decision:"家族・パートナーに相談"},
-    {t:"職場や上司の判断が要る", d:{}, decision:"会社の承認が必要"},
+    {t:"職場・上司・取引先など、仕事関係者の判断が要る", d:{}, decision:"仕事関係者の判断が必要"},
     {t:"内容による", d:{}, decision:"内容による"}
   ]},
   { id:"anxiety", sec:2, title:"新しいことを始めるとき、最初に浮かぶのは？", opts:[
-    {t:"やり切れるか（時間）", d:{}, anx:"時間（やり切れるか）"},
+    {t:"時間を作れるか・続けられるか", d:{}, anx:"時間（やり切れるか）"},
     {t:"自分にできるか（自信）", d:{}, anx:"自信（自分にできるか）"},
     {t:"成果につながるか（見返り）", d:{A:1}, anx:"見返り（成果につながるか）"},
-    {t:"特に不安はない", d:{D:1}, anx:"特になし"}
+    {t:"何から始めればいいか（進め方）", d:{}, anx:"進め方（何から始めるか）"},
+    {t:"特に不安はない", d:{D:1}, anx:"特になし"},
+    {t:NONE_T, d:{}, anx:"その他（選択肢に該当なし）", none:true}
   ]},
   { id:"kibo", sec:2, title:"今後の希望に、いちばん近いものは？", opts:[
-    {t:"いまの会社で評価・役割を上げたい", d:{}, dir:"shoshin"},
-    {t:"社内でAI・DXのポジションを作りたい", d:{}, dir:"dx"},
-    {t:"部署異動・職種転換をしたい", d:{}, dir:"idou"},
+    {t:"いまの職場・組織で、評価や役割を上げたい", d:{}, dir:"shoshin"},
+    {t:"いまの職場・チームで、AI・DXを任される立場を作りたい", d:{}, dir:"dx"},
+    {t:"担当する仕事や職種を変えたい（異動・職種転換）", d:{}, dir:"idou"},
     {t:"転職して市場価値を上げたい", d:{}, dir:"tenshoku"},
     {t:"副業で収入の柱を増やしたい", d:{}, dir:"fukugyo"},
-    {t:"独立・フリーランス・起業をしたい", d:{}, dir:"dokuritsu"}
+    {t:"独立・起業したい／いまの自分の事業や単価を伸ばしたい", d:{}, dir:"dokuritsu"},
+    {t:"まだ決まっていない・" + NONE_T, d:{}, dir:"", none:true}
   ]},
   { id:"honki", sec:2, title:"キャリアを動かすことへの、いまの温度感は？", opts:[
     {t:"今すぐ動きたい", d:{}, honki:0},
     {t:"1〜3ヶ月以内には動きたい", d:{}, honki:0},
     {t:"半年以内には動きたい", d:{}, honki:1},
-    {t:"いずれは、と思っている", d:{}, honki:1}
+    {t:"いずれは、と思っている", d:{}, honki:1},
+    {t:"まだ分からない", d:{}, honki:1, none:true}
   ]},
-  { id:"deadline", sec:2, title:"直近で、キャリアに関わる動きはありますか？（社内の声かけ・異動・プロジェクト・年度の区切りなど）", opts:[
+  { id:"deadline", sec:2, title:"直近で、キャリアに関わる動きはありますか？", hint:"周囲からの声かけ・異動・新しい案件やプロジェクト・契約の更新・年度の区切りなど", opts:[
     {t:"ある。時期も決まっている", d:{}, deadline:"あり（時期確定）"},
     {t:"ありそうだが、まだはっきりしない", d:{}, deadline:"ありそう（未確定）"},
     {t:"特にない", d:{}, deadline:"特になし"}
@@ -762,7 +888,7 @@ var TYPES = {
     summary:"大きく変えたいわけではない。ただ「このままでいいのか」は消えない。納得できれば、着実に進める人です。",
     desc:"安定を大切にしながら、自分で考えて動けるタイプです。「いま困っていないが、この先が見えない」という静かな問いを持っている方が多く、勢いでは動きません。中身が具体で見え、得られるものを自分で想像できたとき、確実に前へ進めます。",
     strengths:["先を読んで備える視点","自分で調べ、判断できる堅実さ","長年の実務経験という土台"],
-    stumbles:["「きちんと理解してから」で、最初の一歩が遅れる","中身が見えないものには動かない","社内で少し評価されると、動く理由が薄れる"],
+    stumbles:["「きちんと理解してから」で、最初の一歩が遅れる","中身が見えないものには動かない","周りから少し評価されると、動く理由が薄れる"],
     mindset:[
       {h:"学んでからではなく、自分の業務から始める", t:"毎日やっている業務を1つ選び、そこにAIを当てるのが最短です。理解は、動きながら深まります。"},
       {h:"「いざという時」を、いま作っておく", t:"備えは、必要になってからでは間に合いません。小さくても外に見せられる実績が、そのまま選択肢になります。"},
@@ -790,15 +916,15 @@ var TYPES = {
 var TYPE_ORDER = ["driver","leap","architect","builder"];
 
 var EXITS = [
-  {id:"shoshin", name:"昇進・昇給", group:"社内で動く", dir:"shoshin", inner:true,
+  {id:"shoshin", name:"昇進・昇給", group:"いまの組織で動く", dir:"shoshin", inner:true,
    text:{high:"AIの成果を評価の言葉に変換できれば、いまの会社で評価と役割を上げるのが最短ルートです。次の評価面談を目標に、語れる実績を仕上げてください。",
          mid:"昇進の土台はあります。あとは、AIで出した成果を「どの業務を、どれくらい改善したか」の形で語れるようにするだけです。",
          low:"まず、いまの業務でAIを使った改善実績を1つ作るところからです。小さくても、数字で語れる1本が評価を動かし始めます。"}},
-  {id:"dx", name:"社内DXポジション確立", group:"社内で動く", dir:"dx", inner:true,
+  {id:"dx", name:"社内DXポジション確立", group:"いまの組織で動く", dir:"dx", inner:true,
    text:{high:"社内のAI・DX推進ポジションを取りにいける状態です。個人の活用を、部署をまたぐ業務再設計の提案まで広げてください。",
          mid:"「AIに強い人」として認知される一歩手前です。チームを巻き込んだ活用事例を1つ作れば、推進の中心に近づきます。",
          low:"まず自分の業務でAI活用を成果にして、「AIならあの人」という社内認知を作るところからです。"}},
-  {id:"idou", name:"社内異動・職種転換", group:"社内で動く", dir:"idou", inner:true,
+  {id:"idou", name:"社内異動・職種転換", group:"いまの組織で動く", dir:"idou", inner:true,
    text:{high:"AIを軸に職種を移れる素地があります。移りたい先で通用する成果を1つ見せられれば、話が動きます。",
          mid:"異動・職種転換は十分狙えます。いまの職種で作った実績を、移りたい職種でも再現できる形で言語化してください。",
          low:"まず、いまの職種でAIの実績を作り、「他の業務でも再現できる」と示せる材料を揃えるのが先です。"}},
@@ -813,11 +939,18 @@ var EXITS = [
   {id:"fukugyo", name:"副業", group:"外に出る", dir:"fukugyo", inner:false,
    text:{high:"AIスキルを社外に展開できる状態です。小さな案件から始めて、外での実績を作っていけます。",
          mid:"副業の可能性はあります。まず本業のAI実績を、社外の人にも伝わる形に整えるところからです。",
-         low:"副業に広げる前に、本業で語れるAI実績と、外で通用する型を作るのが現実的な順番です。"}},
+         low:"副業に広げる前に、本業で語れるAI実績と、外で通用する型を作るのが現実的な順番です。"},
+   /* 経営者・フリーランスの方向け（すでに自分の事業がある前提の言い回し） */
+   textSelf:{high:"AIスキルを、新しいサービスや案件に展開できる状態です。小さく始めて、もう1本の収入の柱に育てていけます。",
+         mid:"収入の柱を増やせる可能性はあります。まず、いまの仕事のAI実績を、初めての相手にも伝わる形に整えるところからです。",
+         low:"柱を増やす前に、いまの仕事で語れるAI実績と、外で通用する型を作るのが現実的な順番です。"}},
   {id:"freelance", name:"フリーランス・起業", group:"外に出る", dir:"dokuritsu", inner:false,
    text:{high:"独立を視野に入れられる土台があります。案件で再現できる実績と、値付けの根拠を積み上げてください。",
          mid:"将来的に独立は狙えます。まず副業で小さく試して、外で売れる実績を作ってください。",
-         low:"独立は、これからの選択肢です。まず本業と小さな副業で、外で通用する実績を作るところから始めてください。"}}
+         low:"独立は、これからの選択肢です。まず本業と小さな副業で、外で通用する実績を作るところから始めてください。"},
+   textSelf:{high:"いまの事業にAIを組み込み、単価と提供価値を上げられる状態です。案件で再現できる実績と、値付けの根拠を積み上げてください。",
+         mid:"事業を伸ばす素地はあります。AIで出した成果を「何を、どれくらい改善したか」の形にして、提案や単価の根拠に変えてください。",
+         low:"まず、自分の仕事でAIの実績を1つ作るところからです。その1本が、提案の説得力と単価を動かし始めます。"}}
 ];
 var CUR_LABELS = ["3〜6ヶ月で射程","1年ほど先","1年以上先","現状の延長では遠め"];
 var LEV_LABELS = ["3〜6ヶ月で視野","半年で視野","半年〜1年で視野","半年〜1年で射程"];
@@ -837,9 +970,10 @@ for (var s = 0; s < SECTIONS.length; s++) {
     qNo++;
     html += '<div class="q" id="q_' + q.id + '"><p class="q-no">Q' + qNo + ' / ' + QUESTIONS.length +
             (SECTIONS[s].scene ? '<span class="q-scene">SCENE</span>' : '') + '</p>' +
-            '<p class="q-title">' + q.title + '</p>';
+            '<p class="q-title">' + q.title + '</p>' +
+            (q.hint ? '<p class="q-hint">' + q.hint + '</p>' : '');
     for (var j = 0; j < q.opts.length; j++) {
-      html += '<label class="opt"><input type="radio" name="' + q.id + '" value="' + j + '">' +
+      html += '<label class="opt' + (q.opts[j].none ? ' none' : '') + '"><input type="radio" name="' + q.id + '" value="' + j + '">' +
               '<span class="opt-in">' + q.opts[j].t + '</span></label>';
     }
     html += '</div>';
@@ -853,6 +987,11 @@ function updateProgress(){
     if (document.querySelector('input[name="' + QUESTIONS[i].id + '"]:checked')) done++;
   }
   document.getElementById("progressBar").style.width = Math.round(done / QUESTIONS.length * 100) + "%";
+  document.getElementById("progressNum").textContent = done;
+  var left = QUESTIONS.length - done;
+  document.getElementById("progressLeft").textContent = left > 0 ? "あと" + left + "問" : "回答完了";
+  var shown = document.getElementById("result").style.display === "block";
+  document.getElementById("progressCount").classList.toggle("show", done > 0 && !shown);
 }
 qWrap.addEventListener("change", function(e){
   updateProgress();
@@ -888,7 +1027,8 @@ function compute(ans){
     if (!opt) continue;
     for (var k in opt.d) raw[k] += opt.d[k];
     if (opt.flag) flags[opt.flag] = true;
-    if (opt.dir) { dir = opt.dir; hopeText = opt.t; }
+    if (opt.flag2) flags[opt.flag2] = true;
+    if (typeof opt.dir === "string") { dir = opt.dir || null; hopeText = opt.t; }
     if (typeof opt.honki === "number") { honki = opt.honki; honkiText = opt.t; }
     if (opt.job) job = opt.job;
     if (typeof opt.pos === "number") pos = opt.pos;
@@ -956,7 +1096,7 @@ function evaluateExits(r){
       if (ex.id === "dx") { if (r.pos >= 1) score += 0.4; if (r.ax.D > 0) score += 0.2; if (r.ax.F > 0.3) score += 0.2; }
       if (ex.id === "idou" && r.lv >= 2) score += 0.2;
       if (ex.id === "shoshin" && r.lv >= 3) score += 0.2;
-      if (!r.isEmployee) notes.push("現在は会社に所属していないため、社内ルートの優先度は下げています。");
+      if (!r.isEmployee) notes.push("現在の働き方に合わせて、組織の中で動くルートの優先度は下げています。");
     } else {
       if (r.ax.D > 0) score += 0.5;
       if (!r.isEmployee) score += (ex.id === "fukugyo" || ex.id === "freelance") ? 1.0 : 0.6;
@@ -965,7 +1105,7 @@ function evaluateExits(r){
       if (ex.id === "venture") { score += r.pos >= 2 ? 0.6 : -0.6; if (r.pos < 2) notes.push("幹部参画は、チーム規模の成果が揃ってから現実的になります。"); }
       if ((ex.id === "fukugyo" || ex.id === "freelance") && r.isEmployee && r.lv < 3) {
         score -= 0.5;
-        notes.push("会社員のうちは、まず本業でAIの実績を作るのが現実的です。副業・独立は、その先の選択肢になります。");
+        notes.push("まずは、いまの仕事でAIの実績を作るのが現実的です。副業・独立は、その先の選択肢になります。");
       }
       if ((ex.id === "fukugyo" || ex.id === "freelance") && H <= 1) notes.push("確保できる時間が少なめのため、到達目安は長めに見ています。");
     }
@@ -978,7 +1118,7 @@ function evaluateExits(r){
     levTier = Math.min(levTier, curTier);
 
     var band = score >= 3.0 ? "high" : (score >= 2.0 ? "mid" : "low");
-    out.push({ex:ex, score:score, band:band, curTier:curTier, levTier:levTier, notes:notes});
+    out.push({ex:ex, score:score, band:band, curTier:curTier, levTier:levTier, notes:notes, selfEmp:!!r.flags.selfEmp});
   }
   out.sort(function(a,b){ return b.score - a.score; });
   return out;
@@ -1057,7 +1197,7 @@ function exitCardHTML(item, rank){
   h += '<span class="exit-group">' + ex.group + '</span></div>';
   h += '<div class="tier-row"><span class="chip cur">いまのまま：' + CUR_LABELS[item.curTier] + '</span>' +
        '<span class="chip lev">伴走すると：' + LEV_LABELS[item.levTier] + '</span></div>';
-  h += '<p class="exit-text">' + ex.text[item.band] + '</p>';
+  h += '<p class="exit-text">' + ((item.selfEmp && ex.textSelf) ? ex.textSelf[item.band] : ex.text[item.band]) + '</p>';
   for (var i = 0; i < item.notes.length; i++) h += '<p class="exit-note">' + item.notes[i] + '</p>';
   h += '</div>';
   return h;
@@ -1095,7 +1235,8 @@ function renderResult(r){
   var lvData = LEVELS[r.lv - 1];
   document.getElementById("rLvNum").textContent = r.lv;
   document.getElementById("rLvName").textContent = lvData.name;
-  document.getElementById("rPhase").textContent = PHASES[lvData.phase].en + "（" + PHASES[lvData.phase].ja + "）";
+  document.getElementById("rPhase").textContent = PHASES[lvData.phase].en;
+  document.getElementById("rPhaseJa").textContent = PHASES[lvData.phase].ja + "段階";
   document.getElementById("rLvNote").textContent = lvData.note;
   var C = 232.5;
   var ring = document.getElementById("ringProg");
@@ -1141,7 +1282,7 @@ function renderResult(r){
     '<div class="tl-item"><div class="tl-node"><span class="m">MONTH</span><span class="d">2</span></div>' +
     '<b>業務フローを再設計して、変化を記録する</b><p>作業時間・品質・アウトプット量のどれが、どう変わったかを記録します。この記録が、あとで実績の材料になります。</p></div>' +
     '<div class="tl-item"><div class="tl-node"><span class="m">MONTH</span><span class="d">3</span></div>' +
-    '<b>成果を「評価される言葉」に変換する</b><p>「どの業務を、どれくらい改善したか」を、評価面談・職務経歴書・商談で語れる1本の実績に仕上げます。</p></div>';
+    '<b>成果を「評価される言葉」に変換する</b><p>「どの業務を、どれくらい改善したか」を、評価面談・職務経歴書・提案や商談の場で語れる1本の実績に仕上げます。</p></div>';
   document.getElementById("roadExtra").textContent = t.road;
 
   document.getElementById("ctaHonki").textContent = r.honki === 0
@@ -1211,6 +1352,7 @@ document.getElementById("diagnoseBtn").addEventListener("click", function(){
   if (!validateContact()) { document.getElementById("nameCard").scrollIntoView({behavior:"smooth", block:"center"}); return; }
   var r = compute(ans);
   renderResult(r);
+  updateProgress();
   sendResult(ans, r);
   document.getElementById("result").scrollIntoView({behavior:"smooth", block:"start"});
 });

@@ -365,7 +365,12 @@ details.allexits[open] summary::before{content:"▾ "}
 .cta h3{font-size:22px;font-weight:900;line-height:1.55;margin-top:10px}
 .cta .cta-lead{font-size:14.5px;line-height:2;color:rgba(255,255,255,.9);margin-top:12px}
 .cta .cta-lead b{color:#fff;background:linear-gradient(transparent 62%,rgba(111,216,255,.42) 62%)}
-.cta-items{margin-top:18px;border-top:1px solid rgba(255,255,255,.3);padding-top:6px}
+.cta-key{margin-top:18px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.34);border-radius:16px;padding:18px 18px 16px}
+.cta-key .k{font-size:12.5px;font-weight:700;color:#CFE9FF;letter-spacing:.08em}
+.cta-key .t{font-size:27px;font-weight:900;line-height:1.4;margin-top:2px}
+.cta-key .d{font-size:14px;line-height:1.9;color:rgba(255,255,255,.92);margin-top:6px}
+.cta-label{margin-top:26px;font-size:13px;font-weight:700;color:#CFE9FF;letter-spacing:.08em}
+.cta-items{margin-top:8px;border-top:1px solid rgba(255,255,255,.3);padding-top:6px}
 .cta-item{display:flex;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.16);align-items:flex-start}
 .cta-item:last-child{border-bottom:none}
 .cta-item .n{flex:0 0 26px;height:26px;font-family:var(--en);background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.5);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700;margin-top:3px}
@@ -373,6 +378,10 @@ details.allexits[open] summary::before{content:"▾ "}
 .cta-item p{font-size:13.5px;color:rgba(255,255,255,.86);line-height:1.8;margin-top:2px}
 .cta-meta{margin-top:14px;font-size:12.5px;color:rgba(255,255,255,.8);letter-spacing:.03em;line-height:1.8}
 .cta-anshin{margin-top:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:13px 15px;font-size:14px;line-height:1.9;color:rgba(255,255,255,.94)}
+.cta-coach{margin-top:16px;border-left:3px solid var(--cyan);padding:4px 0 4px 14px;font-size:14px;line-height:1.9;color:rgba(255,255,255,.94)}
+.cta-coach b{display:block;font-size:12.5px;letter-spacing:.08em;color:#CFE9FF;margin-bottom:2px}
+.cta-turn{margin-top:18px;font-size:15.5px;font-weight:700;line-height:1.95;color:#fff}
+.cta-fork{margin-top:18px;font-size:15.5px;font-weight:700;line-height:1.9;color:#fff}
 .cta-honki{margin-top:14px;font-size:14.5px;line-height:1.95;color:rgba(255,255,255,.94)}
 .cta-btnwrap{margin-top:24px;text-align:center}
 .cta-btn{
@@ -381,7 +390,8 @@ details.allexits[open] summary::before{content:"▾ "}
   padding:18px 14px;letter-spacing:.03em;box-shadow:0 12px 28px rgba(8,10,70,.4);transition:transform .12s ease;
 }
 .cta-btn:hover{transform:translateY(-1px)}
-.cta-sub{font-size:12.5px;color:rgba(255,255,255,.8);margin-top:10px}
+.cta-call{font-size:14.5px;font-weight:700;color:#fff;line-height:1.7;margin-bottom:12px}
+.cta-sub{font-size:12.5px;color:rgba(255,255,255,.82);margin-top:12px;line-height:1.8;text-align:left}
 .cta-divider{height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);margin:30px 0 20px}
 .report-area{text-align:center}
 .report-lead{font-size:13.5px;color:rgba(255,255,255,.86)}
@@ -579,20 +589,29 @@ footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
 
       <div class="cta aurora deep">
         <div class="cta-inner">
-          <p class="cta-kicker">YOUR NEXT STEP</p>
-          <h3>この診断が示せるのは、<br>「タイプ別の地図」まで。</h3>
-          <p class="cta-lead">あなたの業務・環境・使える時間を踏まえた「何から、どの順で進めるか」は、一人ひとり違います。この診断結果を手元に置いて、<b>あなた専用の設計図</b>をコーチと一緒に作るのが、レバンスのAI特化・個別キャリアコーチング（体験）です。</p>
+          <p class="cta-kicker">WHY NOW</p>
+          <h3><span class="nb">「AIが使える」だけでは、</span><span class="nb">もう差がつきません。</span></h3>
+          <p class="cta-lead">いまは、AIによる時代の転換期です。AIを使えること自体は、Excelが使えるのと同じ「できて当たり前」になりつつあり、それだけでキャリアが有利になることは、なくなってきています。</p>
+          <div class="cta-key">
+            <p class="k">これからの評価を分けるもの</p>
+            <p class="t">AIの<span class="gt">実装力</span></p>
+            <p class="d">自分やチームの業務フローのどこに、どうAIを組み込み、業務や組織にどんな成果をもたらしたか。ツールの使い方を覚えるだけでは、ここには届きません。</p>
+          </div>
+          <p class="cta-lead">そして、どの業務に、どう実装すれば目に見える成果になるかは、仕事の内容や組織の方針によって一人ひとり違います。この診断で分かった現在地とタイプを出発点に、そこを<b>一人ひとりに合わせて設計</b>し、進め方を整理するのが、レバンスのAI特化・個別キャリアコーチング（体験）です。</p>
+          <p class="cta-label">体験セッションで行うこと</p>
           <div class="cta-items">
             <div class="cta-item"><span class="n">1</span><div><b>診断結果の読み解き</b><p>タイプと傾向をもとに、あなたに合う進め方・つまずきやすい点を一緒に確認します</p></div></div>
             <div class="cta-item"><span class="n">2</span><div><b>現在地と業務の整理</b><p>あなたの業務の中で、最も評価につながるAI活用ポイントをその場で言語化します</p></div></div>
             <div class="cta-item"><span class="n">3</span><div><b>あなた専用のAIキャリア設計図</b><p>90日で作る実績の輪郭と、積み上げる順番を「設計図」として持ち帰れます</p></div></div>
           </div>
           <p class="cta-meta">約60分｜オンライン（Zoom）｜マンツーマン｜費用はかかりません</p>
-          <div class="cta-anshin">「自分にできるか分からない」のままで大丈夫です。設計図はお持ち帰りいただき、判断はそれからで構いません。</div>
+          <div class="cta-anshin">担当するのは、現役で事業を動かしているコーチです。担当者が自分で一人ひとりを受け持つため、毎月お受けできる人数には限りがあります。</div>
+          <p class="cta-fork">この転換期に実装力を持てるかどうかで、この先のキャリアは大きく分かれます。AIを使って役割と評価を上げていく側に回るか、AIに置き換えられ、その他大勢の一人になるか。</p>
           <p class="cta-honki" id="ctaHonki"></p>
           <div class="cta-btnwrap">
+            <p class="cta-call">次の一手を具体的にしたい方は、<span class="nb">こちらからお申し込みください。</span></p>
             <a class="cta-btn" href="https://sb.levance-inc.jp/page/DBM0LvBChW0C" target="_blank" rel="noopener"><span class="nb">AI特化・個別キャリアコーチングを</span><span class="nb">体験する</span></a>
-            <p class="cta-sub">この診断結果をもとに、次の一手を一緒に設計します。</p>
+            <p class="cta-sub">「自分にできるか分からない」のままで大丈夫です。設計図はお持ち帰りいただき、判断はそれからで構いません。</p>
           </div>
           <div class="cta-divider"></div>
           <!-- 公式LINEのURLが確定するまで非表示（確定後は style="display:none" を外し、LINE_URL を差し替える） -->
@@ -1286,7 +1305,7 @@ function renderResult(r){
   document.getElementById("roadExtra").textContent = t.road;
 
   document.getElementById("ctaHonki").textContent = r.honki === 0
-    ? "動き出すなら、勢いのあるいまがいちばんです。まず60分で、あなた専用の地図を手に入れてください。"
+    ? "動き出すなら、勢いのあるいまがいちばんです。まず60分で、あなた専用の設計図を手に入れてください。"
     : "いきなり大きく動く必要はありません。ただ、方向だけ先に決めておくと、動きたくなったときに迷いません。";
 
   document.getElementById("result").style.display = "block";

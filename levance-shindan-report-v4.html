@@ -1,0 +1,1998 @@
+<!doctype html>
+<!-- 最終更新 2026.10.29 -->
+<!-- 4タイプ別 AIキャリアタイプ診断 v4 レポート管理ページ（運営専用・非公開運用）。正本。公開は repo saori421/ai-career-shindan に levance-shindan-report-v4.html としてPUT -->
+<!-- 記録シートの「v4」タブを読み、診断ページv4と同じ判定・文章でレポートを組む（診断ページの判定部分を取り込んでいるので、診断ページを直したらこのファイルも作り直す：scratchpad の build 手順） -->
+<!-- レポートは5ページ固定の簡略版（1=表紙と人物像／2=人物像と仕事での力／3=回答から見えたこと＋3つの傾向／4=進み方と活躍のヒント／5=90日とご案内）。溢れたときはページを増やさず縮めて収める。コーチ専用プロファイルは印刷対象外 -->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>診断レポート管理 v4｜LEVANCE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* 2026-10-12 診断ページと同じブルー〜バイオレットの配色に変更（寸法・余白・文字サイズは変えていない） */
+  --head:#141A5C; --blue:#2546F0; --violet:#9A5CFF;
+  --accent:#6F5BFF; --accent-soft:#CFE9FF; --accent-deep:#5B4BE0;
+  /* ブランドカラーのオレンジは、お申し込みリンクと印刷ボタンだけに使う */
+  --orange:#E8731E; --orange-soft:#FFB36B; --orange-deep:#C25A0F;
+  --ink:#171C40; --sub:#5A6389; --line:#DFE4FA; --bg:#EEF0FF;
+  --grad:linear-gradient(120deg,#2546F0 0%,#6A5BFF 55%,#B46CFF 100%);
+  --aurora:
+    radial-gradient(110% 85% at 100% 0%,rgba(196,112,255,.78) 0%,rgba(196,112,255,0) 58%),
+    radial-gradient(95% 80% at 0% 100%,rgba(64,170,255,.55) 0%,rgba(64,170,255,0) 60%),
+    linear-gradient(135deg,#161B78 0%,#2340E0 50%,#4A3FE6 100%);
+  --aurora-deep:
+    radial-gradient(110% 85% at 100% 0%,rgba(168,96,255,.62) 0%,rgba(168,96,255,0) 58%),
+    radial-gradient(95% 80% at 0% 100%,rgba(52,140,255,.45) 0%,rgba(52,140,255,0) 60%),
+    linear-gradient(135deg,#10145C 0%,#1C2FB8 55%,#3A2FC8 100%);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Hiragino Sans","Yu Gothic",Meiryo,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.7;font-size:14px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:860px;margin:0 auto;padding:24px 16px 60px}
+
+/* ---------- 管理UI ---------- */
+.adminbar{
+  background:var(--aurora);color:#fff;
+  border-radius:12px;padding:20px 22px;margin-bottom:18px;
+}
+.adminbar .b{font-size:10px;letter-spacing:.24em;color:var(--accent-soft);font-weight:700}
+.adminbar h1{font-size:18px;font-weight:900;margin-top:4px}
+.adminbar p{font-size:12px;color:#E6EBFF;margin-top:4px}
+.keybox{background:#fff;border:1px solid var(--line);border-radius:12px;padding:20px;margin-bottom:16px}
+.keybox label{font-size:13px;font-weight:700;color:var(--head);display:block;margin-bottom:8px}
+.keybox input{width:100%;border:1px solid var(--line);border-radius:8px;padding:11px 13px;font-size:15px;font-family:inherit}
+.keybox button{margin-top:10px;background:var(--blue);color:#fff;border:none;border-radius:8px;padding:11px 24px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.keybox .err{color:#C0392B;font-size:12.5px;margin-top:8px}
+.listcard{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.listhead{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.listhead b{font-size:14px;color:var(--head)}
+.listhead button{background:none;border:1px solid var(--line);border-radius:6px;color:var(--sub);font-size:12px;padding:6px 14px;cursor:pointer;font-family:inherit}
+.rowitem{display:flex;gap:10px 12px;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.rowitem:last-child{border-bottom:none}
+.rowitem .d{font-size:11.5px;color:var(--sub);flex:0 0 118px}
+.rowitem .nm{font-size:14px;font-weight:900;color:var(--head);min-width:120px}
+.rowitem .nm small{font-size:11.5px;font-weight:500;color:var(--sub);margin-left:4px}
+.rowitem .tpchip{font-size:11px;font-weight:700;color:var(--accent-deep);border:1px solid var(--accent);border-radius:4px;padding:1px 8px;white-space:nowrap}
+.rowitem .axes{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:4px 6px}
+.rowitem .axchip{font-size:10.5px;color:#33455C;background:#EEF1FF;border:1px solid var(--line);border-radius:4px;padding:1px 7px;line-height:1.6;white-space:nowrap}
+.rowitem .axchip i{font-style:normal;color:var(--sub);margin-right:3px}
+.rowitem a{
+  margin-left:auto;background:var(--grad) border-box;color:#fff;text-decoration:none;
+  font-size:12px;font-weight:700;border-radius:6px;padding:8px 16px;border:1px solid transparent;white-space:nowrap;
+}
+.loading{padding:30px;text-align:center;color:var(--sub);font-size:13px}
+
+/* ---------- レポート画面 ---------- */
+#reportView{display:none}
+.report-actions{max-width:794px;margin:0 auto 14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.report-actions button{
+  border-radius:8px;padding:11px 22px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;
+}
+#printBtn{background:#FF7A00;color:#fff;border:1px solid #FF7A00}
+#backBtn{background:#fff;color:var(--sub);border:1px solid var(--line)}
+.report-actions .hint{font-size:11.5px;color:var(--sub)}
+
+/* ---------- コーチ専用プロファイル（印刷対象外） ---------- */
+.coach{max-width:794px;margin:0 auto 22px;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.coach-head{background:var(--aurora);color:#fff;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.coach-head b{font-size:14px}
+.coach-head span{font-size:11px;color:var(--accent-soft);letter-spacing:.12em}
+.coach-body{padding:14px 18px 16px}
+.cp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 16px}
+.cp-item .k{display:block;font-size:10.5px;color:var(--sub);letter-spacing:.08em}
+.cp-item .v{font-size:13.5px;font-weight:700;color:var(--head);line-height:1.5;word-break:break-all}
+.cp-item .v a{color:var(--blue)}
+.cp-sec{margin-top:16px;margin-bottom:6px;font-size:11px;letter-spacing:.18em;color:var(--accent-deep);font-weight:700;border-bottom:1px solid var(--line);padding-bottom:4px}
+.cp-ax{display:flex;gap:10px;padding:6px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.cp-ax:last-child{border-bottom:none}
+.cp-ax .an{flex:0 0 108px;font-size:12.5px;font-weight:700;color:var(--head)}
+.cp-ax .al{flex:0 0 200px;font-size:12.5px;font-weight:700;color:var(--accent-deep)}
+.cp-ax .ar{flex:1;font-size:12px;color:#3D4B5C;line-height:1.7}
+.cp-q{margin-top:14px;border:1px solid var(--line);border-radius:8px;padding:8px 12px;background:#FAFBFF}
+.cp-q summary{cursor:pointer;font-size:12.5px;font-weight:700;color:var(--blue)}
+.cp-q table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12px}
+.cp-q th,.cp-q td{text-align:left;vertical-align:top;padding:5px 6px;border-top:1px solid var(--line);line-height:1.6}
+.cp-q th{width:42px;color:var(--accent-deep);font-weight:700;white-space:nowrap}
+.cp-q td.qt{width:44%;color:var(--sub)}
+.cp-q td.qa{font-weight:700;color:var(--head)}
+.cp-q tr.step td,.cp-q tr.step th{background:#EEF1FF;color:var(--head);font-size:11px;letter-spacing:.12em;font-weight:700}
+@media screen and (max-width:640px){
+  .cp-grid{grid-template-columns:1fr 1fr}
+  .cp-ax{flex-wrap:wrap}
+  .cp-ax .al{flex:1 1 auto}
+  .cp-ax .ar{flex:1 1 100%}
+  .cp-q td.qt{width:40%}
+}
+
+/* スマホで読む前提（v4もv3と同じ寸法）。本文を約1.75倍に上げたぶん、A4より縦に長いページ（794×1400px）にしている */
+.a4{
+  width:794px;height:1400px;margin:0 auto 26px;background:#fff;position:relative;
+  box-shadow:0 10px 40px rgba(11,29,58,.18);overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.a4 *{line-height:1.65}
+.pgnum{position:absolute;right:36px;bottom:16px;font-size:14px;color:#9AA7B6;letter-spacing:.1em;z-index:5}
+.on-navy .pgnum{color:#9AA3CF}
+/* ご案内の帯が下端に来るページは、ページ番号が濃紺に乗るので明るくする */
+.a4:has(.rp-cta) .pgnum{color:#9AA3CF}
+
+.bp{position:relative;overflow:hidden}
+.bp::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:radial-gradient(rgba(255,255,255,.26) 1.4px,transparent 2px);
+  background-size:20px 20px;
+  -webkit-mask-image:radial-gradient(70% 75% at 0% 0%,#000 0%,transparent 72%);
+          mask-image:radial-gradient(70% 75% at 0% 0%,#000 0%,transparent 72%);
+}
+.bp > *{position:relative;z-index:2}
+
+/* ----- 1枚目（表紙＋総合診断） ----- */
+.cv-head{
+  background:var(--aurora);
+  color:#fff;padding:54px 44px 76px;flex:0 0 auto;
+}
+.cv-toprow{display:flex;justify-content:space-between;align-items:center}
+.cv-brand{font-size:16.6px;letter-spacing:.26em;color:var(--accent-soft);font-weight:500;border:1px solid rgba(255,255,255,.45);padding:6px 16px;border-radius:999px;background:rgba(255,255,255,.12)}
+.cv-date{font-size:16.6px;color:#D5DEFF;letter-spacing:.06em}
+.cv-sub{font-size:23px;color:#E6EBFF;margin-top:50px;letter-spacing:.04em}
+.cv-name{font-size:42.1px;font-weight:900;margin-top:2px;line-height:1.3}
+.cv-name span{font-size:28.7px;font-weight:700;color:#E6EBFF;margin-left:8px}
+.cv-type{
+  margin-top:50px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.36);
+  border-radius:12px;padding:36px 34px 40px;
+}
+.cv-type .lb{font-size:14.6px;letter-spacing:.24em;color:var(--accent-soft);font-weight:700}
+.cv-type .tn{font-size:44.3px;font-weight:900;margin-top:2px;line-height:1.3;color:#BFE9FF}
+.cv-type .te{font-size:16.6px;letter-spacing:.24em;color:var(--accent-soft);font-weight:700;margin-top:2px}
+.cv-type .tt{font-size:23px;color:#E6EBFF;margin-top:4px}
+.cv-lvrow{margin-top:52px}
+/* リングだと「5段階のどこか」が伝わらないので、段階を並べて現在地を示す */
+.lv-steps{display:flex;align-items:flex-start;margin-top:24px}
+.lv-st{display:flex;flex-direction:column;align-items:center;gap:6px;flex:0 0 auto}
+.lv-st .n{
+  width:36px;height:36px;border-radius:50%;border:2px solid rgba(255,255,255,.42);
+  display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#D5DEFF;
+}
+.lv-st.on .n{background:#fff;border-color:#fff;color:var(--blue)}
+.lv-st.cur .n{box-shadow:0 0 0 6px rgba(138,226,255,.42)}
+.lv-st .t{font-size:14px;color:#C8D1F7;white-space:nowrap;letter-spacing:.02em}
+.lv-st.cur .t{color:#fff;font-weight:700}
+.lv-ln{flex:1 1 auto;height:2px;background:rgba(255,255,255,.26);margin:17px 8px 0}
+.lv-ln.on{background:linear-gradient(90deg,#8AE2FF,#E6BEFF)}
+.cv-ring{position:relative;width:150px;height:150px;flex:0 0 150px}
+.cv-ring svg{transform:rotate(-90deg)}
+.cv-ring-c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+/* リングの内側に収まる幅にする（大きくすると文字が円周に重なる） */
+.cv-ring-c .p{font-size:7.8px;letter-spacing:.06em;color:var(--accent-soft);font-weight:700}
+.cv-ring-c .n{font-size:39.4px;font-weight:900}
+.cv-ring-c .d{font-size:11.5px;color:#D5DEFF}
+.cv-lvtext .l{font-size:16.6px;color:#D5DEFF;letter-spacing:.08em}
+.cv-lvtext .s{font-size:30.7px;font-weight:900;margin-top:1px}
+.cv-phase{display:inline-block;margin-top:6px;font-size:15.3px;font-weight:700;letter-spacing:.06em;color:#fff;border:1px solid rgba(255,255,255,.45);border-radius:4px;padding:4px 12px}
+/* 中身は .pg-inner に入れる。外枠を固定したまま中身だけ測る／縮めるため */
+.cv-body{padding:38px 44px 56px;flex:1 1 auto;min-height:0;overflow:hidden;position:relative}
+
+.rp-k{font-size:16.6px;letter-spacing:.2em;color:var(--accent-deep);font-weight:700;margin-bottom:5px}
+.rp-h{font-size:27.1px;font-weight:900;color:var(--head);border-left:4px solid var(--accent);padding-left:12px;margin-bottom:11px;line-height:1.45}
+.rp-msg{
+  border:1px solid #D5DAFA;border-radius:12px;background:#F6F5FF;
+  padding:16px 20px;
+}
+.rp-msg p{font-size:23.7px;line-height:1.85;color:#26313E;margin-bottom:10px}
+.rp-msg p:last-child{margin-bottom:0}
+.rp-msg p.lead{font-size:26.6px;font-weight:900;color:var(--head);line-height:1.7}
+.rp-lvnote{margin-top:14px;background:#EEF1FF;border-radius:10px;padding:13px 18px}
+.rp-lvnote .k{display:block;font-size:15.3px;letter-spacing:.14em;color:var(--accent-deep);font-weight:700;margin-bottom:3px}
+.rp-lvnote p{font-size:21.5px;color:#33455C;line-height:1.75}
+.rp-lvnote .nx{margin-top:8px;font-size:21.5px;color:var(--head);font-weight:700}
+.rp-lvnote .nx b{color:var(--blue)}
+.lv-list{margin-top:12px;border-top:1px solid var(--line)}
+.lv-li{display:flex;align-items:baseline;gap:14px;padding:11px 4px;border-bottom:1px solid var(--line);font-size:20.5px;color:#5B6B7B;line-height:1.5}
+.lv-li .lv{flex:0 0 auto;font-size:18px;font-weight:900;color:#8B99A9;letter-spacing:.04em}
+.lv-li .nm{flex:0 0 92px;font-weight:900;color:var(--head)}
+.lv-li .ds{flex:1 1 auto}
+.lv-li.cur{background:#EEF1FF}
+.lv-li.cur .lv,.lv-li.cur .nm{color:var(--blue)}
+.lv-li .now{flex:0 0 auto;font-size:16px;font-weight:900;color:#fff;background:var(--grad);border-radius:4px;padding:3px 11px;letter-spacing:.04em}
+
+/* ----- 2〜4枚目共通ヘッダー ----- */
+/* 横並びにすると、名前の長い方で見出しが折り返されるので縦積みにする */
+.pg-head{
+  background:linear-gradient(110deg,#161B78 0%,#2340E0 55%,#8A5CFF 100%);
+  color:#fff;padding:16px 44px 18px;flex:0 0 auto;
+}
+.pg-head .t{font-size:27.2px;font-weight:900;display:block;line-height:1.35}
+.pg-head .t span{color:var(--accent-soft);font-size:15.3px;letter-spacing:.22em;display:block;font-weight:700;margin-bottom:2px}
+.pg-head .nm{font-size:16.4px;color:#DCE3FF;display:block;margin-bottom:6px;letter-spacing:.02em}
+.pg-body{padding:24px 44px 56px;flex:1 1 auto;min-height:0;overflow:hidden;position:relative}
+.pg-inner{transform-origin:top left}
+.pg-fig{margin-top:30px;padding:0 12px}
+.pg-fig svg{display:block;width:100%;max-width:580px;height:auto;margin:0 auto}
+.rp-sec{margin-bottom:14px}
+
+/* 2枚目：6つの傾向（両極スライダー） */
+.ax-note{font-size:16.6px;color:var(--sub);margin:-4px 0 4px;line-height:1.6}
+.ax-row{padding:5px 0 6px;border-bottom:1px dashed var(--line)}
+.ax-row:last-child{border-bottom:none}
+.ax-name{font-size:23px;font-weight:900;color:var(--head);line-height:1.5}
+.ax-name .en{font-size:13.4px;letter-spacing:.2em;color:var(--accent-deep);margin-left:8px;font-weight:700}
+.ax-track{position:relative;height:16px;background:#E7EAFB;border-radius:8px;margin:10px 0 7px}
+.ax-track::before{content:"";position:absolute;left:50%;top:-5px;bottom:-5px;width:2px;background:#B9C1E6}
+.ax-fill{position:absolute;top:0;height:100%;background:linear-gradient(90deg,var(--blue),var(--violet));border-radius:8px}
+.ax-dot{position:absolute;top:50%;width:28px;height:28px;border-radius:50%;background:#fff;border:3.5px solid var(--accent);transform:translate(-50%,-50%);box-shadow:0 3px 10px rgba(84,84,255,.35)}
+.ax-poles{display:flex;justify-content:space-between;font-size:19.4px;color:var(--sub);line-height:1.5}
+.ax-poles b{color:var(--head);font-weight:900}
+.ax-read{font-size:16.6px;color:#33455C;margin-top:4px;line-height:1.55;background:#EEF1FF;border-radius:8px;padding:4px 11px}
+/* 横3列だと文字を大きくしたときに読めないので、縦に積んで理由を添える */
+.ex-sec{margin-top:12px}
+.ex-card{border:1px solid var(--line);border-radius:12px;padding:14px 20px 16px;background:#FAFBFF;margin-bottom:14px}
+.ex-card.first{border:2px solid transparent;background:linear-gradient(180deg,#F6F5FF,#FFFFFF) padding-box,var(--grad) border-box}
+.ex-card .rk{display:inline-block;font-size:14px;font-weight:900;letter-spacing:.06em;color:var(--blue);border:1px solid var(--blue);border-radius:4px;padding:2px 12px;line-height:1.5}
+.ex-card.first .rk{background:var(--grad) border-box;color:#fff;border-color:transparent}
+.ex-card .en{font-size:24.4px;font-weight:900;color:var(--head);margin-top:6px;line-height:1.4}
+.ex-card .why{font-size:20.1px;color:#3D4B5C;margin-top:4px;line-height:1.65}
+
+/* 3枚目：タイプ */
+.tp-name{font-size:34.4px;font-weight:900;color:var(--head);line-height:1.4}
+.tp-name .tp-en{font-size:15.3px;letter-spacing:.22em;color:var(--accent-deep);font-weight:700;margin-left:10px}
+.tp-tag{font-size:20.8px;color:var(--sub);margin-top:1px}
+.tg-axes{font-size:15.9px;color:var(--sub);margin-top:6px;line-height:1.6}
+.type-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 12px}
+.tg-cell{border:1px solid var(--line);border-radius:10px;padding:8px 13px;background:#FAFBFF;position:relative}
+.tg-cell .n{font-size:20.1px;font-weight:900;color:#8B99A9;line-height:1.5}
+.tg-cell .t{font-size:14px;color:#A5B1BF;margin-top:1px;line-height:1.5}
+.tg-cell.on{background:linear-gradient(135deg,#1C2496 0%,#3D4BEA 55%,#8A5CFF 100%) border-box;border:1px solid transparent;box-shadow:0 6px 18px rgba(52,64,200,.28)}
+.tg-cell.on .n{color:#fff}
+.tg-cell.on .t{color:#E6EBFF}
+.tg-badge{position:absolute;top:-9px;right:12px;background:#fff;color:var(--blue);box-shadow:0 3px 10px rgba(52,64,200,.28);font-size:11.5px;font-weight:900;letter-spacing:.16em;border-radius:3px;padding:2px 9px;line-height:1.5}
+.rp-list{list-style:none}
+.rp-list li{position:relative;padding:8px 0 8px 34px;font-size:22.2px;line-height:1.6}
+.rp-list li::before{content:"";position:absolute;left:2px;top:23px;width:12px;height:12px;border:3px solid var(--accent);border-radius:50%}
+.rp-mind{border:1px solid var(--line);border-radius:12px;padding:10px 16px;margin-bottom:7px;background:#FAFBFF}
+.rp-mind .mh{font-size:23.7px;font-weight:900;color:var(--head);line-height:1.5}
+.rp-mind .mh::before{content:attr(data-n);color:var(--accent-deep);font-size:15.9px;margin-right:9px;letter-spacing:.08em}
+.rp-mind p{font-size:20.3px;color:#3D4B5C;margin-top:3px;line-height:1.65}
+.rp-detour{margin-top:2px;background:#EEF1FF;border-radius:10px;padding:11px 16px;font-size:20.1px;color:#33455C;line-height:1.7}
+
+/* 90日ロードマップ・締め・CTA */
+.rp-rstep{position:relative;border:1px solid var(--line);border-radius:12px;padding:16px 22px 16px 26px;background:#FAFBFF;margin-bottom:22px}
+.rp-rstep::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:6px;background:linear-gradient(180deg,#3D6BFF,#B46CFF);border-radius:0 4px 4px 0}
+/* 矢印はステップ同士のあいだにだけ出す */
+.rp-rstep:has(+ .rp-rstep)::after{
+  content:"";position:absolute;left:50%;bottom:-18px;transform:translateX(-50%);
+  width:0;height:0;border-left:11px solid transparent;border-right:11px solid transparent;
+  border-top:14px solid #B9B4FF;
+}
+.rp-closing{margin-top:18px;border-left:6px solid var(--accent);background:#F1F0FF;padding:20px 24px;font-size:23.7px;line-height:1.68;color:var(--head);font-weight:700}
+.rp-closing .ck{display:block;font-size:14px;letter-spacing:.24em;color:var(--accent-deep);font-weight:700;margin-bottom:4px}
+.rp-rstep .rm{font-size:15.9px;letter-spacing:.16em;color:var(--accent-deep);font-weight:700}
+.rp-rstep .rh{font-size:26.6px;font-weight:900;color:var(--head);margin-top:2px;line-height:1.5}
+.rp-rstep p{font-size:22.2px;color:#3D4B5C;margin-top:3px;line-height:1.65}
+.rp-roadextra{margin-top:2px;background:#EEF1FF;border-radius:10px;padding:14px 18px;font-size:22.2px;color:#33455C;line-height:1.7}
+
+/* ご案内は1ページ使わず、最終ページの下端に帯として置く */
+.pg-inner:has(> .rp-cta){display:flex;flex-direction:column}
+.pg-inner > .rp-cta{margin:26px -44px -56px;border-radius:0}
+/* 最終ページが少しだけ溢れるときの詰め（矢印の位置は margin-bottom 基準なので padding だけ触る） */
+.pg-tight .rp-rstep{padding-top:11px;padding-bottom:11px}
+.pg-tight .rp-closing{margin-top:12px;padding-top:13px;padding-bottom:13px}
+.pg-tight .pg-inner > .rp-cta{margin-top:16px;padding-top:14px;padding-bottom:12px}
+.rp-cta{
+  position:relative;margin-top:auto;flex:0 0 auto;
+  background:var(--aurora-deep);color:#fff;
+  padding:18px 44px 16px;overflow:hidden;
+}
+.rp-cta-in{position:relative;z-index:2}
+.rp-cta .ck{font-size:15px;letter-spacing:.24em;color:var(--accent-soft);font-weight:700}
+.rp-cta .ch{font-size:23px;font-weight:900;margin-top:3px;line-height:1.45}
+.rp-cta .ch span{color:var(--accent-soft)}
+.rp-cta .cp{font-size:18.5px;color:#E9EDFF;margin-top:6px;line-height:1.6}
+.rp-cta .cp b{color:#fff}
+.rp-cta-meta{margin-top:8px;font-size:19px;color:#EEF1FF;font-weight:700}
+.rp-cta-meta span{color:var(--accent-soft)}
+.rp-cta-link{margin-top:5px;font-size:17.5px;color:#E9EDFF}
+.rp-cta-link a{color:var(--orange-soft);font-weight:700;text-decoration:none}
+.rp-cta .dis{font-size:11.5px;color:#C8D1F7;margin-top:7px;border-top:1px solid rgba(255,255,255,.14);padding-top:5px;line-height:1.5}
+
+/* ---------- 印刷 ---------- */
+@media print{
+  @page{size:210mm 370mm;margin:0}
+  body{background:#fff}
+  .noprint{display:none !important}
+  .coach{display:none}
+  .wrap{max-width:none;padding:0}
+  .a4{width:210mm;height:370mm;box-shadow:none;margin:0;transform:none !important;page-break-after:always}
+  .a4:last-child{page-break-after:auto}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media screen and (max-width:820px){
+  .a4{transform-origin:top left;transform:scale(0.44);margin-bottom:-600px}
+}
+
+/* ===== v4 追加（2026-10-29） ===== */
+.tn{word-break:keep-all;overflow-wrap:anywhere}
+.cv-type{display:flex;gap:26px;align-items:center}
+.cv-ani{flex:0 0 132px;line-height:0}
+.cv-ani .animal{filter:drop-shadow(0 8px 18px rgba(10,12,80,.35))}
+.cv-tx{flex:1 1 auto;min-width:0}
+.cv-type .nick{display:inline-block;margin-top:12px;font-size:18px;font-weight:700;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:5px 16px}
+.cv-head{padding-bottom:44px}
+.cv-name{margin-top:0}
+.cv-sub{margin-top:34px}
+.cv-type{margin-top:30px;padding:28px 30px}
+.cv-lvrow{margin-top:34px}
+.cv-lvtext .s{font-size:28px}
+.cv-lvnote{margin-top:16px;font-size:17.5px;color:#E6EBFF;line-height:1.7}
+.ch-lead{font-size:23px;line-height:1.85;color:#26313E}
+.ch-sub{font-size:24px;font-weight:900;color:var(--head);margin-bottom:6px}
+.aru{list-style:none;border-top:1px dashed var(--line)}
+.aru li{position:relative;padding:9px 4px 9px 42px;border-bottom:1px dashed var(--line);font-size:21.5px;line-height:1.6;color:#26313E}
+.aru li::before{content:"";position:absolute;left:4px;top:15px;width:24px;height:24px;border-radius:50%;background:var(--grad)}
+.aru li::after{content:"";position:absolute;left:12.5px;top:19.5px;width:6px;height:11px;border:solid #fff;border-width:0 3px 3px 0;transform:rotate(45deg)}
+.ch-step{border-radius:14px;padding:13px 22px;font-size:21.5px;line-height:1.8;color:#26313E}
+.ch-step .ch-h{font-size:17px;font-weight:900;letter-spacing:.06em;margin-bottom:4px}
+.ch-step.good{background:#EEF1FF}
+.ch-step.good .ch-h{color:var(--accent-deep)}
+.ch-step.aspect{background:#F7F8FC;border:1px solid var(--line)}
+.ch-step.aspect .ch-h{color:var(--sub)}
+.ch-step.more{border:2px solid var(--accent);background:#FBFAFF}
+.ch-step.more .ch-h{color:var(--accent-deep)}
+.ai-box{border-radius:14px;padding:18px 22px;color:#fff;background:linear-gradient(135deg,#1C2496 0%,#3D4BEA 55%,#8A5CFF 100%)}
+.ai-box .ai-h{font-size:17px;font-weight:900;letter-spacing:.06em;color:#D9D3FF;margin-bottom:4px}
+.ai-box p{font-size:21.5px;line-height:1.8}
+.rd p.rd{font-size:20.5px;line-height:1.8;color:#26313E;margin-bottom:12px}
+.rd .rd-h{display:block;font-size:15.5px;font-weight:900;letter-spacing:.12em;color:var(--accent-deep);margin-bottom:2px}
+.rd .qt{background:linear-gradient(transparent 60%,#E3DDFF 60%);font-weight:700;color:var(--head)}
+.rd .rd-strength{background:#EEF1FF;border-radius:12px;padding:12px 18px}
+.rd .rd-strength p.rd{margin-bottom:0}
+.ax-lean{float:right;font-size:17px;font-weight:700;color:var(--accent-deep)}
+.ax-box .ax-h{font-size:17px;font-weight:900;letter-spacing:.04em;color:var(--accent-deep);margin-bottom:2px}
+.ax-box .ax-row{padding:4px 0 2px;border-bottom:none}
+.ax-box .ax-name{font-size:19.5px;line-height:1.4}
+.ax-box .ax-track{margin:8px 0 6px;height:12px}
+.ax-box .ax-dot{width:22px;height:22px;border-width:3px}
+.cp-warn{background:#FFF4E5;border:1px solid #F3C98B;color:#8A5300;border-radius:8px;padding:8px 12px;font-size:12.5px;margin-bottom:10px}
+.pg-inner{display:flex;flex-direction:column;row-gap:18px}
+.pg-inner:has(> .rp-cta){min-height:100%}
+.pg-inner > .rp-cta{margin:auto -44px -56px;padding-bottom:46px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="adminbar noprint" id="adminBar">
+    <span class="b">LEVANCE｜ADMIN</span>
+    <h1>診断レポート管理（v4）</h1>
+    <p>2026年10月29日からの新しい診断（全25問・動物4タイプ）の回答一覧です。レポートを開き「PDFとして保存」で5ページのレポート（スマホ閲覧向け）を出力できます。上部のコーチ専用プロファイルは印刷・PDFに含まれません。<br>それ以前の診断（v3）は <a href="levance-shindan-report" style="color:#CFE9FF;font-weight:700">診断レポート管理（v3）</a> へ。</p>
+  </div>
+  <div class="keybox noprint" id="keyBox" style="display:none">
+    <label for="keyInput">アクセスキーを入力してください（初回のみ・この端末に保存されます）</label>
+    <input type="password" id="keyInput" placeholder="アクセスキー" autocomplete="off">
+    <button type="button" id="keySubmit">表示する</button>
+    <p class="err" id="keyErr" style="display:none">キーが違うようです。もう一度確認してください。</p>
+  </div>
+  <div class="listcard noprint" id="listCard" style="display:none">
+    <div class="listhead"><b>回答一覧（新しい順）</b><button type="button" id="reloadBtn">再読み込み</button></div>
+    <div id="listBody"><div class="loading">読み込み中...</div></div>
+  </div>
+  <div id="reportView">
+    <div class="report-actions noprint">
+      <button type="button" id="backBtn">← 一覧に戻る</button>
+      <button type="button" id="printBtn">PDFとして保存（印刷）</button>
+      <span class="hint">5ページで出力されます。印刷画面で「PDFとして保存」を選択。コーチ専用プロファイルは出力されません</span>
+    </div>
+    <div id="coachBox"></div>
+    <div id="pages"></div>
+  </div>
+</div>
+<script>
+"use strict";
+/* ===== 診断ページ v4 から取り込んだ判定・文章（質問の描画とイベントは除く） ===== */
+
+"use strict";
+
+/* =========================================================
+   データ定義
+   軸: A判断(+結論先行/-納得重視) B決め方(+即決/-持ち帰り) C自己開示(+本音/-慎重)
+       D動機(+攻め/-守り) E進め方(+自走/-伴走) F課題の捉え方(+自分で動かす/-環境要因)
+   その他: S2 AI活用度 / S3 AI成果 / H 時間 / tag系フラグ
+========================================================= */
+
+var SECTIONS = [
+  {step:"STEP 1", title:"今のあなたについて", desc:""},
+  {step:"STEP 2", title:"あなた自身のこと", desc:"それぞれの文が、ふだんのあなたにどのくらい当てはまるかを選んでください。深く考えず、直感で選ぶのがいちばん正確です"},
+  {step:"STEP 3", title:"仕事のなかのあなた", desc:"いちばん近いものを選んでください。正解はありません。「チーム」「周り」は、取引先や仕事仲間に読み替えて構いません"},
+  {step:"STEP 4", title:"これからのキャリア", desc:"いま感じていることと、これから向かいたい方向について"}
+];
+
+/* none:true ＝「どれにも当てはまらない」系の選択肢（配点なし・控えめな見た目で表示） */
+var NONE_T = "どれにも当てはまらない";
+
+/* 自分自身の設問（5段階）。dir＝「そう思う」が軸のどちら向きか（+1/-1）。value＝回答の強さ（+2〜-2） */
+var LK_LABELS = ["とてもそう思う","ややそう思う","どちらとも言えない","あまりそう思わない","まったくそう思わない"];
+function LK(id, text, axis, dir){
+  var opts = [];
+  for (var i = 0; i < 5; i++) { var d = {}; d[axis] = (2 - i) * dir; opts.push({t:LK_LABELS[i], d:d, value:2 - i}); }
+  return {id:id, sec:1, title:text, likert:true, axis:axis, dir:dir, opts:opts};
+}
+/* AとBを比べる設問。A＝軸のプラス側 */
+function AB(id, axis, a, b){
+  var labels = ["Aに近い","ややAに近い","どちらとも言えない","ややBに近い","Bに近い"];
+  var opts = [];
+  for (var i = 0; i < 5; i++) { var d = {}; d[axis] = 2 - i; opts.push({t:labels[i] + (i < 2 ? "（" + a + "）" : i > 2 ? "（" + b + "）" : ""), d:d, value:2 - i}); }
+  return {id:id, sec:1, title:"ふだんのあなたは、どちらに近いですか？", likert:true, ab:{a:a, b:b}, axis:axis, dir:1, opts:opts};
+}
+
+var QUESTIONS = [
+  /* ---------- STEP 1：今のあなたについて ---------- */
+  { id:"shokushu", sec:0, title:"現在の仕事内容に、いちばん近いものは？", hint:"いまお仕事をお休みしている方は、直近のお仕事で構いません", opts:[
+    {t:"営業・販売・接客", d:{}, job:"営業・販売"},
+    {t:"企画・マーケティング・広報", d:{}, job:"企画・マーケティング"},
+    {t:"経営・事業企画・マネジメント", d:{}, job:"経営・企画"},
+    {t:"IT・エンジニア・DX推進", d:{}, job:"IT・DX"},
+    {t:"管理部門（人事・総務・経理・法務など）", d:{}, job:"管理部門"},
+    {t:"事務・アシスタント・カスタマーサポート", d:{}, job:"事務・サポート"},
+    {t:"制作・クリエイティブ（デザイン・ライティング・動画など）", d:{}, job:"制作"},
+    {t:"専門職（医療・福祉・教育・士業・コンサルなど）", d:{}, job:"専門職"},
+    {t:"現場・技術・製造・物流", d:{}, job:"現場・技術"},
+    {t:"その他・" + NONE_T, d:{}, job:"いま", none:true}
+  ]},
+  /* away＝いまはお仕事を離れている（結果文で「直近のお仕事で」と書く） */
+  { id:"tachiba", sec:0, title:"現在の働き方・立場に、いちばん近いものは？", opts:[
+    {t:"会社員・公務員（一般・メンバー）", d:{}, pos:0},
+    {t:"会社員・公務員（リーダー・主任）", d:{}, pos:1},
+    {t:"会社員・公務員（管理職）", d:{}, pos:3, flag:"kanri"},
+    {t:"経営者・役員", d:{}, pos:3, flag:"notEmployee", flag2:"selfEmp"},
+    {t:"フリーランス・個人事業主", d:{}, pos:1, flag:"notEmployee", flag2:"selfEmp"},
+    {t:"パート・アルバイト", d:{}, pos:0},
+    {t:"派遣社員・契約社員", d:{}, pos:0},
+    {t:"休職中", d:{}, pos:0, away:true},
+    {t:"育休中", d:{}, pos:0, away:true},
+    {t:"求職中", d:{}, pos:0, flag:"notEmployee", away:true},
+    {t:"専業主婦・主夫", d:{}, pos:0, flag:"notEmployee", away:true},
+    {t:"その他・" + NONE_T, d:{}, pos:0, flag:"notEmployee", none:true}
+  ]},
+  { id:"katsuyo", sec:0, title:"AIを普段どのくらい活用していますか？", hint:"ChatGPT・Gemini・Claude・Copilotなど、使っているツールは問いません", opts:[
+    {t:"まだほとんど使っていない", d:{S2:0}},
+    {t:"ときどき、調べ物や文章づくりに使う", d:{S2:1}},
+    {t:"ほぼ毎日、資料作成や壁打ちなどに使っている", d:{S2:2}},
+    {t:"決まった作業はAIに任せ、仕事の流れに組み込んでいる", d:{S2:3}},
+    {t:"自動化・仕組み化まで作り込んでいる", d:{S2:4}}
+  ]},
+  { id:"seika", sec:0, title:"AIを活用して、どんな変化がありましたか？", hint:"いちばん大きい変化を選んでください", opts:[
+    {t:"まだ変化は感じていない", d:{S3:0}},
+    {t:"自分の作業が少し速くなった", d:{S3:1}},
+    {t:"成果物の質が上がった", d:{S3:2}},
+    {t:"仕事の流れ（業務フロー）を仕組み化して、改善できた", d:{S3:3}},
+    {t:"チームやお客様など、周りの人の仕事のやり方まで変わった", d:{S3:4}},
+    {t:"売上・コスト・時間など、数字で示せる成果が出た", d:{S3:4}},
+    {t:"AIを軸に、新しい役割や仕事、収入につながった", d:{S3:5}},
+    {t:NONE_T, d:{S3:0}, none:true}
+  ]},
+  { id:"ai_nayami", sec:0, title:"AIとキャリアについて、いま気になっていることに近いものは？", opts:[
+    {t:"AIを使っているのに、評価や収入にはつながっていない", d:{D:1}},
+    {t:"AIで速くなった分、別の仕事が増えただけになっている", d:{}},
+    {t:"自分のAI活用が、外でも通用するレベルなのか分からない", d:{}},
+    {t:"周りがAIを使いこなし始めていて、置いていかれそうで焦る", d:{}},
+    {t:"いまの仕事がAIに置き換えられないか、この先が心配", d:{D:-1}},
+    {t:"情報が多すぎて、何を学べばいいか決められない", d:{}},
+    {t:"特に気になっていることはない・" + NONE_T, d:{}, none:true}
+  ]},
+  { id:"tayorare", sec:0, title:"職場や周りの人から、AIについて聞かれることはありますか？", opts:[
+    {t:"よく聞かれる。気づけば相談役になっている", d:{}},
+    {t:"ときどき聞かれる", d:{}},
+    {t:"自分が聞く側のことが多い", d:{}},
+    {t:"AIの話をする相手が、周りにいない", d:{}}
+  ]},
+
+  /* ---------- STEP 2：あなた自身のこと（タイプ判定の主な材料）----------
+     作り方は 2026-10-29_性格診断リサーチ.md を参照。
+     ・自分の行動を言い切る文に、どのくらい当てはまるかを5段階で答える（16Personalities・TIPI-J の形式）
+     ・1軸4問。両方向の文を混ぜる（何にでも「そう思う」と答える癖を打ち消す）＋AとBを比べる設問を1問（よく見せようとする回答を減らす）
+     ・軸の順番はばらして並べる
+     参考尺度：攻め↔守り＝制御焦点（GRFM／PPFS）、自走↔伴走＝援助要請スタイル（永井2013）・達成動機、結論先行↔納得重視＝REI・認知欲求・認知的完結欲求 */
+  LK("p_d1", "これから手に入れたいことや、なりたい姿を思い浮かべることがよくある", "D", 1),
+  LK("p_e1", "困ったことがあっても、まず自分で調べたり試したりしてから、人に聞く", "E", 1),
+  LK("p_a1", "迷ったときは、最初にピンときた方を選ぶことが多い", "A", 1),
+  LK("p_d2", "新しいことを始めるときは、うまくいったときより、うまくいかなかったときのことを先に考える", "D", -1),
+  LK("p_e2", "一人だと後回しにしがちなことも、誰かと約束すると進められる", "E", -1),
+  LK("p_a2", "理由が腹落ちしないまま動くのは、落ち着かない", "A", -1),
+  LK("p_d3", "大きく変えるより、いまあるものを守りながら少しずつ良くしていきたい", "D", -1),
+  LK("p_e3", "周りからは「マイペース」「一人でも平気そう」と言われることが多い", "E", 1),
+  LK("p_a3", "人の話は、経緯より先に、まず結論を聞きたい", "A", 1),
+  AB("p_d4", "D", "多少の不安があっても、伸びしろのある方を選びたい", "いまの暮らしや信頼を、崩さない方を選びたい"),
+  AB("p_e4", "E", "新しいことは、自分なりに手順やメモを作りながら覚える", "詳しい人に一度やって見せてもらう方が、早く身につく"),
+  AB("p_a4", "A", "段取りは、まず動いてみて、やりながら直す", "全体を見渡してから、動き出す"),
+
+  /* ---------- STEP 3: 仕事のなかのあなた（購入場面は使わない／会社員に限定しない） ---------- */
+  { id:"s_result", sec:2, title:"仕事で思うように成果が出ないとき、まず頭に浮かぶのは？", opts:[
+    {t:"自分のやり方の、どこを変えるか", d:{F:2}},
+    {t:"組織の方針や、取引先・市場などの環境に原因があると感じる", d:{F:-2}},
+    {t:"時間や人手が足りないのだから仕方ない", d:{F:-1}},
+    {t:"誰かに相談して、原因を整理したい", d:{F:1}},
+    {t:"原因を決めつけず、まず数字や事実を確かめる", d:{F:1}},
+    {t:NONE_T, d:{}, none:true}
+  ]},
+  { id:"s_stop", sec:2, title:"新しい習慣や取り組みが途中で止まったとき、振り返ると原因は？", opts:[
+    {t:"自分で優先順位を下げてしまった", d:{F:1}},
+    {t:"忙しくて時間が取れなかった", d:{F:-1}},
+    {t:"何から手をつけるか、分からなくなった", d:{E:-1}, hintAnx:"judge"},
+    {t:"一緒に進める相手や、締切がなかった", d:{E:-2}},
+    {t:"止まった経験は、あまりない", d:{E:2,F:1}},
+    {t:NONE_T, d:{}, none:true}
+  ]},
+  { id:"s_leader", sec:2, title:"もし明日、周囲から「AI活用の旗振り役をやってほしい」と言われたら？", opts:[
+    {t:"ぜひやりたい。むしろ待っていた", d:{D:1,F:1}},
+    {t:"範囲や条件を確認してから、引き受ける", d:{D:1}},
+    {t:"正直、荷が重い。裏方で支える方が向いている", d:{D:-1}},
+    {t:"自分にできるか、という不安が先に立つ", d:{D:-1}, hintAnx:"confidence"},
+    {t:NONE_T, d:{}, none:true}
+  ]},
+  /* ---------- STEP 4：これからのキャリア ---------- */
+  { id:"career_nayami", sec:3, title:"いまの仕事やキャリアで、感じていることに近いものは？", opts:[
+    {t:"頑張っているわりに、評価や収入が上がらない", d:{}},
+    {t:"いまの仕事を、この先も続けていけるか不安がある", d:{}},
+    {t:"自分の強みや市場価値を、うまく言葉にできない", d:{}},
+    {t:"もっと力を発揮できる場所があるはず、と感じている", d:{}},
+    {t:"仕事と家庭の両立で、自分のことが後回しになっている", d:{}},
+    {t:"ブランクがあり、復帰や再スタートに不安がある", d:{}},
+    {t:"特に悩みはない・" + NONE_T, d:{}, none:true}
+  ]},
+  { id:"henka", sec:3, title:"いま、キャリアを変えたいと思っていますか？", opts:[
+    {t:"すぐにでも変えたい", d:{}, honki:0},
+    {t:"3ヶ月以内には動きたい", d:{}, honki:0},
+    {t:"変えたいが、時期はまだ決めていない", d:{}, honki:1},
+    {t:"いまの仕事を続けながら、選択肢を増やしておきたい", d:{}, honki:1},
+    {t:"変えるつもりはないが、このままでいいのかは気になる", d:{}, honki:1},
+    {t:"特に変えるつもりはない", d:{}, honki:1}
+  ]},
+  { id:"kibo", sec:3, title:"キャリアを動かすとしたら、いちばん近いものは？", hint:"まだ決まっていなくても、気持ちがいちばん近いものを選んでください", opts:[
+    {t:"いまの職場で、評価や役割を上げる", d:{}, dir:"shoshin"},
+    {t:"いまの職場で、AI・DXを任される立場になる", d:{}, dir:"dx"},
+    {t:"担当する仕事や職種を変える（異動・職種転換）", d:{}, dir:"idou"},
+    {t:"転職する", d:{}, dir:"tenshoku"},
+    {t:"副業を始める・増やす", d:{}, dir:"fukugyo"},
+    {t:"独立・起業する／いまの事業を伸ばす", d:{}, dir:"dokuritsu"},
+    {t:"新しいことを学び直す", d:{}, dir:""},
+    {t:"仕事に復帰する・再就職する", d:{}, dir:"tenshoku"},
+    {t:"まだ決まっていない・" + NONE_T, d:{}, dir:"", none:true}
+  ]},
+  { id:"anxiety", sec:3, title:"新しいことを始めるとき、最初に浮かぶのは？", opts:[
+    {t:"時間を作れるか・続けられるか", d:{}, anx:"時間（やり切れるか）"},
+    {t:"自分にできるか（自信）", d:{}, anx:"自信（自分にできるか）"},
+    {t:"成果につながるか（見返り）", d:{}, anx:"見返り（成果につながるか）"},
+    {t:"何から始めればいいか（進め方）", d:{}, anx:"進め方（何から始めるか）"},
+    {t:"特に不安はない", d:{}, anx:"特になし"},
+    {t:NONE_T, d:{}, anx:"その他（選択肢に該当なし）", none:true}
+  ]}
+];
+
+/* 軸の正規化スケールと両極ラベル */
+var AXES = [
+  {k:"A", name:"判断の仕方", en:"JUDGMENT", scale:5,
+   pos:"結論から知りたい", neg:"納得を積み上げたい",
+   coachPos:"結論先行", coachNeg:"納得重視", coachMid:"場面による",
+   readPos:"要点と結論を先に押さえるほど、動きやすくなる傾向です。詳細は、必要なところだけ確認する進め方が合っています。",
+   readNeg:"背景と根拠を理解してから動くほど、力が出る傾向です。仕組みまで納得できる材料を先に揃えると、迷いが減ります。",
+   readMid:"場面に応じて、結論から入るときと、根拠を確かめるときを使い分けるタイプです。"},
+  {k:"B", name:"決め方", en:"DECISION", scale:3,
+   pos:"その場で決める", neg:"持ち帰って比べる",
+   coachPos:"即決", coachNeg:"持ち帰り・比較", coachMid:"場面による",
+   readPos:"必要だと思えば、その場で決めて動ける傾向です。勢いを活かしつつ、進める順番だけは先に決めておくと確実です。",
+   readNeg:"いったん持ち帰り、比較して決める傾向です。判断材料を揃える時間を最初から確保しておくと、納得して動けます。",
+   readMid:"内容と金額によって、即決と持ち帰りを使い分けるタイプです。"},
+  {k:"C", name:"本音の出し方", en:"OPENNESS", scale:3,
+   pos:"最初から本音で話す", neg:"様子を見てから話す",
+   coachPos:"本音を出す", coachNeg:"慎重", coachMid:"相手次第",
+   readPos:"初対面でも、悩みや本音を言葉にしやすい傾向です。話しながら整理するほど、次の一手が見えやすくなります。",
+   readNeg:"信頼できると感じてから、少しずつ本音を出す傾向です。無理に言葉にしなくても、事実から整理していけば十分に進めます。",
+   readMid:"相手や場面によって、本音の出し方を変えるタイプです。"},
+  {k:"D", name:"動機の向き", en:"MOTIVATION", scale:5,
+   pos:"上を目指したい（攻め）", neg:"安心を確かにしたい（守り）",
+   coachPos:"攻め（上昇・挑戦）", coachNeg:"守り（備え・安心）", coachMid:"両方",
+   readPos:"役割・評価・挑戦が動機になるタイプです。目指す姿をはっきりさせるほど、行動の速さが上がります。",
+   readNeg:"備え・安心・続けやすさが動機になるタイプです。大きく変えるより、いまの土台にAIを足していく進め方が合っています。",
+   readMid:"上を目指す気持ちと、安心を確かにしたい気持ちの両方を持っているタイプです。"},
+  {k:"E", name:"進め方", en:"STYLE", scale:6,
+   pos:"自分で型を作る（自走）", neg:"相談相手と進める（伴走）",
+   coachPos:"自走", coachNeg:"伴走", coachMid:"両方",
+   readPos:"自分で調べ、自分で型を作って進めるタイプです。中身と順番が具体で見えていれば、一人でも走り切れます。",
+   readNeg:"相談相手や締切があると、続けやすくなるタイプです。一人で抱えず、戻れる場所を先に用意しておくと速くなります。",
+   readMid:"一人で進める部分と、相談しながら進める部分を組み合わせるとうまくいくタイプです。"},
+  {k:"F", name:"課題への向き合い方", en:"OWNERSHIP", scale:4,
+   pos:"まず自分の打ち手を探す", neg:"まず環境や条件を整える",
+   coachPos:"自分の打ち手で捉える（自責寄り）", coachNeg:"環境要因を先に挙げる（他責寄り）", coachMid:"場面による",
+   readPos:"うまくいかないとき、まず自分のやり方を見直すタイプです。その姿勢は、そのまま実績の再現性につながります。",
+   readNeg:"うまくいかないとき、まず環境や条件に目が向くタイプです。環境を変えるより「自分の裁量で完結する業務」から始めると、動き出しやすくなります。",
+   readMid:"自分の打ち手と、環境の条件を分けて考えられるタイプです。"}
+];
+
+var PHASES = [
+  {en:"PHASE 1｜AI PLAYER", ja:"AIを使いこなす"},
+  {en:"PHASE 2｜WORK DESIGNER", ja:"業務を設計し直す"},
+  {en:"PHASE 3｜ORG DRIVER", ja:"組織を動かす"}
+];
+var LEVELS = [
+  {lv:1, name:"情報収集ステージ", phase:0, note:"AIが気になり、情報を集め始めた段階です。勉強を増やすより「自分の業務のどこに使うか」を1つ決めるだけで、次のステージに進めます。"},
+  {lv:2, name:"個人活用ステージ", phase:0, note:"個人の時短にAIを使えている段階です。次は、毎日の業務フローに組み込むこと。ここから、便利に使う人と成果に変える人が分かれます。"},
+  {lv:3, name:"業務実装ステージ", phase:1, note:"業務の一部にAIを組み込めている段階です。次は、成果を「どの業務を、どれくらい改善したか」の形に変換することです。"},
+  {lv:4, name:"仕組み化ステージ", phase:1, note:"再現できる型まで作り込めている段階です。次は、その型をチーム・周囲に広げること。個人の生産性から組織の生産性へ進みます。"},
+  {lv:5, name:"組織展開ステージ", phase:2, note:"チーム・組織にAI活用を広げられている段階です。推進実績をキャリアの言葉に変換して、狙う出口を取りにいく段階です。"}
+];
+
+/* タイプの動物イラスト（2026-10-29 B案：グラデーションの塗りに決定。原本は 診断タイプ_イラスト候補.js） */
+var ANIMAL_SHAPES = {
+  driver: { /* ハヤブサ：とがった翼を後ろに流して、獲物へ向かう姿 */
+    tf: 'rotate(-10 60 60)',
+    body: [
+      '<path d="M54 46C40 38 22 32 3 29C11 35 17 41 21 47C30 52 42 58 56 62Z"/>',
+      '<path d="M66 46C80 38 98 32 117 29C109 35 103 41 99 47C90 52 78 58 64 62Z"/>',
+      '<path d="M60 19C67 19 71 26 71 35C71 49 68 63 65 78L55 78C52 63 49 49 49 35C49 26 53 19 60 19Z"/>',
+      '<path d="M54.5 76L65.5 76L71 96C64 100 56 100 49 96Z"/>'
+    ],
+    soft: [],
+    detail: [
+      '<path d="M13 33C25 39 39 47 51 53M107 33C95 39 81 47 69 53" fill="none" stroke-width="2.4" stroke-linecap="round"/>',
+      '<path d="M56.5 42L60 45L63.5 42M56 51L60 54L64 51M56.5 60L60 63L63.5 60" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>'
+    ]
+  },
+  leap: { /* イルカ：波から跳ねる姿 */
+    tf: '',
+    body: [
+      '<path d="M18 94C26 60 54 34 90 32C98 32 104 33 109 35L118 39L108 43C100 45 94 47 88 50C70 56 52 70 36 96Z"/>',
+      '<path d="M58 41C56 31 52 25 46 20C59 23 67 29 72 37Z"/>',
+      '<path d="M21 96L4 100C9 92 14 89 19 87Z"/>',
+      '<path d="M25 99L24 117C30 113 32 108 32 101Z"/>'
+    ],
+    soft: [],
+    detail: [
+      '<circle cx="97" cy="38.5" r="2.6"/>',
+      '<path d="M75 54C71 60 65 65 59 67C67 68 75 64 81 58Z"/>',
+      '<path d="M42 84C54 68 70 57 88 50" fill="none" stroke-width="2.4" stroke-linecap="round"/>'
+    ]
+  },
+  architect: { /* ビーバー：座った横向き。平たいしっぽと前歯 */
+    tf: '',
+    body: [
+      '<path d="M42 96C28 101 14 104 9 98C4 91 16 83 30 83C38 83 44 87 47 91Z"/>',
+      '<ellipse cx="62" cy="80" rx="30" ry="28"/>',
+      '<circle cx="82" cy="48" r="20"/>',
+      '<ellipse cx="98" cy="55" rx="11" ry="9"/>',
+      '<circle cx="71" cy="30" r="6"/>',
+      '<ellipse cx="72" cy="106" rx="15" ry="5"/>'
+    ],
+    soft: [],
+    detail: [
+      '<circle cx="88" cy="44" r="3"/>',
+      '<ellipse cx="107" cy="51" rx="3.6" ry="2.8"/>',
+      '<rect x="97" y="57" width="6" height="6.5" rx="1.5"/>',
+      '<path d="M15 92L38 88M17 97L40 93" fill="none" stroke-width="2" stroke-linecap="round"/>',
+      '<path d="M80 72C84 76 88 78 92 77" fill="none" stroke-width="2.4" stroke-linecap="round"/>'
+    ]
+  },
+  builder: { /* ペンギン：正面。お腹が白い */
+    tf: '',
+    body: [
+      '<path d="M60 14C82 14 92 36 92 62C92 88 80 106 60 106C40 106 28 88 28 62C28 36 38 14 60 14Z"/>',
+      '<path d="M30 56C22 66 20 80 24 88C28 80 32 70 35 62Z"/>',
+      '<path d="M90 56C98 66 100 80 96 88C92 80 88 70 85 62Z"/>',
+      '<ellipse cx="50" cy="107" rx="8" ry="3.5"/>',
+      '<ellipse cx="70" cy="107" rx="8" ry="3.5"/>'
+    ],
+    soft: [
+      '<path d="M60 47C72 47 80 59 80 75C80 91 72 101 60 101C48 101 40 91 40 75C40 59 48 47 60 47Z"/>'
+    ],
+    detail: [
+      '<circle cx="51" cy="33" r="3"/>',
+      '<circle cx="69" cy="33" r="3"/>',
+      '<path d="M55.5 40L64.5 40L60 47Z"/>'
+    ]
+  }
+};
+
+/* テイスト
+   badge：グラデーションの丸バッジに白いシルエット（アプリのアイコン風）
+   fill ：動物そのものをグラデーションで塗る（背景なし）
+   line ：線画（細い線・1色。色は周りの文字色に合わせる） */
+function animalSVG(key, style, size, uid){
+  var s = ANIMAL_SHAPES[key]; if (!s) return "";
+  size = size || 96; uid = uid || (key + "_" + style);
+  var g = 'g_' + uid;
+  var defs = '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="1" y2="1">' +
+             '<stop offset="0" stop-color="#2546F0"/><stop offset=".55" stop-color="#6A5BFF"/><stop offset="1" stop-color="#B46CFF"/></linearGradient></defs>';
+  var body = s.body.join(""), soft = s.soft.join(""), det = s.detail.join("");
+  var tf = s.tf ? ' transform="' + s.tf + '"' : '';
+  var out = '<svg class="animal animal-' + style + '" viewBox="0 0 120 120" width="' + size + '" height="' + size + '" aria-hidden="true">' + defs;
+  if (style === "badge") {
+    out += '<circle cx="60" cy="60" r="58" fill="url(#' + g + ')"/>' +
+           '<circle cx="60" cy="60" r="56.5" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.5"/>' +
+           '<g transform="translate(13 13) scale(.78)"><g' + tf + '>' +
+           '<g fill="#fff">' + body + '</g>' +
+           '<g fill="#5B5FEF" opacity=".18">' + soft + '</g>' +
+           '<g fill="#4A4FE6" stroke="#4A4FE6">' + det + '</g></g></g>';
+  } else if (style === "light") {  /* 濃い背景の上：明るいグラデーション */
+    out = out.replace('stop-color="#2546F0"', 'stop-color="#A9BBFF"').replace('stop-color="#6A5BFF"', 'stop-color="#C9BFFF"').replace('stop-color="#B46CFF"', 'stop-color="#F3DBFF"');
+    out += '<g' + tf + '><g fill="url(#' + g + ')">' + body + '</g>' +
+           '<g fill="#fff">' + soft + '</g>' +
+           '<g fill="#3B3FC8" stroke="#3B3FC8">' + det + '</g></g>';
+  } else if (style === "white") {
+    out += '<g' + tf + '><g fill="#fff">' + body + '</g>' +
+           '<g fill="#5B5FEF" opacity=".22">' + soft + '</g>' +
+           '<g fill="#5B5FEF" stroke="#5B5FEF">' + det + '</g></g>';
+  } else if (style === "fill") {
+    out += '<g' + tf + '><g fill="url(#' + g + ')">' + body + '</g>' +
+           '<g fill="#fff">' + soft + '</g>' +
+           '<g fill="#fff" stroke="#fff">' + det + '</g></g>';
+  } else {
+    out += '<g' + tf + ' fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">' + body + soft + '</g>' +
+           '<g' + tf + ' fill="currentColor" stroke="currentColor">' + det + '</g>';
+  }
+  return out + '</svg>';
+}
+
+/* タイプ文面はPDFレポート（AI診断v3_レポート管理ページ.html）で2026-09-10に書き直した版にそろえた。
+   v3.1で追加：nick（判断の仕方で分ける二つ名）／scenes（面談でよく聞く場面）／cta（体験セッションで扱うこと） */
+var TYPES = {
+  driver: {
+    name:"狙いを定めるハヤブサ", animal:"ハヤブサ", en:"FALCON", tag:"自分で道筋を描き、成果で示すタイプ",
+    d:"攻め", e:"自走",
+    nick:{pos:"最短距離を引く設計者", neg:"根拠から組み立てる戦略家"},
+    nickNote:{pos:"ゴールが見えた瞬間に、逆算で道筋を引けるタイプ", neg:"理由まで押さえてから、ぶれない計画を組み立てるタイプ"},
+    summary:"目標も進め方も、自分で決めたいタイプ。抽象的な話より、具体的な材料があるほど前に進めます。",
+    desc:"上を目指す意欲があり、進め方も自分で設計できるタイプです。必要なのは「何を、どの順で、どこまでやるか」が具体で見えること。そして、その成果が評価・役割・市場価値のどれに効くのかを、自分で判断できる材料です。そこさえ揃えば、あとは自分の力で進んでいける方が多いタイプです。",
+    strengths:["目標から逆算して動ける設計力","自分で調べ、自分で決める推進力","成果に対する基準の高さ"],
+    stumbles:["全体像が見えないまま進めることに、時間を使いにくい","自分で全部検証しようとして、時間が足りなくなりやすい","周囲との温度差に、力を使わされることがある"],
+    scenes:[
+      "AIで仕事の質は上がった。でも、作業時間は思ったほど減っていない",
+      "人の仕事やお客様の仕組みは整えられるのに、自分のことはつい後回しになる",
+      "「それ、どうやってるんですか？」と聞かれて、自分のやり方をうまく説明できなかった",
+      "便利な仕組みを作っても、ルールや費用の都合で止まったことがある",
+      "情報を集めるほど、試したいことが増えていく"
+    ],
+    cta:["自分で進められる強みはそのままに、どこを任せ、どこに時間を使うかを整理します",
+         "あなたの業務の中で、成果が「外から見える形」になりやすいAI活用ポイントを特定します",
+         "90日で作る実績を、チームでも再現できる型として残すための設計図をお渡しします"],
+    mindset:[
+      {h:"自分の型を「再現できる形」で残す", t:"個人の成果で止めず、チームでも再現できる型として残す。それがそのまま推進実績・市場価値になります。"},
+      {h:"検証は全部やらない。任せる部分を決める", t:"全部自分で触ると時間切れになります。判断が必要な部分だけ自分が持ち、それ以外は仕組みと人に任せる設計が結果を分けます。"},
+      {h:"判断材料は、走り出す前に集める", t:"「何が得られるか」「どう評価に効くか」を具体で押さえてから動くと、途中で迷いません。"}
+    ],
+    detour:"このタイプが独学で進むと、成果は出ているのに「外から見える形」になっていない期間が延びがちです。成果物の設計図を先に持つのが近道です。",
+    road:"90日の実績を「チームでも再現できる型」として文書化してください。それが次の役割・次の交渉の材料になります。"
+  },
+  leap: {
+    name:"波に乗るイルカ", animal:"イルカ", en:"DOLPHIN", tag:"高い目標を、相談相手と一緒に取りにいくタイプ",
+    d:"攻め", e:"伴走",
+    nick:{pos:"ゴールから駆け上がる挑戦者", neg:"腹落ちして加速する挑戦者"},
+    nickNote:{pos:"行き先が決まると、誰よりも速く動き出せるタイプ", neg:"「これだ」と納得できた瞬間に、一気に加速するタイプ"},
+    summary:"目指す姿は、すでにはっきりしている。あとは進む順番が決まれば、いちばん速く動けるタイプ。",
+    desc:"上を目指す意欲が強く、挑戦を前向きに捉えるタイプです。一方で、選択肢が多いと迷いやすく、優先順位が入れ替わりがちなところがあります。それは意欲の問題ではなく、進む順番がまだ決まっていないだけです。方向と順番が決まれば、このタイプはもっとも速く動けます。",
+    strengths:["挑戦を楽しめる前向きさ","目指す姿を語れる意欲","人の力を借りて加速できる柔軟さ"],
+    stumbles:["選択肢が多いと迷いやすく、着手が遅れることがある","独学だと、途中で優先順位が下がりやすい","成果を急ぐと、土台の部分が抜けやすい"],
+    scenes:[
+      "AIで速くなった分、そこに別の仕事が乗ってくる",
+      "「AIってどう使えばいい？」と相談されることがある。でも、それを自分の強みとして言える言葉はまだない",
+      "年度や季節の区切りが来るたびに「今年こそ」と思う",
+      "AIに詳しい人の集まりにいると、自分はまだまだだと感じる",
+      "作ったものを、人に渡せる形にするところで手が止まる"
+    ],
+    cta:["選択肢が多い中で、何を基準に選ぶか。あなたの判断軸を言葉にします",
+         "いまの業務や、人から相談されていることの中から、評価につながるテーマを1つに絞ります",
+         "90日で進む順番と、迷ったときに戻る区切りを入れた設計図をお渡しします"],
+    mindset:[
+      {h:"迷ったら戻る場所を、先に決めておく", t:"相談相手と週次の区切りを先に置くと、迷いが「止まる時間」ではなく「決める時間」に変わります。"},
+      {h:"順番を決めれば、速さは自然に出る", t:"あれもこれもではなく、90日で1本。順番が決まると、意欲がそのまま推進力になります。"},
+      {h:"小さく始めて、実績で広げる", t:"いきなり大きく飛ぶより、小さな実績を積んで選択肢を増やす方が、結果として遠くまで届きます。"}
+    ],
+    detour:"このタイプが独学で進むと、学びは増えるのに「1本の実績」にまとまらないまま時間が経ちがちです。順番と相談相手を先に用意するのが近道です。",
+    road:"90日は「1つの業務・1つの成果」に絞ってください。絞るほど、次の挑戦の選択肢が増えます。"
+  },
+  architect: {
+    name:"コツコツ築くビーバー", animal:"ビーバー", en:"BEAVER", tag:"納得してから、自分のペースで積み上げるタイプ",
+    d:"守り", e:"自走",
+    nick:{pos:"要点をつかむ実務家", neg:"理由まで確かめる職人肌"},
+    nickNote:{pos:"押さえるべき点を見極めて、無駄なく積み上げるタイプ", neg:"仕組みまで理解したことを、確実に自分のものにするタイプ"},
+    summary:"大きく変えたいわけではない。ただ「このままでいいのか」という問いは、ふとした時に戻ってくる。納得できたときに、着実に進むタイプ。",
+    desc:"安定を大切にしながら、自分で考えて動けるタイプです。「いま困っていないが、この先が見えない」という静かな問いを持っている方が多く、勢いでは動きません。中身が具体で見え、得られるものを自分で想像できたとき、確実に前へ進めます。",
+    strengths:["先を読んで備える視点","自分で調べ、判断できる堅実さ","長年の実務経験という土台"],
+    stumbles:["「きちんと理解してから」と考えるほど、最初の一歩が遅くなりやすい","中身が具体で見えないと、動き出しにくい","一人で調べる時間が長くなり、進め方の確認が後回しになりやすい"],
+    scenes:[
+      "時間をいちばん取られているのは、作業そのものより「探す・確かめる」時間",
+      "セミナーや動画ではできたのに、自分の仕事に戻すと手が止まる",
+      "有料のAIツールを使い始めたものの、どこから手をつけるか決めきれていない",
+      "周りに詳しい人がいなくて、気づけば自分がAIの担当のようになっている",
+      "仕事の場ではAIを使いにくく、家でだけ使い込んでいる"
+    ],
+    cta:["やること・順番・得られるものを具体にして、納得して動ける状態にします",
+         "「探す・確かめる」時間のように、AIで減らせる業務を一緒に洗い出します",
+         "いまの業務を土台にした、無理のない90日の設計図をお渡しします"],
+    mindset:[
+      {h:"学んでからではなく、自分の業務から始める", t:"毎日やっている業務を1つ選び、そこにAIを当てるのが最短です。理解は、動きながら深まります。"},
+      {h:"「いざという時」を、いま作っておく", t:"備えは、必要になってからでは間に合いません。小さくても外に見せられる実績が、そのまま選択肢になります。"},
+      {h:"判断材料は、具体で揃える", t:"何を、どの順で、どこまでやるか。具体で見えれば、このタイプは迷いなく進めます。"}
+    ],
+    detour:"このタイプが独学で進むと「調べて終わり」の期間が長くなりがちです。順番を先に設計してしまうのが近道です。",
+    road:"90日で作る実績を、外に見せられる形で残してください。小さくてかまいません。それが、そのまま次の選択肢になります。"
+  },
+  builder: {
+    name:"寄りそって進むペンギン", animal:"ペンギン", en:"PENGUIN", tag:"安心できる環境で、一歩ずつ確実に進めるタイプ",
+    d:"守り", e:"伴走",
+    nick:{pos:"一歩目が速い積み上げ派", neg:"納得を力に変える積み上げ派"},
+    nickNote:{pos:"やることが決まれば、迷わず手を動かせるタイプ", neg:"腑に落ちたことは、長く続けられるタイプ"},
+    summary:"大きな変化は望んでいない。ただ、いまの働き方を楽に、長く続けられる力は欲しい。無理のないペースで、一歩ずつ積み上げていくタイプ。",
+    desc:"安定と安心を大切にし、無理のないペースで積み上げたいタイプです。「自分にできるだろうか」という不安が先に立つことがありますが、これまで新しい仕事や資格を身につけたときも、最初は同じだったはずです。相談できる相手と続けられる環境があれば、確実に前へ進めます。",
+    strengths:["続ける力、積み上げる力","実務で培った経験","無理をしない現実的な判断"],
+    stumbles:["「自分にできるだろうか」で、手が止まりやすい","何から手をつけるかで迷いやすい","相談相手がいないと、独学で遠回りしやすい"],
+    scenes:[
+      "自分のために使える時間は、夜、家のことが一段落してから",
+      "AIの案内やお知らせが来ても「まだ使いこなせていないから」と見送ったことがある",
+      "説明会や動画を見ても、結局どこから始めればいいかが分からなかった",
+      "メールやアプリについているAI機能を使って「これ、すごいな」と思ったことがある",
+      "引き継ぎや手順書がないまま、一人で回している仕事がある"
+    ],
+    cta:["「自分にできるか」を、いまできていることから一緒に整理します",
+         "毎日の業務の中から、まずAIで楽にできる1つを一緒に選びます",
+         "1日15分からでも続けられる、90日の設計図をお渡しします"],
+    mindset:[
+      {h:"不安なままで、始めていい", t:"不安は、このタイプのほぼ全員が持っています。始めてから消えていくものです。"},
+      {h:"必要なのは、まとまった時間ではありません", t:"1日15分でも、90日続ければ20時間を超えます。差がつくのは1回の長さではなく、続けられる形にできたかどうかです。"},
+      {h:"すでに持っている力に、AIを足す", t:"ゼロから学ぶのではなく、いまの業務・いまのスキルにAIを重ねる。それがいちばん確実です。"}
+    ],
+    detour:"このタイプが独学で進むと「調べたけれど不安が消えない」まま止まりがちです。相談相手と順番があれば、遠回りしません。",
+    road:"90日は「いまの業務を1つ楽にする」から始めてください。その1つが、次の安心につながります。"
+  }
+};
+/* 性格と仕事の言い当て（2026-10-29追加）。書き方は 2026-10-29_性格診断リサーチ.md の原理に沿う：
+   生活の一場面で言い当てる／いいところ→こんな一面も（すぐ強みに言い換える）→こうするともっと輝く */
+var CHARACTER = {
+  driver: {
+    lead:"ゴールが見えた瞬間、頭の中ではもう道筋が引かれている。ハヤブサが狙いを定めて一直線に向かうように、やると決めたときの集中力と速さは、周りが驚くほどです。",
+    aru:["旅行や予定は、行き先が決まると調べものが止まらなくなる",
+         "人の話を聞きながら、つい「で、結局どうしたいんだろう」と着地点を考えている",
+         "人に頼むより、自分でやった方が早いと思うことがよくある",
+         "やると決めたことは、誰に言われなくても最後までやり切る",
+         "あいまいな説明を受けると、あとで自分で調べ直してしまう"],
+    good:"決めたら迷わない。自分で考え、自分で動ける。周りからは「任せておけば大丈夫」と信頼される存在です。",
+    aspect:"目標に一直線なぶん、周りのペースとの差にもどかしさを感じることがあるかもしれません。でもそれは、それだけ先が見えているということです。",
+    more:"自分のやり方を言語化して周りに渡せるようになると、あなた一人の速さが、チーム全体の速さに変わります。個人として成果を出す人から、組織を動かす人へ。次のステージはそこにあります。",
+    work:"仕事では、目標から逆算して段取りを組み、成果で示すタイプ。指示を待つより、自分で道筋を描く方が力が出ます。",
+    workAspect:"全体像が見えないまま進めることには、抵抗を感じやすいかもしれません。でもそれは、ムダな動きをしない力の裏返し。最初に「何を、どの順で、どこまで」を押さえれば、誰より速く走り切れます。",
+    ai:"AIを、自分の段取りをまるごと任せられる相棒にできるタイプです。あなたのやり方をAIに載せて仕組みにすれば、チームの誰もが、あなたと同じ速さで動けるようになります。"
+  },
+  leap: {
+    lead:"新しいことに可能性を見いだし、気づけば周りも巻き込んでいる。イルカが群れで波に乗るように、人と一緒に動くときにいちばん推進力が出るタイプです。",
+    aru:["興味を持った話は、すぐ誰かに共有したくなる",
+         "一人だと後回しになることも、誰かと約束すると一気に進む",
+         "やってみたいことが次々に浮かび、メモがすぐ増えていく",
+         "年度や期の区切りが来ると、新しい目標を立てたくなる",
+         "周りから前向きな反応があると、もうひと押しできる"],
+    good:"前向きで、挑戦を楽しめる。あなたが加わると場が前に進み、周りも「やってみよう」と動き出します。",
+    aspect:"やりたいことが多いぶん、あれもこれもと気持ちが散ってしまうことがあるかもしれません。でもそれは、それだけたくさんの可能性に気づける力があるということです。",
+    more:"進む順番さえ決まれば、その推進力は誰よりも遠くまで届きます。テーマを1つに絞ったとき、周りを巻き込む力が、そのまま大きな成果になります。",
+    work:"仕事では、新しい企画や挑戦の場で力を発揮するタイプ。人と話しながらアイデアを広げ、チームの空気を前向きに動かせます。",
+    workAspect:"選択肢が多いと、迷って手が止まることもあるかもしれません。でもそれは、視野が広い証拠。判断の軸と区切りを先に決めておけば、迷う時間が「決める時間」に変わります。",
+    ai:"AIを「一緒に考える相棒」にすると、アイデアがすぐ形になるタイプです。壁打ちから企画書まで一気に進められるので、あなたの「やってみたい」が、提案や成果に変わるスピードが大きく上がります。"
+  },
+  architect: {
+    lead:"納得できたことを、自分のペースで、確実に積み上げていく。ビーバーが一本ずつ木を運んで丈夫なダムを築くように、時間をかけたものほど崩れないのが、あなたの強さです。",
+    aru:["新しいアプリや家電は、使い方を一通り確かめてから使い始める",
+         "「なんで？」が解決しないと、どうも落ち着かない",
+         "人に聞くより、まず自分で調べた方が早いと思っている",
+         "一度気に入ったお店や道具は、長く使い続ける",
+         "周りが盛り上がっていても、自分が納得するまでは様子を見る"],
+    good:"一度始めたことは、丁寧に、最後まで仕上げる。あなたの仕事には「この人がやったなら大丈夫」という安心感があります。",
+    aspect:"きちんと理解してから動きたいぶん、最初の一歩に時間がかかることがあるかもしれません。でもそれは、遠回りをしないための慎重さです。",
+    more:"完璧になる前に、小さく外に見せてみる。それだけで、あなたが積み上げてきたものが、一気に評価に変わり始めます。",
+    work:"仕事では、仕組みや手順を整えて、品質を守る要になるタイプ。地道な改善を重ねて、気づけば周りが頼る「土台」をつくっています。",
+    workAspect:"中身が見えないと、動き出しにくいこともあるかもしれません。でもそれは、判断を外さない力の裏返し。やること・順番・得られるものを先に具体にすれば、迷いなく進めます。",
+    ai:"AIで、あなたの「調べる・確かめる」時間を一気に短くできるタイプです。丁寧さはそのままに仕上がりまでが速くなるので、積み上げられる量そのものが増えていきます。"
+  },
+  builder: {
+    lead:"周りと足並みをそろえながら、一歩ずつ、着実に前へ進む。ペンギンが群れで寄りそって厳しい環境を乗り越えるように、あなたがいる場所には安心と信頼が生まれます。",
+    aru:["困っている人がいると、自分の仕事より先に手を貸してしまう",
+         "自分のための時間は、仕事や家のことが一段落してから",
+         "新しいことは、詳しい人に一度見せてもらうと安心して進められる",
+         "大きな変化より、いまの環境を少しずつ良くしていきたい",
+         "「助かった」と言われることが、いちばんの原動力になる"],
+    good:"人の状況に気づける細やかさと、誠実さ。あなたのまわりは自然とまとまり、それぞれが安心して力を出せる場になります。",
+    aspect:"周りを優先するぶん、自分のことが後回しになったり、「自分にできるかな」と立ち止まったりすることがあるかもしれません。でもそれは、それだけ人を大切にしてきたということです。",
+    more:"相談できる相手と、続けられるペースがあれば、着実に積み上げられる人です。小さな成果を重ねた先で、自分でも想像しなかった位置に立っています。",
+    work:"仕事では、チームを支え、人と人をつなぐ存在。決められたことを丁寧に、確実に回せるので、周りからの信頼が厚いタイプです。",
+    workAspect:"何から始めるかで迷うこともあるかもしれません。でもそれは、一つひとつを大切にしているから。最初の一歩を一緒に決める相手がいれば、そこからは着実に進めます。",
+    ai:"AIを、毎日の作業を引き受けてくれる「頼れる助手」にできるタイプです。手間のかかっていた作業が軽くなるほど、あなたが得意な「人を支える仕事」に、時間を使えるようになります。"
+  }
+};
+
+/* AIレベルで出し分ける文章（2026-10-29）
+   early＝Lv1〜2（使い始め）／adv＝Lv3〜5（仕事の流れに組み込めている）。
+   ここに無い項目は TYPES の文面をそのまま使う（TYPES の既定文は、ハヤブサ・イルカの一部＝adv向け、ビーバー・ペンギン＝early向け） */
+var LEVEL_TEXT = {
+  driver: {
+    early: {
+      mindset:[
+        {h:"最初の1本は、自分の業務から選ぶ", t:"ツールを広く試すより、毎日の業務を1つ選んでAIを当てる方が、あなたの逆算力が活きます。最初の成果が見えれば、そこから先は自分で走れます。"},
+        {h:"検証は全部やらない。試す範囲を決める", t:"気になるものを全部自分で確かめると、時間が足りなくなります。90日で試す範囲を先に決めると、成果までの距離が最短になります。"},
+        {h:"判断材料は、走り出す前に集める", t:"「何が得られるか」「どう評価に効くか」を具体で押さえてから動くと、途中で迷いません。"}
+      ],
+      scenes:[
+        "AIが気になってはいるが、どの業務に使えば成果になるのかが見えていない",
+        "やるなら成果につなげたいので、中途半端には始めたくない",
+        "自分で調べて進めたいのに、調べる時間そのものが取れない",
+        "人の仕事やお客様の仕組みは整えられるのに、自分のことはつい後回しになる",
+        "情報を集めるほど、試したいことが増えていく"
+      ],
+      detour:"このタイプが独学で進むと、気になるツールを一通り試しているうちに時間が過ぎがちです。どの業務で成果を出すかを先に決めるのが近道です。",
+      road:"90日で、成果を数字で語れる業務を1つ作ってください。最初の1本ができれば、そこから先の道筋は自分で引けます。",
+      cta:["自分で進められる強みはそのままに、どの業務から始めると成果が最短かを整理します",
+           "あなたの業務の中で、成果が「外から見える形」になりやすいAI活用ポイントを特定します",
+           "90日で最初の実績を作るための設計図をお渡しします"]
+    },
+    adv: {
+      mindset:[
+        {h:"自分の型を「再現できる形」で残す", t:"個人の成果で止めず、チームでも再現できる型として残す。それがそのまま推進実績・市場価値になります。"},
+        {h:"検証は全部やらない。任せる部分を決める", t:"全部自分で触ると時間切れになります。判断が必要な部分だけ自分が持ち、それ以外は仕組みと人に任せる設計が結果を分けます。"},
+        {h:"成果を、評価や役割の言葉に変える", t:"「どの業務を、どれくらい改善したか」を数字で語れる形にしておくと、次の役割や交渉の材料になります。"}
+      ]
+    }
+  },
+  leap: {
+    early: {
+      scenes:[
+        "やってみたいことは多いのに、どれから手をつけるか決めきれない",
+        "動画や記事で学んだことを、自分の仕事でどう使うかがつながらない",
+        "一緒に進める相手がいれば、もっと続けられるのにと思う",
+        "年度や季節の区切りが来るたびに「今年こそ」と思う",
+        "AIに詳しい人の集まりにいると、自分はまだまだだと感じる"
+      ]
+    },
+    adv: {
+      scenes:[
+        "AIで速くなった分、そこに別の仕事が乗ってくる",
+        "「AIってどう使えばいい？」と相談されることがある。でも、それを自分の強みとして言える言葉はまだない",
+        "作ったものを、人に渡せる形にするところで手が止まる",
+        "やりたいテーマが増えすぎて、どれを成果として仕上げるか決めきれない",
+        "年度や期の区切りが来るたびに、次の目標を立て直している"
+      ],
+      mindset:[
+        {h:"テーマを1本に絞り、実績として仕上げる", t:"AIを使える場面が多いほど、やりたいことは広がります。評価につながるテーマを1つに絞り、成果まで仕上げ切ることが次の一歩です。"},
+        {h:"巻き込む力を、推進役の実績に変える", t:"人を巻き込めるのは大きな強みです。チームでのAI活用をあなたが旗を振って進めれば、それがそのまま推進役としての実績になります。"},
+        {h:"迷ったら戻る場所を、先に決めておく", t:"相談相手と週次の区切りを先に置くと、迷いが「止まる時間」ではなく「決める時間」に変わります。"}
+      ]
+    }
+  },
+  architect: {
+    adv: {
+      mindset:[
+        {h:"積み上げた仕組みを、外から見える形にする", t:"あなたが整えてきた仕組みは、周りからは見えにくいものです。手順と効果を資料にまとめて共有すると、それがそのまま評価の材料になります。"},
+        {h:"完璧を待たずに、周りに渡してみる", t:"細部まで仕上げてから出したい気持ちは強みでもあります。ただ、7割の段階で周りに使ってもらう方が、改善も評価も早く進みます。"},
+        {h:"「いざという時」を、いま作っておく", t:"備えは、必要になってからでは間に合いません。外に見せられる実績が、そのまま次の選択肢になります。"}
+      ],
+      scenes:[
+        "周りに詳しい人がいなくて、気づけば自分がAIの担当のようになっている",
+        "作った仕組みを、自分以外の人が使える形にまとめる時間がない",
+        "改善した成果を、数字で説明できる形で残せていない",
+        "自分が整えた仕組みの価値が、周りに十分伝わっていない気がする",
+        "職場や取引先のルールの都合で、AIを思うように使えない場面がある"
+      ],
+      detour:"このタイプが一人で進むと、仕組みは整っているのに、その価値が周りに伝わらないまま時間が経ちがちです。成果を見せる形を先に決めるのが近道です。",
+      road:"90日で、あなたが整えた仕組みを、周りが使える形にまとめてください。それが、そのまま次の役割の材料になります。",
+      cta:["積み上げてきた仕組みと成果を棚卸しし、強みとして言葉にします",
+           "あなたが整えた仕組みを、周りに広げられるテーマを一緒に選びます",
+           "その仕組みを評価や次の役割につなげる、90日の設計図をお渡しします"]
+    }
+  },
+  builder: {
+    adv: {
+      mindset:[
+        {h:"あなたの使い方を、チームの「当たり前」にする", t:"すでにAIを仕事に組み込めているのは大きな強みです。周りの人も同じように使えるよう手順を共有すると、チームに欠かせない支え役になります。"},
+        {h:"できていることを、数字で数える", t:"AIで短くなった時間や、減ったミスを記録してみてください。自分では当たり前になっていることほど、周りから見ると大きな成果です。"},
+        {h:"相談できる相手と、次の目標を決める", t:"一人だと、いまのやり方を守ることに意識が向きがちです。相談できる相手と次の目標を決めると、積み上げてきたものを次の役割につなげられます。"}
+      ],
+      scenes:[
+        "AIで楽になったぶん、ほかの人の仕事まで引き受けている",
+        "周りから使い方を聞かれるが、教え方には自信がない",
+        "自分の工夫が、評価にどうつながっているのかが見えない",
+        "引き継ぎや手順書がないまま、一人で回している仕事がある",
+        "この先も、いまのやり方で大丈夫だろうかと、ふと考える"
+      ],
+      detour:"このタイプが一人で進むと、周りを支えることに時間を使い、自分の成果を形にするのが後回しになりがちです。相談相手と次の目標を決めておけば、遠回りしません。",
+      workAspect:"いまのやり方を守ることに、意識が向きやすいかもしれません。でもそれは、周りが安心して働ける環境を大切にしているから。次の目標を一緒に決める相手がいれば、そこから一段上に進めます。",
+      road:"90日で、あなたのAIの使い方をチームに1つ広げてください。周りの仕事が楽になった分だけ、あなたの評価が積み上がります。",
+      cta:["すでにできていることを棚卸しし、あなたの強みとして言葉にします",
+           "あなたのAIの使い方を、チームに広げられる業務を一緒に選びます",
+           "支える力を評価や次の役割につなげる、90日の設計図をお渡しします"]
+    }
+  }
+};
+/* 仕事×AI の一文（Lv3以上）。Lv1〜2は CHARACTER の ai を使う */
+var AI_ADV = {
+  driver:"すでにAIを仕事の流れに組み込めているあなたは、その仕組みをチームに広げられる段階です。あなたのやり方を型にして渡せば、チームの誰もが、あなたと同じ速さで動けるようになります。",
+  leap:"すでにAIを使いこなせているあなたは、そのアイデアを周りと一緒に形にできる段階です。チームでの活用をあなたが旗を振って進めると、提案や成果に変わるスピードがさらに上がります。",
+  architect:"すでにAIで「調べる・確かめる」時間を減らせているあなたは、その仕組みを周りに広げられる段階です。あなたが整えた手順は、チーム全体の品質とスピードを同時に引き上げます。",
+  builder:"すでにAIを日々の仕事に取り入れているあなたは、その使い方をチームに広げられる段階です。周りの作業まで軽くできると、チームに欠かせない支え役になります。"
+};
+/* いまお仕事を離れている方（休職・育休・求職・専業主婦／主夫）向けの言い換え */
+function ctxText(r, s){
+  if (!r.flags || !r.flags.away || typeof s !== "string") return s;
+  return s.replace(/毎日やっている業務/g, "直近のお仕事や身近な作業")
+          .replace(/毎日の業務フロー/g, "仕事の流れ")
+          .replace(/毎日の業務/g, "身近な作業")
+          .replace(/自分の業務/g, "身近な作業")
+          .replace(/いまの業務/g, "直近のお仕事")
+          .replace(/あなたの業務/g, "直近のお仕事やこれからの仕事");
+}
+var AWAY_CTA = ["これまでの経験とタイプから、あなたに合う進め方を一緒に確認します",
+                "直近のお仕事や、これから目指す仕事の中から、AIで実績を作りやすいテーマを選びます",
+                "再スタートに向けて、90日で作る実績の設計図をお渡しします"];
+function lvTier(r){ return r.lv >= 3 ? "adv" : "early"; }
+function lvPick(r, field){
+  var o = LEVEL_TEXT[r.typeKey] && LEVEL_TEXT[r.typeKey][lvTier(r)];
+  var v = (o && o[field]) || TYPES[r.typeKey][field];
+  if (typeof v === "string") return ctxText(r, v);
+  return v.map(function(x){ return typeof x === "string" ? ctxText(r, x) : {h:ctxText(r, x.h), t:ctxText(r, x.t)}; });
+}
+/* 90日の道筋（Lv1〜2／Lv3／Lv4〜5） */
+function roadmapSteps(r){
+  var jobLabel = r.job === "いま" ? "いまの" : r.job + "の";
+  if (r.flags.away) return [
+    ["再スタート後の仕事を想定して、テーマを1つ決める", "直近のお仕事や、これから目指す仕事を想定して、AIで改善できそうなテーマを1つ選びます。家のことや地域の活動など、身近な作業で試すところからでも構いません。"],
+    ["実際に試して、変化を記録する", "作業時間や仕上がりがどう変わったかを記録します。この記録が、あとで実績の材料になります。"],
+    ["成果を「伝わる言葉」に変換する", "「何を、どれくらい改善したか」を、職務経歴書・面接・復帰後の面談で語れる1本の実績に仕上げます。"]];
+  if (r.lv <= 2) return [
+    ["対象業務を1つ決めて、小さく実装する", jobLabel + "業務の中から、AIで改善しやすいテーマを1つ選びます。ツールの勉強からではなく、毎日やっている業務から選ぶのがポイントです。"],
+    ["業務フローを再設計して、変化を記録する", "作業時間・品質・アウトプット量のどれが、どう変わったかを記録します。この記録が、あとで実績の材料になります。"],
+    ["成果を「評価される言葉」に変換する", "「どの業務を、どれくらい改善したか」を、評価面談・職務経歴書・提案や商談の場で語れる1本の実績に仕上げます。"]];
+  if (r.lv === 3) return [
+    ["AIを入れた業務の効果を、数字で記録する", "すでにAIを組み込んでいる業務で、作業時間・品質・量がどう変わったかを記録します。ここが実績の土台になります。"],
+    ["やり方を、再現できる手順にまとめる", "プロンプトや手順を、自分以外の人でも再現できる形にまとめます。個人の工夫が「型」に変わります。"],
+    ["成果を「評価される言葉」に変換する", "「どの業務を、どれくらい改善したか」を、評価面談・職務経歴書・提案や商談の場で語れる1本の実績に仕上げます。"]];
+  return [
+    ["自分の仕組みを棚卸しし、広げるテーマを選ぶ", "これまで作った仕組みを見直し、チームや周囲に広げたときに効果が大きいテーマを1つ選びます。"],
+    ["周りに広げて、効果を数字で記録する", "チームや関係者が使える形にして導入し、組織として何が変わったかを記録します。"],
+    ["推進実績を、キャリアの言葉に変換する", "「どの業務を、どれくらい改善し、何人に広げたか」を、評価面談・職務経歴書・提案や商談の場で語れる実績に仕上げます。"]];
+}
+
+var TYPE_ORDER = ["driver","leap","architect","builder"];
+
+var EXITS = [
+  {id:"shoshin", name:"昇進・昇給", group:"いまの組織で動く", dir:"shoshin", inner:true,
+   text:{high:"AIの成果を評価の言葉に変換できれば、いまの職場で評価と役割を上げるのが最短ルートです。次の評価面談を目標に、語れる実績を仕上げてください。",
+         mid:"昇進の土台はあります。あとは、AIで出した成果を「どの業務を、どれくらい改善したか」の形で語れるようにするだけです。",
+         low:"まず、いまの業務でAIを使った改善実績を1つ作るところからです。小さくても、数字で語れる1本が評価を動かし始めます。"}},
+  {id:"dx", name:"社内DXポジション確立", group:"いまの組織で動く", dir:"dx", inner:true,
+   text:{high:"社内のAI・DX推進ポジションを取りにいける状態です。個人の活用を、部署をまたぐ業務再設計の提案まで広げてください。",
+         mid:"「AIに強い人」として認知される一歩手前です。チームを巻き込んだ活用事例を1つ作れば、推進の中心に近づきます。",
+         low:"まず自分の業務でAI活用を成果にして、「AIならあの人」という社内認知を作るところからです。"}},
+  {id:"idou", name:"社内異動・職種転換", group:"いまの組織で動く", dir:"idou", inner:true,
+   text:{high:"AIを軸に職種を移れる素地があります。移りたい先で通用する成果を1つ見せられれば、話が動きます。",
+         mid:"異動・職種転換は十分狙えます。いまの職種で作った実績を、移りたい職種でも再現できる形で言語化してください。",
+         low:"まず、いまの職種でAIの実績を作り、「他の業務でも再現できる」と示せる材料を揃えるのが先です。"}},
+  {id:"tenshoku", name:"転職", nameAway:"再就職・転職", group:"外に出る", dir:"tenshoku", inner:false,
+   text:{high:"職務経歴書に書けるAI実績を整えれば、市場価値の高いポジションを狙える状態です。",
+         mid:"転職市場で戦える素地はあります。「どの業務を、どれくらい改善したか」を書ける実績を、あと1本作ってください。",
+         low:"いきなり動くより、まず90日で職務経歴書に書ける実績を作るのが現実的です。それが、いちばんの準備になります。"}},
+  {id:"venture", name:"ベンチャー・新規事業の幹部参画", nameSelf:"新規事業・協業の推進", group:"外に出る", dir:null, inner:false,
+   textSelf:{high:"AIを軸に、事業そのものを一段大きく動かせる状態です。新規事業や他社との協業など、影響範囲を広げる場に挑めます。",
+         mid:"事業を広げる素地はあります。AIで出した成果を、チームや取引先にも広げた実績にしてください。",
+         low:"まず自分の事業の中でAIの成果を1つ作り、それを広げられる形にするところからです。"},
+   text:{high:"影響範囲と成果が揃いつつあります。事業を一段大きく動かす場に挑む準備を始められる状態です。",
+         mid:"幹部参画の芽はあります。チーム規模の成果と、人を動かした実績を重ねてください。",
+         low:"まず自分の影響範囲を広げて、チーム単位で成果を出す経験を積むのが先です。"}},
+  {id:"fukugyo", name:"副業", group:"外に出る", dir:"fukugyo", inner:false,
+   text:{high:"AIスキルを社外に展開できる状態です。小さな案件から始めて、外での実績を作っていけます。",
+         mid:"副業の可能性はあります。まず本業のAI実績を、社外の人にも伝わる形に整えるところからです。",
+         low:"副業に広げる前に、本業で語れるAI実績と、外で通用する型を作るのが現実的な順番です。"},
+   /* いまお仕事を離れている方向け（本業がない前提） */
+   textAway:{high:"AIスキルを、仕事として外に出せる状態です。小さな案件から始めて、実績と収入の柱を作っていけます。",
+         mid:"在宅の仕事や副業につなげられる可能性はあります。まず、AIで作った成果を、初めての相手にも伝わる形に整えるところからです。",
+         low:"仕事にする前に、AIを使った小さな実績を1つ作り、外で通用する型を身につけるのが現実的な順番です。"},
+   /* 経営者・フリーランスの方向け（すでに自分の事業がある前提の言い回し） */
+   textSelf:{high:"AIスキルを、新しいサービスや案件に展開できる状態です。小さく始めて、もう1本の収入の柱に育てていけます。",
+         mid:"収入の柱を増やせる可能性はあります。まず、いまの仕事のAI実績を、初めての相手にも伝わる形に整えるところからです。",
+         low:"柱を増やす前に、いまの仕事で語れるAI実績と、外で通用する型を作るのが現実的な順番です。"}},
+  {id:"freelance", name:"フリーランス・起業", group:"外に出る", dir:"dokuritsu", inner:false,
+   text:{high:"独立を視野に入れられる土台があります。案件で再現できる実績と、値付けの根拠を積み上げてください。",
+         mid:"将来的に独立は狙えます。まず副業で小さく試して、外で売れる実績を作ってください。",
+         low:"独立は、これからの選択肢です。まず本業と小さな副業で、外で通用する実績を作るところから始めてください。"},
+   textAway:{high:"独立を視野に入れられる土台があります。小さな案件で実績を作り、値付けの根拠を積み上げてください。",
+         mid:"将来的に独立は狙えます。まず小さな仕事で試して、外で通用する実績を作ってください。",
+         low:"独立は、これからの選択肢です。まずAIを使った小さな実績を作り、外で通用する形にするところから始めてください。"},
+   textSelf:{high:"いまの事業にAIを組み込み、単価と提供価値を上げられる状態です。案件で再現できる実績と、値付けの根拠を積み上げてください。",
+         mid:"事業を伸ばす素地はあります。AIで出した成果を「何を、どれくらい改善したか」の形にして、提案や単価の根拠に変えてください。",
+         low:"まず、自分の仕事でAIの実績を1つ作るところからです。その1本が、提案の説得力と単価を動かし始めます。"}}
+];
+var CUR_LABELS = ["3〜6ヶ月で射程","1年ほど先","1年以上先","現状の延長では遠め"];
+var LEV_LABELS = ["3〜6ヶ月で視野","半年で視野","半年〜1年で視野","半年〜1年で射程"];
+
+/* =========================================================
+   診断ロジック
+========================================================= */
+function getAnswers(){
+  var ans = {};
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    var q = QUESTIONS[i];
+    var checked = document.querySelector('input[name="' + q.id + '"]:checked');
+    ans[q.id] = checked ? parseInt(checked.value, 10) : null;
+  }
+  return ans;
+}
+
+function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
+
+function compute(ans){
+  var raw = {A:0,B:0,C:0,D:0,E:0,F:0,S2:0,S3:0,H:2};   /* 時間の設問はv3.2で削除。到達目安は中間値で計算 */
+  var flags = {};
+  var dir = null, honki = 1, job = "いま", pos = 0;
+  var decision = "", anx = "", deadline = "", hopeText = "", honkiText = "";
+  var hintDecision = null, hintAnx = null, deadlineSelf = 0;
+
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    var q = QUESTIONS[i];
+    var opt = q.opts[ans[q.id]];
+    if (!opt) continue;
+    for (var k in opt.d) raw[k] += opt.d[k];
+    if (opt.flag) flags[opt.flag] = true;
+    if (opt.flag2) flags[opt.flag2] = true;
+    if (opt.away) flags.away = true;
+    if (typeof opt.dir === "string") { dir = opt.dir || null; hopeText = opt.t; }
+    if (typeof opt.honki === "number") { honki = opt.honki; honkiText = opt.t; }
+    if (opt.job) job = opt.job;
+    if (typeof opt.pos === "number") pos = opt.pos;
+    if (opt.decision) decision = opt.decision;
+    if (opt.anx) anx = opt.anx;
+    if (opt.deadline) deadline = opt.deadline;
+    if (opt.hintDecision) hintDecision = opt.hintDecision;
+    if (opt.hintAnx) hintAnx = opt.hintAnx;
+    if (opt.hintDeadline) deadlineSelf += opt.hintDeadline;
+  }
+
+  /* 軸を -1〜1 に正規化 */
+  var ax = {};
+  for (var a = 0; a < AXES.length; a++) {
+    var key = AXES[a].k;
+    ax[key] = Math.round(clamp(raw[key] / AXES[a].scale, -1, 1) * 100) / 100;
+  }
+
+  /* AIレベル：使い方（Q3）で土台を決め、出ている変化（Q4）で引き上げる。
+     Lv5（組織展開）は「仕事の流れに組み込み済み」かつ「周りの仕事・数字・新しい役割に効いている」ときだけ */
+  var lv = [1,2,2,3,4][raw.S2] || 1;
+  if (raw.S3 >= 2) lv = Math.max(lv, 2);
+  if (raw.S3 >= 3) lv = Math.max(lv, 3);
+  if (raw.S3 >= 4 && raw.S2 >= 2) lv = Math.max(lv, 4);
+  if (raw.S3 >= 4 && raw.S2 >= 3) lv = 5;
+  lv = clamp(lv, 1, 5);
+
+  /* タイプ判定（D×E。同点は希望・学び方で補う） */
+  var attack = ax.D > 0 ? true : ax.D < 0 ? false :
+               (dir === "tenshoku" || dir === "fukugyo" || dir === "dokuritsu" || dir === "dx");
+  var self = ax.E > 0 ? true : ax.E < 0 ? false : (ans["p_e1"] !== null && ans["p_e1"] <= 1);
+  var typeKey = attack ? (self ? "driver" : "leap") : (self ? "architect" : "builder");
+
+  return {ans:ans, ax:ax, raw:raw, flags:flags, dir:dir, honki:honki, job:job, pos:pos, lv:lv, typeKey:typeKey,
+          decision:decision, anx:anx, deadline:deadline, hopeText:hopeText, honkiText:honkiText,
+          hintDecision:hintDecision, hintAnx:hintAnx, deadlineSelf:deadlineSelf,
+          isEmployee:!flags.notEmployee};
+}
+
+/* 軸ごとのラベル（コーチ向け・受診者向け共通の判定） */
+function axisSide(v){ return v >= 0.34 ? "pos" : v <= -0.34 ? "neg" : "mid"; }
+function axisCoachLabel(axis, v){
+  var s = axisSide(v);
+  return s === "pos" ? axis.coachPos : s === "neg" ? axis.coachNeg : axis.coachMid;
+}
+function axisReadText(axis, v){
+  var s = axisSide(v);
+  return s === "pos" ? axis.readPos : s === "neg" ? axis.readNeg : axis.readMid;
+}
+
+function strictTier(sc){ if (sc >= 3.4) return 0; if (sc >= 2.8) return 1; if (sc >= 2.2) return 2; return 3; }
+function softTier(sc){ if (sc >= 3.0) return 0; if (sc >= 2.2) return 1; if (sc >= 1.5) return 2; return 3; }
+
+function evaluateExits(r){
+  var out = [];
+  var H = r.raw.H;
+  for (var i = 0; i < EXITS.length; i++) {
+    var ex = EXITS[i];
+    var score = 1.0, notes = [];
+    var dirMatch = (r.dir && ex.dir === r.dir);
+    if (dirMatch) score += 2.0;
+    if (ex.id === "tenshoku" && r.flags.selfEmp && r.pos >= 3 && !dirMatch) score -= 1.0;
+
+    if (ex.inner) {
+      score += r.isEmployee ? 0.8 : -1.5;
+      if (r.ax.D < 0) score += 0.3;
+      if (ex.id === "dx") { if (r.pos >= 1) score += 0.4; if (r.ax.D > 0) score += 0.2; if (r.ax.F > 0.3) score += 0.2; }
+      if (ex.id === "idou" && r.lv >= 2) score += 0.2;
+      if (ex.id === "shoshin" && r.lv >= 3) score += 0.2;
+      if (!r.isEmployee) notes.push("現在の働き方に合わせて、組織の中で動くルートの優先度は下げています。");
+    } else {
+      if (r.ax.D > 0) score += 0.5;
+      if (!r.isEmployee) score += (ex.id === "fukugyo" || ex.id === "freelance") ? 1.0 : 0.6;
+      if (H >= 3) score += 0.3;
+      if (r.lv >= 3) score += 0.3;
+      if (ex.id === "venture") { score += r.pos >= 2 ? 0.6 : -0.6; if (r.pos < 2) notes.push("幹部参画は、チーム規模の成果が揃ってから現実的になります。"); }
+      if ((ex.id === "fukugyo" || ex.id === "freelance") && r.isEmployee && r.lv < 3) {
+        score -= 0.5;
+        notes.push("まずは、いまの仕事でAIの実績を作るのが現実的です。副業・独立は、その先の選択肢になります。");
+      }
+      if ((ex.id === "fukugyo" || ex.id === "freelance") && H <= 1) notes.push("確保できる時間が少なめのため、到達目安は長めに見ています。");
+    }
+
+    /* 到達目安（現状の準備度: AIレベル・時間・希望の一致） */
+    /* 到達目安はAIレベルで決める（説明文と同じ基準。時間の設問は削除済み） */
+    var curTier = r.lv >= 4 ? 0 : r.lv === 3 ? 1 : r.lv === 2 ? 2 : 3;
+    if (!dirMatch && curTier < 3 && r.lv < 5) curTier = curTier + 1 > 3 ? 3 : curTier + 1;
+    if ((ex.id === "fukugyo" || ex.id === "freelance") && r.isEmployee && r.lv < 3) curTier = Math.min(3, curTier + 1);
+    var levTier = Math.max(0, curTier - 2);
+    if (ex.id === "venture" && r.pos < 2) curTier = Math.min(3, curTier + 1);
+    levTier = Math.min(levTier, curTier);
+
+    var band = r.lv >= 4 ? "high" : (r.lv === 3 ? "mid" : "low");
+    out.push({ex:ex, score:score, band:band, curTier:curTier, levTier:levTier, notes:notes, selfEmp:!!r.flags.selfEmp, awayNE:!!(r.flags.away && r.flags.notEmployee), away:!!r.flags.away});
+  }
+  out.sort(function(a,b){ return b.score - a.score; });
+  return out;
+}
+
+/* =========================================================
+   回答データの送信（シート記録＋通知。失敗しても結果表示は止めない）
+========================================================= */
+/* 本番は同一ドメインの /api/collect（Pages Functions経由でWorkerへ中継）。ローカルで開いたときだけWorker直接 */
+var COLLECT_URL = (location.protocol === "file:")
+  ? "https://levance-shindan-collect.saori421work.workers.dev/"
+  : "/api/collect";
+
+function buildPayload(ans, r){
+  var lvData = LEVELS[r.lv - 1];
+  var evals = evaluateExits(r);
+  var answers = [];
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    var opt = QUESTIONS[i].opts[ans[QUESTIONS[i].id]];
+    answers.push(opt ? opt.t : "");
+  }
+  var axisLabels = {}, axes = {};
+  for (var a = 0; a < AXES.length; a++) {
+    axisLabels[AXES[a].k] = axisCoachLabel(AXES[a], r.ax[AXES[a].k]);
+    axes[AXES[a].k] = r.ax[AXES[a].k];
+  }
+  var t = TYPES[r.typeKey];
+  return {
+    v: 4,
+    name: document.getElementById("userName").value.trim(),
+    age: getAgeBand(),
+    email: document.getElementById("userEmail").value.trim(),
+    lv: "Lv." + r.lv,
+    stage: lvData.name,
+    type: t.name,
+    typeKey: r.typeKey,
+    typeAxes: t.d + "×" + t.e,
+    axes: axes,
+    axisLabels: axisLabels,
+    work: txtOf(r, "tachiba"),
+    aiConcern: txtOf(r, "ai_nayami"),
+    careerConcern: txtOf(r, "career_nayami"),
+    anxiety: r.anx + (r.flags.lowVerbal ? "／言語化に不慣れ" : ""),
+    hope: r.hopeText,
+    honki: r.honkiText,
+    exits: [evals[0].ex.name, evals[1].ex.name, evals[2].ex.name],
+    answers: answers
+  };
+}
+
+function sendResult(ans, r){
+  if (typeof PREVIEW !== "undefined" && PREVIEW) return;   /* 確認用ファイルでは送信しない */
+  try {
+    var payload = buildPayload(ans, r);
+    fetch(COLLECT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      keepalive: true
+    }).catch(function(){});
+  } catch (e) { /* 送信失敗しても診断体験は止めない */ }
+}
+
+/* =========================================================
+   結果の描画
+========================================================= */
+function esc(t){ return String(t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function exitCardHTML(item, rank){
+  var ex = item.ex;
+  var first = rank === 1;
+  var h = '<div class="exit-card' + (first ? " first" : "") + '">';
+  h += '<div class="exit-top">';
+  if (rank) h += '<span class="rankb">' + (first ? "BEST MATCH" : rank + "位") + '</span>';
+  h += '<span class="exit-name">' + esc((item.awayNE && ex.nameAway) || (item.selfEmp && ex.nameSelf) || ex.name) + '</span>';
+  h += '<span class="exit-group">' + ex.group + '</span></div>';
+  h += '<div class="tier-row"><span class="chip cur">いまのまま：' + CUR_LABELS[item.curTier] + '</span>' +
+       '<span class="chip lev">伴走すると：' + (item.curTier === 0 ? "1〜3ヶ月で射程" : LEV_LABELS[item.levTier]) + '</span></div>';
+  var et = (item.awayNE && ex.textAway) ? ex.textAway[item.band] : (item.selfEmp && ex.textSelf) ? ex.textSelf[item.band] : ex.text[item.band];
+  if (item.away) et = et.replace(/いまの業務/g, "直近のお仕事").replace(/自分の業務/g, "直近のお仕事");
+  h += '<p class="exit-text">' + et + '</p>';
+  for (var i = 0; i < item.notes.length; i++) h += '<p class="exit-note">' + item.notes[i] + '</p>';
+  h += '</div>';
+  return h;
+}
+
+function renderTendency(r){
+  var out = "";
+  for (var a = 0; a < AXES.length; a++) {
+    var axis = AXES[a];
+    if (PUBLIC_AXES.indexOf(axis.k) < 0) continue;   /* 決め方・本音の出し方・課題の捉え方はコーチ欄のみ */
+    var v = r.ax[axis.k];
+    var pct = 50 + v * 50;
+    var left = v >= 0 ? 50 : pct;
+    var width = Math.abs(v) * 50;
+    var side = axisSide(v);
+    var lean = Math.round(50 + Math.abs(v) * 50);
+    var leanLabel = (v >= 0 ? axis.pos : axis.neg).replace(/（.*?）/g, "");
+    var pctTag = v === 0 ? '<span class="tend-lean">ちょうど中間</span>' : '<span class="tend-lean">' + leanLabel + '<b>' + lean + '%</b></span>';
+    var negTxt = side === "neg" ? "<b>" + axis.neg + "</b>" : axis.neg;
+    var posTxt = side === "pos" ? "<b>" + axis.pos + "</b>" : axis.pos;
+    out += '<div class="tend-row">' +
+      '<p class="tend-name"><span>' + axis.name + '<span class="en">' + axis.en + '</span></span>' + pctTag + '</p>' +
+      '<div class="tend-track"><div class="tend-fill ' + (v >= 0 ? "pos" : "neg") + '" style="left:' + left + '%;width:' + width + '%"></div>' +
+      '<div class="tend-dot" style="left:' + pct + '%"></div></div>' +
+      '<div class="tend-poles"><span>' + negTxt + '</span>' +
+      '<span>' + posTxt + '</span></div>' +
+      '<p class="tend-read">' + esc(axisReadText(axis, v)) + '</p></div>';
+  }
+  document.getElementById("tendList").innerHTML = out;
+}
+
+/* 「特徴＋動物」の名前は、特徴と動物のあいだでだけ改行する */
+function typeNameHTML(t){
+  if (!t.animal || t.name.slice(-t.animal.length) !== t.animal) return esc(t.name);
+  return '<span class="tn">' + esc(t.name.slice(0, -t.animal.length)) + '<wbr>' + esc(t.animal) + '</span>';
+}
+
+function renderResult(r){
+  var name = document.getElementById("userName").value.trim();
+  document.getElementById("rName").textContent = name ? name + " さんの診断結果" : "";
+
+  var t = TYPES[r.typeKey];
+  document.getElementById("rTypeName").innerHTML = typeNameHTML(t);
+  document.getElementById("rTypeIcon").innerHTML = animalSVG(r.typeKey, "light", 104, "hero");
+  document.getElementById("rTypeEn").textContent = t.en;
+  document.getElementById("rTypeTag").textContent = t.tag;
+  document.getElementById("rSummary").textContent = t.summary;
+  document.getElementById("rNick").textContent = t.nick[subSide(r)];
+  document.getElementById("rdTitle").textContent = name ? name + "さんの回答から見えたこと" : "あなたの回答から見えたこと";
+  document.getElementById("rdBody").innerHTML = buildReading(r);
+
+  var lvData = LEVELS[r.lv - 1];
+  document.getElementById("rLvNum").textContent = r.lv;
+  document.getElementById("rLvName").textContent = lvData.name;
+  document.getElementById("rPhase").textContent = PHASES[lvData.phase].en;
+  document.getElementById("rPhaseJa").textContent = PHASES[lvData.phase].ja + "段階";
+  document.getElementById("rLvNote").textContent = ctxText(r, lvData.note);
+  var C = 232.5;
+  var ring = document.getElementById("ringProg");
+  ring.style.strokeDashoffset = C;
+  setTimeout(function(){ ring.style.strokeDashoffset = C * (1 - r.lv / 5); }, 200);
+
+  renderTendency(r);
+
+  var c = CHARACTER[r.typeKey];
+  var nm0 = document.getElementById("userName").value.trim();
+  document.getElementById("chTitle").textContent = (nm0 ? nm0 + "さん" : "あなた") + "の人物像";
+  document.getElementById("chLead").textContent = c.lead;
+  var aru = "";
+  for (var ai = 0; ai < c.aru.length; ai++) aru += "<li>" + esc(c.aru[ai]) + "</li>";
+  document.getElementById("chAru").innerHTML = aru;
+  document.getElementById("chGood").textContent = c.good;
+  document.getElementById("chAspect").textContent = c.aspect;
+  document.getElementById("chMore").textContent = c.more;
+  var tg = "";
+  for (var tk = 0; tk < TYPE_ORDER.length; tk++) {
+    var key = TYPE_ORDER[tk];
+    var on = key === r.typeKey;
+    tg += '<div class="tg-cell' + (on ? " on" : "") + '">' + (on ? '<span class="tg-badge">YOU</span>' : "") +
+          '<p class="n">' + '<span class="tg-icon">' + animalSVG(key, on ? "white" : "fill", 52, "tg" + key) + '</span>' + typeNameHTML(TYPES[key]) + '</p><p class="t">' + TYPES[key].d + "×" + TYPES[key].e + "｜" + TYPES[key].tag + '</p></div>';
+  }
+  document.getElementById("typeGrid").innerHTML = tg;
+  document.getElementById("wkNote").style.display = r.flags.away ? "block" : "none";
+  document.getElementById("wkLead").textContent = c.work;
+  var la = LEVEL_TEXT[r.typeKey] && LEVEL_TEXT[r.typeKey][lvTier(r)];
+  document.getElementById("wkAspect").textContent = (la && la.workAspect) || c.workAspect;
+  document.getElementById("wkAI").textContent = ctxText(r, lvTier(r) === "adv" ? AI_ADV[r.typeKey] : c.ai);
+  var st = "", md = "";
+  for (var x = 0; x < t.strengths.length; x++) st += "<li>" + esc(t.strengths[x]) + "</li>";
+  var mset = lvPick(r, "mindset");
+  for (var z = 0; z < mset.length; z++) {
+    md += '<div class="mind"><p class="m-h" data-n="0' + (z + 1) + '">' + esc(mset[z].h) + '</p><p>' + esc(mset[z].t) + '</p></div>';
+  }
+  document.getElementById("tpStrengths").innerHTML = st;
+  document.getElementById("tpMindset").innerHTML = md;
+  /* 最後に：このタイプに多い悩み（チェックは付けない） */
+  document.getElementById("cnTitle").innerHTML = typeNameHTML(t) + "の方に<wbr>多い悩み";
+  var cn = "";
+  var scs = lvPick(r, "scenes");
+  for (var ci = 0; ci < scs.length; ci++) cn += "<li>" + esc(scs[ci]) + "</li>";
+  document.getElementById("cnList").innerHTML = cn;
+  document.getElementById("tpDetour").textContent = lvPick(r, "detour");
+
+  var evals = evaluateExits(r);
+  var top3 = "", all = "";
+  for (var e = 0; e < evals.length; e++) {
+    if (e < 3) top3 += exitCardHTML(evals[e], e + 1);
+    all += exitCardHTML(evals[e], e + 1);
+  }
+  document.getElementById("exitTop3").innerHTML = top3;
+  document.getElementById("exitAll").innerHTML = all;
+
+  var steps = roadmapSteps(r), rm = "";
+  if (r.flags.selfEmp) steps = steps.map(function(s){ return [s[0], s[1].replace("評価面談・職務経歴書・提案や商談の場", "提案や商談、発信の場")]; });
+  for (var si = 0; si < steps.length; si++) {
+    rm += '<div class="tl-item"><div class="tl-node"><span class="m">MONTH</span><span class="d">' + (si + 1) + '</span></div>' +
+          '<b>' + esc(steps[si][0]) + '</b><p>' + esc(steps[si][1]) + '</p></div>';
+  }
+  document.getElementById("roadmap").innerHTML = rm;
+  document.getElementById("roadExtra").textContent = lvPick(r, "road");
+
+  document.getElementById("ctaHonki").textContent = r.honki === 0
+    ? "動き出すなら、勢いのあるいまがいちばんです。まず60分で、あなた専用の設計図を手に入れてください。"
+    : "いきなり大きく動く必要はありません。ただ、方向だけ先に決めておくと、動きたくなったときに迷いません。";
+  renderPersonalCTA(r);
+
+  document.getElementById("result").style.display = "block";
+}
+
+/* =========================================================
+   v3.1 言い当て：回答の組み合わせから、その人だけの文章を組み立てる
+   - 受診者に見せるのは本人の役に立つ内容だけ（決め方・本音の出し方・課題の捉え方はコーチ欄のみ。9/10 FB）
+   - ネガティブな決めつけはしない。事実の反射＋問いかけ＋前向きな言い換え（9/8 FB）
+========================================================= */
+var PREVIEW = false;   /* 本番：回答を送信する（確認用ファイルでは true） */
+var PUBLIC_AXES = ["A","D","E"];
+
+var QMAP = {};
+for (var qi = 0; qi < QUESTIONS.length; qi++) QMAP[QUESTIONS[qi].id] = QUESTIONS[qi];
+
+function optOf(r, id){ var q = QMAP[id]; var i = r.ans[id]; return (q && i !== null && i !== undefined) ? q.opts[i] : null; }
+function idxOf(r, id){ var i = r.ans[id]; return (i === null || i === undefined) ? -1 : i; }
+function noneOf(r, id){ var o = optOf(r, id); return !o || !!o.none; }
+function txtOf(r, id){ var o = optOf(r, id); return o ? o.t : ""; }
+function qt(s){ return '<span class="qt">「' + esc(s) + '」</span>'; }
+function inSet(v, arr){ return arr.indexOf(v) >= 0; }
+
+/* 自分自身の設問の回答の強さ（+2〜-2）と、引用用の文 */
+function lkv(r, id){ var o = optOf(r, id); return (o && typeof o.value === "number") ? o.value : 0; }
+function st(r, id){ var q = QMAP[id]; return q ? q.title : ""; }
+function lkQuote(r, id){
+  var q = QMAP[id], o = optOf(r, id);
+  if (!q || !o) return "";
+  if (q.ab) return qt(o.value > 0 ? q.ab.a : q.ab.b) + "に近い";
+  return qt(q.title) + "に" + qt(o.t);
+}
+
+function subSide(r){
+  var s = axisSide(r.ax.A);
+  if (s !== "mid") return s;
+  var v = lkv(r,"p_a3") - lkv(r,"p_a2");
+  if (v !== 0) return v > 0 ? "pos" : "neg";
+  return r.ax.A >= 0 ? "pos" : "neg";
+}
+
+/* 二面性・言い当てのルール。上から順に判定し、当てはまったものを最大2つ使う。skip＝先に使われていたら出さない（同じ話の重複を防ぐ） */
+var GAP_RULES = [
+  { id:"confidence_gap",
+    when:function(r){ return (r.lv >= 3 || inSet(idxOf(r,"tayorare"), [0,1])) && (idxOf(r,"anxiety") === 1 || idxOf(r,"ai_nayami") === 2); },
+    text:function(r){
+      var first = inSet(idxOf(r,"tayorare"), [0,1])
+        ? "周りからAIについて" + qt(txtOf(r,"tayorare")) + "と答えています。周りからは、もう「使える側」に見えています"
+        : "ここまでAIを使えているなら、周りからは、もう十分に「使える側」に見えています";
+      var second = idxOf(r,"ai_nayami") === 2
+        ? "それでも、いま気になっているのは" + qt(txtOf(r,"ai_nayami"))
+        : "それでも、新しいことを始めるときに最初に浮かぶのは" + qt("自分にできるか");
+      return first + "。" + second + "。できていることを、自分ではまだ「できている」と数えていないのかもしれません。"; } },
+  { id:"use_vs_result",
+    when:function(r){ return idxOf(r,"katsuyo") >= 2 && (inSet(idxOf(r,"ai_nayami"), [0,1]) || idxOf(r,"seika") <= 1 || noneOf(r,"seika")); },
+    text:function(r){
+      var head = inSet(idxOf(r,"ai_nayami"), [0,1])
+        ? "ふだんからAIを使っているのに、気になっているのは" + qt(txtOf(r,"ai_nayami")) + "。"
+        : "ふだんからAIを使っているのに、変化はまだ自分の手元にとどまっている。";
+      return head + "使っている量と、周りから見える成果のあいだに、段差がある状態です。AIの使い方が足りないのではなく、成果を「周りに見える形」にする一手がまだ入っていないだけではないでしょうか。"; } },
+  { id:"worry_vs_strength", skip:["confidence_gap"],
+    when:function(r){ return idxOf(r,"career_nayami") === 2 && ((idxOf(r,"seika") >= 2 && !noneOf(r,"seika")) || inSet(idxOf(r,"tayorare"), [0,1])); },
+    text:function(r){
+      var evidence = (idxOf(r,"seika") >= 2 && !noneOf(r,"seika"))
+        ? "AIを使った変化は、もう出ています"
+        : "周りからAIについて" + qt(txtOf(r,"tayorare")) + "と答えています";
+      return "いまのキャリアで感じているのは" + qt(txtOf(r,"career_nayami")) + "。一方で、" + evidence + "。強みがないのではなく、もう出ている成果を、まだ強みとして言葉にしていないだけかもしれません。"; } },
+  { id:"effort_vs_reward", skip:["use_vs_result"],
+    when:function(r){ return idxOf(r,"career_nayami") === 0 && idxOf(r,"katsuyo") >= 1; },
+    text:function(r){ return "いまのキャリアで感じているのは" + qt(txtOf(r,"career_nayami")) + "。AIも、ふだんから仕事に取り入れています。頑張りが足りないのではなく、頑張った中身が、評価する側に届く形になっていないのではないでしょうか。"; } },
+  { id:"blank_restart",
+    when:function(r){ var o = optOf(r,"tachiba"); return ((o && o.away) || idxOf(r,"career_nayami") === 5) && idxOf(r,"katsuyo") >= 1; },
+    text:function(r){
+      var o = optOf(r,"tachiba");
+      var head = (o && o.away) ? "いまは" + qt(o.t) + "。それでも、AIを使う手は止まっていません" : "ブランクへの不安がある一方で、AIを使う手は止まっていません";
+      return head + "。仕事を離れている間にも、AIを使う感覚は積み上がっています。再スタートは、ゼロからではなく、その続きから始められます。"; } },
+  { id:"behind_but_started",
+    when:function(r){ return inSet(idxOf(r,"ai_nayami"), [3,4]) && idxOf(r,"katsuyo") >= 1; },
+    text:function(r){ return "いま気になっているのは" + qt(txtOf(r,"ai_nayami")) + "。" + (r.lv >= 3 ? "でも、AIはすでに仕事の流れに組み込めています。置いていかれるどころか、周りより先を進んでいる側です。" : "でも、AIはもう使い始めています。ゼロからのスタートではありません。") + "焦りの正体は、遅れそのものより、どこに向かって積み上げればいいかが見えていないことではないでしょうか。"; } },
+  { id:"selfrun_but_stop", group:"self",
+    when:function(r){ return lkv(r,"p_e1") >= 1 && inSet(idxOf(r,"s_stop"), [2,3]); },
+    text:function(r){ return lkQuote(r,"p_e1") + "と答えています。一人で進める力はある。それでも、取り組みが止まったときを振り返ると" + qt(txtOf(r,"s_stop")) + "。止まる理由は力不足ではなく、道筋や区切りがなかったことにありそうです。"; } },
+  { id:"quiet_influence",
+    when:function(r){ return idxOf(r,"s_leader") === 2 && (idxOf(r,"seika") >= 3 && !noneOf(r,"seika") || idxOf(r,"tayorare") === 0); },
+    text:function(r){
+      var ev = (idxOf(r,"seika") >= 3 && !noneOf(r,"seika"))
+        ? "AIで出せている変化は、もう自分の作業の外にまで届いています"
+        : "周りからAIについて" + qt(txtOf(r,"tayorare")) + "と答えています";
+      return "旗振り役を頼まれたら" + qt(txtOf(r,"s_leader")) + "と答えています。でも、" + ev + "。前に立っていなくても、すでに周りの仕事を動かしている側です。"; } },
+  { id:"ambition_and_caution", skip:["confidence_gap"],
+    when:function(r){ return (inSet(idxOf(r,"career_nayami"), [0,3]) || inSet(idxOf(r,"henka"), [0,1])) && (idxOf(r,"s_leader") === 3 || idxOf(r,"anxiety") === 1); },
+    text:function(r){
+      var first = inSet(idxOf(r,"career_nayami"), [0,3])
+        ? "いまのキャリアで感じているのは" + qt(txtOf(r,"career_nayami"))
+        : "キャリアについては" + qt(txtOf(r,"henka"));
+      var second = idxOf(r,"s_leader") === 3
+        ? "旗振り役を頼まれたら" + qt(txtOf(r,"s_leader"))
+        : "新しいことを始めるときに最初に浮かぶのは" + qt("自分にできるか");
+      return first + "。上を目指す気持ちは、はっきりあります。一方で、" + second + "。前に進みたい気持ちと、慎重さが同居しています。この両方を持っている人は、勢いだけで動いて遠回りすることが少ないタイプです。"; } },
+  { id:"already_leading", group:"self",
+    when:function(r){ return lkv(r,"p_d1") >= 1 && lkv(r,"p_e1") >= 1 && idxOf(r,"s_leader") === 0; },
+    text:function(r){ return "なりたい姿を思い浮かべることがよくあり、困ったときもまず自分で動く。旗振り役を頼まれたら" + qt(txtOf(r,"s_leader")) + "。もう、周りを引っ張る側の動き方をしています。あとは、その動きを評価や役割につながる言葉にできるかどうかです。"; } },
+  { id:"direction_without_timing",
+    when:function(r){ return idxOf(r,"kibo") >= 2 && !noneOf(r,"kibo") && inSet(idxOf(r,"henka"), [2,3,4]); },
+    text:function(r){ return "キャリアを動かすとしたら" + qt(txtOf(r,"kibo")) + "。方向は、もう見えています。ただ、いまの気持ちは" + qt(txtOf(r,"henka")) + "。決まっていないのは方向ではなく、時期と最初の一歩だけかもしれません。"; } },
+  { id:"will_vs_time",
+    when:function(r){ return inSet(idxOf(r,"henka"), [0,1]) && (idxOf(r,"career_nayami") === 4 || idxOf(r,"anxiety") === 0); },
+    text:function(r){
+      var t = idxOf(r,"career_nayami") === 4 ? qt(txtOf(r,"career_nayami")) : "新しいことを始めるときに最初に浮かぶのは" + qt("時間を作れるか・続けられるか");
+      return "キャリアについては" + qt(txtOf(r,"henka")) + "。気持ちは前に出ているのに、" + t + "。いちばんもどかしいのは、意欲と時間の差ではないでしょうか。だからこそ、時間を増やすより、使う場所を絞る進め方が合っています。"; } },
+  { id:"steady_but_invisible", skip:["use_vs_result","effort_vs_reward"],
+    when:function(r){ return idxOf(r,"s_stop") === 4 && (idxOf(r,"seika") <= 2 || noneOf(r,"seika")); },
+    text:function(r){ return "取り組みが止まった経験は" + qt("あまりない") + "。続ける力は十分にあります。それでもAIの変化が、まだ周りから見える形になっていないとしたら、足りないのは努力の量ではなく、成果を「外から見える形」にする設計ではないでしょうか。"; } },
+  { id:"quiet_but_ready", group:"self",
+    when:function(r){ return (lkv(r,"p_d3") >= 1 || lkv(r,"p_d4") <= -1) && idxOf(r,"s_leader") === 0; },
+    text:function(r){
+      var q = lkv(r,"p_d3") >= 1 ? lkQuote(r,"p_d3") : lkQuote(r,"p_d4");
+      return q + "と答えています。それでも、旗振り役を頼まれたら" + qt(txtOf(r,"s_leader")) + "。ふだんはいまあるものを大切にしていても、任されると力が出るタイプです。その力は、まだ周りに知られていないだけかもしれません。"; } },
+  { id:"self_and_promise", group:"self",
+    when:function(r){ return lkv(r,"p_e1") >= 1 && lkv(r,"p_e2") >= 1; },
+    text:function(r){ return "困ったときは" + qt("まず自分で調べたり試したりしてから、人に聞く") + "。それなのに、" + qt("一人だと後回しにしがちなことも、誰かと約束すると進められる") + "にも、そう思うと答えています。自分で進める力と、約束があると加速する力の両方を持っている。一人で考える時間と、一緒に進める相手。その両方がそろったときに、いちばん力が出るタイプです。"; } },
+  { id:"intuition_and_caution", group:"self",
+    when:function(r){ return lkv(r,"p_a1") >= 1 && lkv(r,"p_d2") >= 1; },
+    text:function(r){ return "迷ったときは" + qt("最初にピンときた方を選ぶ") + "。一方で、新しいことを始めるときは" + qt("うまくいかなかったときのことを先に考える") + "。直感で選びながら、リスクの確認も欠かさない。その組み合わせは、動き出したあとに大きく外すことが少ない強みです。"; } },
+  { id:"dream_and_guard", group:"self",
+    when:function(r){ return lkv(r,"p_d1") >= 1 && lkv(r,"p_d3") >= 1; },
+    text:function(r){ return qt("なりたい姿を思い浮かべることがよくある") + "一方で、" + qt("いまあるものを守りながら少しずつ良くしていきたい") + "とも答えています。上を目指す気持ちと、いまを大切にする気持ちの両方がある。だからこそ、いまの土台を活かしながら一段上がる道筋が合っています。"; } },
+  { id:"why_before_move", group:"self",
+    when:function(r){ return lkv(r,"p_a2") >= 1 && lkv(r,"p_a4") >= 1; },
+    text:function(r){ return qt("理由が腹落ちしないまま動くのは、落ち着かない") + "。それでいて、段取りは" + qt("まず動いてみて、やりながら直す") + "に近い。理由さえ納得できれば、そこからの動き出しは速いタイプです。最初に「なぜやるのか」を押さえる時間が、いちばんの近道になります。"; } },
+  { id:"talk_to_think", group:"self",
+    when:function(r){ return idxOf(r,"s_result") === 3 || (lkv(r,"p_e2") >= 1 && lkv(r,"p_e4") <= -1); },
+    text:function(r){
+      var t = idxOf(r,"s_result") === 3 ? "うまくいかないときは" + qt(txtOf(r,"s_result")) + "と答えています" : "新しいことは" + qt("詳しい人に一度やって見せてもらう方が、早く身につく") + "に近いと答えています";
+      return t + "。一人で考え込むより、人と話しながら整理した方が、答えが早く出るタイプです。"; } }
+];
+
+/* 面談で4人に共通していた二面性。ルールが1つ以下しか当てはまらないときに使う */
+var GAP_UNIVERSAL = "人から頼られたり、相談されたりすることはあるのに、自分の強みを一言で言おうとすると少し迷う。そんな感覚はありませんか。仕事で頼られている人ほど、この「できているのに、言葉になっていない」状態にいることが多いです。";
+
+function strengthText(r, t){
+  if (idxOf(r,"s_result") === 0) return "うまくいかないとき、まず" + qt("自分のやり方の、どこを変えるか") + "を考えられること。これは、AIの成果を「再現できる実績」に変えるときに、いちばん効く力です。";
+  if (idxOf(r,"s_result") === 4) return "原因を決めつけず、まず数字や事実を確かめられること。AIをどの業務に入れるべきかを外さない力です。";
+  if (lkv(r,"p_a2") === 2) return "背景と理由を押さえてから動けること。業務にAIを組み込むとき、どこに使うべきかを外さない力です。";
+  if (idxOf(r,"s_stop") === 4) return "一度始めたことを、止めずに続けられること。成果は、続けた人のところにしか残りません。";
+  if (lkv(r,"p_e1") === 2) return "困ったとき、まず自分で調べて試せること。AIを業務に組み込むとき、いちばん差がつく力です。";
+  if (lkv(r,"p_d2") === 2) return "うまくいかなかったときのことを、先に考えられること。新しいことを、大きく外さずに進められる力です。";
+  if (lkv(r,"p_e2") === 2) return "人と一緒に進めると、力が出ること。相談できる相手を持てる人は、一人で抱え込む人より遠くまで進めます。";
+  return qt(t.strengths[0]) + "。このタイプの方が、自分では当たり前だと思っていることが多い強みです。";
+}
+
+function buildReading(r){
+  var t = TYPES[r.typeKey];
+  var side = subSide(r);
+  var out = "";
+
+  /* 1. 二つ名の説明 */
+  var p1 = esc(t.name) + "の中でも、" + qt(t.nick[side]) + "。" + esc(t.nickNote[side]) + "です。";
+  var want = {D: t.d === "攻め" ? 1 : -1, E: t.e === "自走" ? 1 : -1};
+  var picks = [];
+  for (var pi = 0; pi < QUESTIONS.length && picks.length < 2; pi++) {
+    var pq = QUESTIONS[pi];
+    if (!pq.likert || !want[pq.axis]) continue;
+    var pv = lkv(r, pq.id) * pq.dir;
+    if (pv === 2 * want[pq.axis] && !(picks.length && QMAP[picks[0]].axis === pq.axis)) picks.push(pq.id);
+  }
+  if (picks.length) {
+    p1 += "とくに、" + lkQuote(r, picks[0]) + (picks[1] ? "、" + lkQuote(r, picks[1]) : "") + "と答えているところに、このタイプらしさがはっきり出ています。";
+  }
+  out += '<p class="rd"><span class="rd-h">あなたのタイプ</span>' + p1 + "</p>";
+
+  /* 2. 現在地の反射 */
+  var jobO = optOf(r,"shokushu");
+  var tb = optOf(r,"tachiba");
+  var notWorking = !!(tb && tb.away);
+  var jobPhrase = (!jobO || jobO.none) ? (notWorking ? "直近のお仕事で" : "いまのお仕事で")
+                : (notWorking ? "直近の" : "") + esc(jobO.t.replace(/（.*?）/g, "")) + "のお仕事で";
+  var lvNext = r.lv === 1 ? "まずは、毎日の業務のどこか1か所でAIを使ってみるところからです。使い方を広く学ぶより、1つの業務で試す方が、早く手応えが出ます。"
+             : r.lv === 2 ? "ここから先は、使う量を増やすより、毎日の業務のどこに組み込むかで差がつく段階です。"
+             : r.lv === 3 ? "使いこなす段階は越えています。次に問われるのは、その成果をどう見せるかです。"
+             : "使う側から、仕組みを作る側に入っています。あとは、それをキャリアの言葉に変えられるかどうかです。";
+  var p2 = jobPhrase + "、AIの使い方は" + qt(txtOf(r,"katsuyo")) + "。";
+  if (!noneOf(r,"seika") && idxOf(r,"seika") > 0) p2 += "AIを活用して出ている変化は" + qt(txtOf(r,"seika")) + "。";
+  p2 += ctxText(r, lvNext);
+  out += '<p class="rd"><span class="rd-h">いまの現在地</span>' + p2 + "</p>";
+
+  /* 3. 回答の組み合わせ（二面性） */
+  /* AI・キャリアの回答から1つ、自分自身の回答から1つ。片方が無ければもう片方から2つ */
+  var hits = {career:[], self:[]};
+  for (var i = 0; i < GAP_RULES.length; i++) {
+    var rule = GAP_RULES[i];
+    var all = hits.career.concat(hits.self), skipped = false;
+    if (rule.skip) for (var s2 = 0; s2 < rule.skip.length; s2++) if (all.indexOf(rule.skip[s2]) >= 0) skipped = true;
+    if (!skipped && rule.when(r)) hits[rule.group || "career"].push(rule.id);
+  }
+  var used = hits.career.slice(0, 1).concat(hits.self.slice(0, 1));
+  var rest = hits.career.slice(1).concat(hits.self.slice(1));
+  while (used.length < 2 && rest.length) used.push(rest.shift());
+  var gaps = [];
+  for (var g = 0; g < GAP_RULES.length; g++) if (used.indexOf(GAP_RULES[g].id) >= 0) gaps.push(GAP_RULES[g].text(r));
+  if (gaps.length < 2) gaps.push(GAP_UNIVERSAL);
+  for (var k = 0; k < gaps.length; k++) {
+    out += '<p class="rd">' + (k === 0 ? '<span class="rd-h">回答の組み合わせから</span>' : "") + gaps[k] + "</p>";
+  }
+
+  /* 4. 気づきにくい強み */
+  out += '<div class="rd-strength"><p class="rd"><span class="rd-h">自分では気づきにくい強み</span>' + strengthText(r, t) + "</p></div>";
+
+  r.readingRules = used;
+  return out;
+}
+
+var CTA_SUB = {
+  0:"時間が取れるか不安な方も、いま使える時間に合わせて設計します。設計図はお持ち帰りいただき、判断はそれからで構いません。",
+  1:"「自分にできるか分からない」のままで大丈夫です。設計図はお持ち帰りいただき、判断はそれからで構いません。",
+  2:"成果につながるかどうかを、あなたの業務に当てはめて確かめる時間です。設計図はお持ち帰りいただき、判断はそれからで構いません。",
+  3:"何から始めればいいかは、その場で一緒に決めます。設計図はお持ち帰りいただき、判断はそれからで構いません。"
+};
+
+function renderPersonalCTA(r){
+  var t = TYPES[r.typeKey];
+  var nm = document.getElementById("userName").value.trim();
+  document.getElementById("ctaLabel").textContent = "体験セッションで" + (nm ? "、" + nm + "さんと" : "") + "行うこと（" + t.name + "の場合）";
+  var ctas = r.flags.away ? AWAY_CTA : lvPick(r, "cta");
+  document.getElementById("ctaItem1").textContent = ctas[0];
+  document.getElementById("ctaItem2").textContent = ctas[1];
+  document.getElementById("ctaItem3").textContent = ctas[2];
+  var a = idxOf(r,"anxiety");
+  document.getElementById("ctaSub").textContent = CTA_SUB[a] || "設計図はお持ち帰りいただき、判断はそれからで構いません。";
+}
+
+/* 確認用：?demo=1 で回答をランダムに入れて結果を表示（「どれにも当てはまらない」は選ばない） */
+function runDemo(){
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    var q = QUESTIONS[i], c = [];
+    for (var j = 0; j < q.opts.length; j++) if (!q.opts[j].none) c.push(j);
+    var pick = c[Math.floor(Math.random() * c.length)];
+    var el = document.querySelector('input[name="' + q.id + '"][value="' + pick + '"]');
+    if (el) el.checked = true;
+  }
+  document.getElementById("userName").value = "山田";
+  document.getElementById("userEmail").value = "demo@example.com";
+  var ag = document.querySelector('input[name="ageBand"][value="40代"]'); if (ag) ag.checked = true;
+  document.getElementById("diagnoseBtn").click();
+}
+
+
+/* =========================================================
+   ここから下：レポート管理ページ（v4）専用
+   上の判定・文章は診断ページ v4 から自動で取り込んだもの（受診者が画面で見た結果と同じ文章になる）
+========================================================= */
+var WORKER = (location.protocol === "file:")
+  ? "https://levance-shindan-collect.saori421work.workers.dev"
+  : "/api";
+var ROWS_PATH = "/rows?tab=v4";
+var KEY_STORE = "lv_report_key";
+var CONSULT_URL = "https://sb.levance-inc.jp/page/DBM0LvBChW0C";
+
+/* v4タブの列（0始まり） */
+var COL = {
+  date:0, name:1, age:2, email:3, type:4, typeKey:5, lv:6, stage:7,
+  axA:8, axD:9, axE:10, axF:11, work:12, aiC:13, carC:14, honki:15, hope:16, anx:17,
+  exit1:18, exit2:19, exit3:20, axes:21, q1:22
+};
+
+var rows = [];
+function esc(t){ return String(t == null ? "" : t).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function getKey(){ try { return localStorage.getItem(KEY_STORE) || ""; } catch(e){ return ""; } }
+function setKey(k){ try { localStorage.setItem(KEY_STORE, k); } catch(e){} }
+function show(id, on){ document.getElementById(id).style.display = on ? "block" : "none"; }
+function cell(r, i){ return (r && r[i] != null) ? String(r[i]) : ""; }
+
+/* シートに記録された選択肢の文から、回答番号に戻す */
+function rowToAnswers(r){
+  var ans = {}, miss = 0;
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    var q = QUESTIONS[i], t = cell(r, COL.q1 + i), idx = -1;
+    for (var j = 0; j < q.opts.length; j++) if (q.opts[j].t === t) { idx = j; break; }
+    ans[q.id] = idx >= 0 ? idx : null;
+    if (idx < 0) miss++;
+  }
+  return {ans:ans, miss:miss};
+}
+
+/* ---------- データ取得・一覧 ---------- */
+function loadRows(){
+  document.getElementById("listBody").innerHTML = '<div class="loading">読み込み中...</div>';
+  show("listCard", true);
+  fetch(WORKER + ROWS_PATH, { headers: { "X-Report-Key": getKey() } })
+    .then(function(res){ if (res.status === 403) throw new Error("forbidden"); return res.json(); })
+    .then(function(j){
+      if (!j.ok) throw new Error("api");
+      rows = j.values || [];
+      renderList();
+      var m = location.hash.match(/^#r=(\d+)$/);
+      if (m) openReport(parseInt(m[1], 10));
+    })
+    .catch(function(e){
+      if (String(e.message) === "forbidden") {
+        try { localStorage.removeItem(KEY_STORE); } catch(_){}
+        show("listCard", false); show("keyBox", true);
+        document.getElementById("keyErr").style.display = "";
+      } else {
+        document.getElementById("listBody").innerHTML = '<div class="loading">読み込みに失敗しました。電波の良い場所で再読み込みしてください。</div>';
+      }
+    });
+}
+
+function renderList(){
+  var html = "";
+  for (var i = rows.length - 1; i >= 1; i--) {
+    var r = rows[i];
+    var chips = "";
+    [["働き方", COL.work], ["AIレベル", COL.lv], ["キャリア", COL.honki]].forEach(function(c){
+      var v = cell(r, c[1]); if (v) chips += '<span class="axchip"><i>' + c[0] + '</i>' + esc(v) + '</span>';
+    });
+    html += '<div class="rowitem">' +
+      '<span class="d">' + esc(cell(r, COL.date)) + '</span>' +
+      '<span class="nm">' + esc(cell(r, COL.name)) + (cell(r, COL.age) ? '<small>（' + esc(cell(r, COL.age)) + '）</small>' : '') + '</span>' +
+      '<span class="tpchip">' + esc(cell(r, COL.type)) + '</span>' +
+      '<a href="#r=' + (i + 1) + '" data-row="' + (i + 1) + '">レポートを開く</a>' +
+      '<span class="axes">' + chips + '</span></div>';
+  }
+  if (!html) html = '<div class="loading">まだ回答がありません。</div>';
+  document.getElementById("listBody").innerHTML = html;
+  var links = document.querySelectorAll("#listBody a");
+  for (var l = 0; l < links.length; l++) {
+    links[l].addEventListener("click", function(e){ e.preventDefault(); openReport(parseInt(this.getAttribute("data-row"), 10)); });
+  }
+}
+
+/* ---------- レポートの部品 ---------- */
+function levelStepsHTML(lv){
+  var h = '<div class="lv-steps">';
+  for (var i = 1; i <= 5; i++){
+    var cls = (i <= lv ? " on" : "") + (i === lv ? " cur" : "");
+    h += '<div class="lv-st' + cls + '"><span class="n">' + i + '</span><span class="t">' + esc(LEVELS[i - 1].name.replace("ステージ", "")) + '</span></div>';
+    if (i < 5) h += '<span class="lv-ln' + (i < lv ? " on" : "") + '"></span>';
+  }
+  return h + '</div>';
+}
+function axisRowHTML(axis, v){
+  var pct = 50 + v * 50, left = v >= 0 ? 50 : pct, width = Math.abs(v) * 50, side = axisSide(v);
+  var lean = Math.round(50 + Math.abs(v) * 50);
+  var leanLabel = v === 0 ? "ちょうど中間" : (v >= 0 ? axis.pos : axis.neg).replace(/（.*?）/g, "") + " " + lean + "%";
+  return '<div class="ax-row">' +
+    '<p class="ax-name">' + esc(axis.name) + '<span class="ax-lean">' + esc(leanLabel) + '</span></p>' +
+    '<div class="ax-track"><div class="ax-fill" style="left:' + left.toFixed(1) + '%;width:' + width.toFixed(1) + '%"></div>' +
+    '<div class="ax-dot" style="left:' + pct.toFixed(1) + '%"></div></div>' +
+    '</div>';
+}
+function cpItem(k, v){ return '<div class="cp-item"><span class="k">' + esc(k) + '</span><span class="v">' + (v || "（未記録）") + '</span></div>'; }
+
+/* コーチ専用プロファイル（印刷対象外） */
+function buildCoachProfile(r, res, miss){
+  var email = cell(r, COL.email);
+  var t = TYPES[res.typeKey];
+  var h = '<div class="coach"><div class="coach-head"><b>COACH PROFILE｜面談用プロファイル</b><span>印刷・PDFには含まれません</span></div><div class="coach-body">' +
+    (miss ? '<p class="cp-warn">回答のうち ' + miss + ' 問を選択肢と照合できませんでした。その設問はレポートに反映されていません。</p>' : '') +
+    '<div class="cp-grid">' +
+      cpItem("お名前", esc(cell(r, COL.name))) + cpItem("年代", esc(cell(r, COL.age))) +
+      cpItem("メール", email ? '<a href="mailto:' + esc(email) + '">' + esc(email) + '</a>' : "") +
+      cpItem("受信日時", esc(cell(r, COL.date))) +
+      cpItem("タイプ", esc(t.name) + '（' + esc(t.d) + '×' + esc(t.e) + '）') +
+      cpItem("AIレベル", 'Lv.' + res.lv + '｜' + esc(LEVELS[res.lv - 1].name)) +
+    '</div><p class="cp-sec">悩み・希望・傾向</p><div class="cp-grid">' +
+      cpItem("働き方", esc(cell(r, COL.work))) + cpItem("AIの気がかり", esc(cell(r, COL.aiC))) +
+      cpItem("キャリアの悩み", esc(cell(r, COL.carC))) + cpItem("キャリアを変えたいか", esc(cell(r, COL.honki))) +
+      cpItem("今後の希望", esc(cell(r, COL.hope))) + cpItem("最初に浮かぶ不安", esc(cell(r, COL.anx))) +
+      cpItem("判断の仕方", esc(axisCoachLabel(AXES[0], res.ax.A))) + cpItem("課題の捉え方", esc(axisCoachLabel(AXES[5], res.ax.F))) +
+      cpItem("出口トップ3", esc([cell(r, COL.exit1), cell(r, COL.exit2), cell(r, COL.exit3)].filter(Boolean).join(" / "))) +
+    '</div>';
+  var tbl = "", sec = -1;
+  for (var q = 0; q < QUESTIONS.length; q++) {
+    var Q = QUESTIONS[q];
+    if (Q.sec !== sec) { sec = Q.sec; tbl += '<tr class="step"><th colspan="3">' + esc(SECTIONS[sec].step + "　" + SECTIONS[sec].title) + '</th></tr>'; }
+    var title = Q.ab ? "A「" + Q.ab.a + "」／B「" + Q.ab.b + "」" : Q.title;
+    tbl += '<tr><th>Q' + (q + 1) + '</th><td class="qt">' + esc(title) + '</td><td class="qa">' + (esc(cell(r, COL.q1 + q)) || "（未回答）") + '</td></tr>';
+  }
+  h += '<details class="cp-q"><summary>全' + QUESTIONS.length + '問の回答を見る</summary><table>' + tbl + '</table></details></div></div>';
+  return h;
+}
+
+/* ---------- ページ組み（1セクション＝1ページ。溢れたら縮めて収め、5ページを超えない） ---------- */
+function gapOf(body){
+  var inner = body.querySelector(":scope > .pg-inner");
+  if (!inner) return body.clientHeight;
+  var cs = getComputedStyle(body);
+  var avail = body.clientHeight - (parseFloat(cs.paddingTop) || 0) - (parseFloat(cs.paddingBottom) || 0);
+  return avail - inner.offsetHeight;
+}
+function shrinkToFit(body){
+  var inner = body.querySelector(":scope > .pg-inner");
+  if (!inner) return;
+  inner.style.zoom = "";
+  var z = 1, guard = 0;
+  while (gapOf(body) < 0 && guard < 30){ z -= 0.02; if (z < 0.66) break; inner.style.zoom = z.toFixed(3); guard++; }
+}
+function spreadGaps(host){
+  var pages = host.querySelectorAll(".a4");
+  for (var i = 0; i < pages.length; i++){
+    var body = pages[i].querySelector(".pg-body") || pages[i].querySelector(".cv-body");
+    var inner = body && body.querySelector(":scope > .pg-inner");
+    if (!body || !inner || inner.style.zoom) continue;
+    if (inner.querySelector(".rp-rstep") || inner.querySelector(".rp-cta")) continue;
+    var n = inner.children.length;
+    if (n < 2) continue;
+    var room = gapOf(body) - 16;
+    if (room < 60) continue;
+    inner.style.display = "flex"; inner.style.flexDirection = "column";
+    inner.style.rowGap = Math.min(room / (n - 1), 72).toFixed(1) + "px";
+    if (gapOf(body) < 0) { inner.style.rowGap = ""; inner.style.display = ""; inner.style.flexDirection = ""; }
+  }
+}
+function numberPages(host){
+  var pages = host.querySelectorAll(".a4");
+  for (var i = 0; i < pages.length; i++){
+    var s = document.createElement("span");
+    s.className = "pgnum";
+    s.textContent = "LEVANCE AI CAREER REPORT｜" + (i + 1) + " / " + pages.length;
+    pages[i].appendChild(s);
+  }
+}
+function addPage(host, nmShort, kicker, title, blocks){
+  var pg = document.createElement("div");
+  pg.className = "a4";
+  pg.innerHTML = '<div class="pg-head"><span class="nm">' + nmShort + '</span><p class="t"><span>' + kicker + '</span>' + title + '</p></div>' +
+    '<div class="pg-body"><div class="pg-inner">' + blocks.join("") + '</div></div>';
+  host.appendChild(pg);
+}
+
+function openReport(rowNum){
+  if (document.fonts && !openReport._fontsReady){
+    document.fonts.ready.then(function(){ openReport._fontsReady = true; openReport(rowNum); });
+    return;
+  }
+  var r = rows[rowNum - 1];
+  if (!r) { alert("その行のデータが見つかりません（行番号: " + rowNum + "）"); return; }
+  var conv = rowToAnswers(r);
+  var res = compute(conv.ans);
+  var k = res.typeKey, t = TYPES[k], c = CHARACTER[k];
+  var name = cell(r, COL.name) || "（未入力）";
+  var dateStr = cell(r, COL.date).split(" ")[0];
+  var lvData = LEVELS[res.lv - 1];
+  var side = subSide(res);
+  var nmShort = esc(name) + 'さん｜' + esc(t.name);
+
+  /* 進み方トップ3（診断ページと同じ選び方・同じ文面） */
+  var evals = evaluateExits(res), exitHtml = "";
+  for (var e = 0; e < 3 && e < evals.length; e++) {
+    var it = evals[e], ex = it.ex;
+    var nm = (it.awayNE && ex.nameAway) || (it.selfEmp && ex.nameSelf) || ex.name;
+    var et = (it.awayNE && ex.textAway) ? ex.textAway[it.band] : (it.selfEmp && ex.textSelf) ? ex.textSelf[it.band] : ex.text[it.band];
+    if (it.away) et = et.replace(/いまの業務/g, "直近のお仕事").replace(/自分の業務/g, "直近のお仕事");
+    exitHtml += '<div class="ex-card' + (e === 0 ? " first" : "") + '"><span class="rk">' + (e === 0 ? "BEST MATCH" : (e + 1) + "位") + '</span>' +
+      '<p class="en">' + esc(nm) + '</p><p class="why">' + esc(et) + '</p></div>';
+  }
+  var mset = lvPick(res, "mindset"), mindHtml = "";
+  for (var mi = 0; mi < mset.length; mi++) mindHtml += '<div class="rp-mind"><p class="mh" data-n="0' + (mi + 1) + '">' + esc(mset[mi].h) + '</p><p>' + esc(mset[mi].t) + '</p></div>';
+  var steps = roadmapSteps(res);
+  if (res.flags.selfEmp) steps = steps.map(function(s){ return [s[0], s[1].replace("評価面談・職務経歴書・提案や商談の場", "提案や商談、発信の場")]; });
+  var roadHtml = "";
+  for (var si = 0; si < steps.length; si++) roadHtml += '<div class="rp-rstep"><span class="rm">MONTH ' + (si + 1) + '</span><p class="rh">' + esc(steps[si][0]) + '</p><p>' + esc(steps[si][1]) + '</p></div>';
+  var aru = "";
+  for (var ai = 0; ai < c.aru.length; ai++) aru += "<li>" + esc(c.aru[ai]) + "</li>";
+  var axHtml = "";
+  for (var a = 0; a < AXES.length; a++) if (PUBLIC_AXES.indexOf(AXES[a].k) >= 0) axHtml += axisRowHTML(AXES[a], res.ax[AXES[a].k]);
+  var aiText = ctxText(res, lvTier(res) === "adv" ? AI_ADV[k] : c.ai);
+
+  var host = document.getElementById("pages");
+  host.innerHTML = "";
+
+  /* 1枚目：表紙＋人物像 */
+  var cover = document.createElement("div");
+  cover.className = "a4 on-navy";
+  cover.innerHTML =
+    '<div class="cv-head bp">' +
+      '<div class="cv-toprow"><span class="cv-brand">LEVANCE｜AI CAREER DIAGNOSIS</span><span class="cv-date">診断日 ' + esc(dateStr) + '</span></div>' +
+      '<p class="cv-sub">4タイプ別 AIキャリアタイプ診断｜結果レポート</p>' +
+      '<p class="cv-name">' + esc(name) + '<span>さん</span></p>' +
+      '<div class="cv-type"><div class="cv-ani">' + animalSVG(k, "light", 132, "cv" + k) + '</div><div class="cv-tx">' +
+        '<span class="lb">YOUR TYPE</span><p class="tn">' + typeNameHTML(t) + '</p><p class="te">' + esc(t.en) + '</p>' +
+        '<p class="tt">' + esc(t.tag) + '</p><span class="nick">' + esc(t.nick[side]) + '</span></div></div>' +
+      '<div class="cv-lvrow"><div class="cv-lvtext"><p class="l">あなたのAIレベル（5段階）</p><p class="s">Lv.' + res.lv + '　' + esc(lvData.name) + '</p></div>' +
+        levelStepsHTML(res.lv) + '<p class="cv-lvnote">' + esc(ctxText(res, lvData.note)) + '</p></div>' +
+    '</div>' +
+    '<div class="cv-body"><div class="pg-inner">' +
+      '<div><p class="rp-k">YOUR CHARACTER</p><p class="rp-h">' + esc(name) + 'さんの人物像</p><p class="ch-lead">' + esc(c.lead) + '</p></div>' +
+      '<div class="ch-step good"><p class="ch-h">あなたの持ち味</p><p>' + esc(c.good) + '</p></div>' +
+    '</div></div>';
+  host.appendChild(cover);
+
+  addPage(host, nmShort, "YOUR CHARACTER", "あなたの人物像と、仕事での力", [
+    '<div><p class="ch-sub">こんなところ、ありませんか？</p><ul class="aru">' + aru + '</ul></div>',
+    '<div class="ch-step aspect"><p class="ch-h">こんな傾向も</p><p>' + esc(c.aspect) + '</p></div>',
+    '<div class="ch-step more"><p class="ch-h">さらに力を伸ばすなら</p><p>' + esc(c.more) + '</p></div>',
+    '<div class="ai-box"><p class="ai-h">AIと組み合わせると、こんなことができる</p><p>' + esc(aiText) + '</p></div>'
+  ]);
+  addPage(host, nmShort, "READING", esc(name) + "さんの回答から見えたこと", [
+    '<div class="rd">' + buildReading(res) + '</div>',
+    '<div class="ax-box"><p class="ax-h">3つの傾向（どちらが良い・悪いではありません）</p>' + axHtml + '</div>'
+  ]);
+  addPage(host, nmShort, "CAREER PATHS", "相性の良い進み方と、活躍のヒント", [
+    '<div>' + exitHtml + '</div>',
+    '<div><p class="rp-k">MINDSET</p><p class="rp-h">もっと活躍するために</p>' + mindHtml + '</div>'
+  ]);
+  addPage(host, nmShort, "NEXT 90 DAYS", "最初の90日でやること", [
+    roadHtml,
+    '<div class="rp-closing"><span class="ck">LAST WORDS</span>' + esc(lvPick(res, "road")) + '</div>',
+    '<div class="rp-cta bp"><div class="rp-cta-in">' +
+      '<p class="ck">NEXT STEP｜' + esc(name) + 'さんへのご案内</p>' +
+      '<p class="ch">これからの評価を分けるのは、AIの<span>「実装力」</span>です</p>' +
+      '<p class="cp">「使える」だけでは差がつかない時代です。どの業務にどう実装すれば成果になるかを、一人ひとりに合わせて設計するのが<b>AI特化・個別キャリアコーチング</b>です。</p>' +
+      '<p class="rp-cta-meta">約60分｜オンライン（Zoom）｜マンツーマン｜<span>体験1回・無料</span></p>' +
+      '<p class="rp-cta-link">お申し込み・詳細：<a href="' + CONSULT_URL + '">' + CONSULT_URL + '</a></p>' +
+      '<p class="dis">※専任コーチの稼働枠に限りがあるため、定員に達し次第、受付を終了いたします。本レポートの内容は現時点での目安であり、成果を保証するものではありません。｜レバンス（LEVANCE）</p>' +
+    '</div></div>'
+  ]);
+
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    var pages = host.querySelectorAll(".a4");
+    for (var p = 0; p < pages.length; p++){
+      var b = pages[p].querySelector(".pg-body") || pages[p].querySelector(".cv-body");
+      if (b && gapOf(b) < 0) shrinkToFit(b);
+    }
+    spreadGaps(host);
+    numberPages(host);
+  }); });
+
+  document.getElementById("coachBox").innerHTML = buildCoachProfile(r, res, conv.miss);
+  document.title = (name && name !== "（未入力）") ? "レバンス_AI診断レポート_" + name + "様" : "レバンス_AI診断レポート";
+  show("adminBar", false); show("listCard", false); show("reportView", true);
+  location.hash = "r=" + rowNum;
+  window.scrollTo(0, 0);
+}
+
+/* ---------- イベント・初期化 ---------- */
+document.getElementById("backBtn").addEventListener("click", function(){
+  show("reportView", false); show("adminBar", true); show("listCard", true);
+  document.title = "診断レポート管理 v4｜LEVANCE";
+  if (history.replaceState) history.replaceState(null, "", location.pathname);
+});
+document.getElementById("printBtn").addEventListener("click", function(){ window.print(); });
+document.getElementById("reloadBtn").addEventListener("click", loadRows);
+document.getElementById("keySubmit").addEventListener("click", function(){
+  var kk = document.getElementById("keyInput").value.trim();
+  if (!kk) return;
+  setKey(kk); document.getElementById("keyErr").style.display = "none"; show("keyBox", false); loadRows();
+});
+document.getElementById("keyInput").addEventListener("keydown", function(e){ if (e.key === "Enter") document.getElementById("keySubmit").click(); });
+if (getKey()) loadRows(); else show("keyBox", true);
+
+</script>
+</body>
+</html>

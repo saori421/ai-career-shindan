@@ -1,6 +1,6 @@
 <!doctype html>
-<!-- 最終更新 2026.10.12 -->
-<!-- 4タイプ別 AIキャリアタイプ診断（v3：面談前に「人物タイプ」を掴む診断）｜レバンス -->
+<!-- 最終更新 2026.10.29 -->
+<!-- 4タイプ別 AIキャリアタイプ診断 v4（本番・2026-10-29反映）｜レバンス。全25問：STEP1 今のあなた6問／STEP2 あなた自身のこと12問（5段階・タイプ判定の主な材料）／STEP3 仕事のなかのあなた3問／STEP4 これからのキャリア4問。タイプは動物4種。回答はWorkerへ v:4 で送り、記録シートの「v4」タブに入る。設計の経緯は 2026-10-27_AI診断v3.1_言い当て改修案.md -->
 <!-- 正本。公開は GitHub repo saori421/ai-career-shindan に levance-ai-career-shindan-v2.html として上書きpush（公開URLは v2 のまま据え置き） -->
 <!-- 設計の正本: レバンス/2026-09-07_AIキャリアタイプ診断v3_設計案.md（2026-10-12改修の差分は同ファイル末尾「8. 2026-10-12 改修」） -->
 <!-- TODO: 結果レポート受け取りボタンの href を公式LINEのURLに差し替える（LINE_URL で検索） -->
@@ -449,19 +449,90 @@ footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
   *{animation:none !important;transition:none !important}
 }
 @media print{.hero,.diagnose-area,.retake,#progressWrap,#progressCount{display:none}}
+/* ===== v3.1 言い当て改修 ===== */
+.r-nick{display:inline-block;margin-top:10px;font-size:14px;font-weight:700;color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);border-radius:999px;padding:5px 14px;letter-spacing:.04em}
+.reading p.rd{font-size:15px;line-height:2.05;color:#2A3158;margin-top:14px}
+.reading p.rd:first-of-type{margin-top:4px}
+.reading .rd-h{display:block;font-size:12.5px;font-weight:900;color:var(--violet);letter-spacing:.08em;margin-bottom:2px}
+.reading .qt{background:linear-gradient(transparent 58%,#E3DDFF 58%);font-weight:700;color:var(--head)}
+.reading .rd-strength{margin-top:18px;background:var(--tint);border-radius:14px;padding:14px 16px}
+.reading .rd-strength p.rd{margin-top:2px}
+.tend-name{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.tend-lean{font-size:12.5px;font-weight:700;color:var(--violet);letter-spacing:0}
+.tend-lean b{font-family:var(--en);font-size:15px;margin-left:4px}
+.scenes{margin-top:22px;border:1px solid var(--line);border-radius:16px;padding:16px 16px 12px;background:#FAFBFF}
+.scenes .sc-h{font-size:15px;font-weight:900;color:var(--head);line-height:1.6}
+.scenes .sc-lead{font-size:13px;color:var(--sub);margin:4px 0 8px;line-height:1.7}
+.sc-item{display:flex;gap:10px;align-items:flex-start;padding:11px 4px;border-top:1px dashed var(--line);cursor:pointer;font-size:14.5px;line-height:1.8;color:#2F3760;-webkit-tap-highlight-color:transparent}
+.sc-item input{position:absolute;opacity:0;pointer-events:none}
+.sc-box{flex:0 0 22px;height:22px;border-radius:6px;border:2px solid #B9C1E6;background:#fff;margin-top:3px;position:relative;transition:all .15s}
+.sc-item input:checked + .sc-box{background:var(--grad);border-color:transparent}
+.sc-item input:checked + .sc-box::after{content:"";position:absolute;left:6px;top:2px;width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+.sc-item input:checked ~ .sc-t{color:var(--head);font-weight:700}
+.sc-result{display:none;margin-top:8px;font-size:14px;line-height:1.85;color:#2F3760;background:var(--tint);border-radius:12px;padding:12px 14px}
+.cta-personal{margin:14px 0 4px;font-size:14px;color:rgba(255,255,255,.92);line-height:1.8}
+.ab{margin:2px 0 4px;display:grid;gap:8px}
+.ab p{font-size:14.5px;line-height:1.7;color:#2F3760;background:#F7F8FF;border:1px solid var(--line);border-radius:12px;padding:10px 12px 10px 40px;position:relative}
+.ab b{position:absolute;left:12px;top:10px;font-family:var(--en);font-weight:900;color:var(--violet)}
+.lk{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding:0 2px}
+.lk label{flex:1;display:flex;justify-content:center;align-items:center;height:52px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.lk input{position:absolute;opacity:0;pointer-events:none}
+.lk .dot{display:block;border-radius:50%;border:2.5px solid #B9C1E6;background:#fff;transition:all .15s}
+.lk-0 .dot,.lk-4 .dot{width:44px;height:44px}
+.lk-1 .dot,.lk-3 .dot{width:34px;height:34px}
+.lk-2 .dot{width:26px;height:26px}
+.lk-0 .dot,.lk-1 .dot{border-color:#8E9BF0}
+.lk-3 .dot,.lk-4 .dot{border-color:#C3A8F5}
+.lk input:checked + .dot{background:var(--grad);border-color:transparent;box-shadow:0 4px 12px rgba(80,90,240,.3)}
+.lk input:focus-visible + .dot{outline:2px solid var(--blue2);outline-offset:3px}
+.lk-ends{display:flex;justify-content:space-between;font-size:12.5px;font-weight:700;color:var(--sub);margin-top:4px;padding:0 4px}
+.tn{word-break:keep-all;overflow-wrap:anywhere}
+.tg-icon{display:block;line-height:0;margin-bottom:6px}
+.r-icon{line-height:0;margin-top:10px}
+.r-icon .animal{filter:drop-shadow(0 8px 18px rgba(10,12,80,.35))}
+.char .ch-lead,.ch-lead{font-size:15.5px;line-height:2.05;color:#2A3158}
+.ch-sub{margin-top:18px;font-size:15px;font-weight:900;color:var(--head)}
+.aru{list-style:none;margin-top:8px;border-top:1px dashed var(--line)}
+.aru li{position:relative;padding:11px 4px 11px 30px;border-bottom:1px dashed var(--line);font-size:14.5px;line-height:1.8;color:#2F3760}
+.aru li::before{content:"";position:absolute;left:4px;top:16px;width:16px;height:16px;border-radius:50%;background:var(--grad)}
+.aru li::after{content:"";position:absolute;left:9.5px;top:19.5px;width:4px;height:7px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.kuchi{margin-top:16px}
+.kuchi-h{font-size:12.5px;font-weight:900;color:var(--violet);letter-spacing:.06em}
+#chKuchi{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+#chKuchi span{display:inline-block;background:#fff;border:1.5px solid #CFC8FF;border-radius:18px 18px 18px 4px;padding:6px 13px;font-size:14px;font-weight:700;color:var(--head)}
+.ch-flow{margin-top:22px;display:grid;gap:10px}
+.ch-step{border-radius:14px;padding:14px 16px;font-size:14.5px;line-height:1.95;color:#2F3760}
+.ch-step .ch-h{font-size:13px;font-weight:900;letter-spacing:.04em;margin-bottom:2px}
+.ch-step.good{background:var(--tint)}
+.ch-step.good .ch-h{color:var(--violet)}
+.ch-step.aspect{background:#F7F8FC;border:1px solid var(--line)}
+.ch-step.aspect .ch-h{color:var(--sub)}
+.ch-step.more{background:linear-gradient(#fff,#fff) padding-box,var(--grad) border-box;border:2px solid transparent}
+.ch-step.more .ch-h{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.char .tg-axes{margin-top:24px}
+.wk-p{font-size:14.5px;line-height:1.95;color:#2F3760}
+.ai-box{margin-top:20px;border-radius:16px;padding:16px 18px;color:#fff;background:linear-gradient(135deg,#1C2496 0%,#3D4BEA 55%,#8A5CFF 100%);box-shadow:0 10px 24px rgba(52,64,200,.25)}
+.ai-box .ai-h{font-size:13px;font-weight:900;letter-spacing:.04em;color:#D9D3FF;margin-bottom:4px}
+.ai-box p{font-size:14.5px;line-height:1.95}
+.cn-list{list-style:none;margin-top:4px}
+.cn-list li{position:relative;padding:12px 4px 12px 26px;border-top:1px dashed var(--line);font-size:14.5px;line-height:1.8;color:#2F3760}
+.cn-list li::before{content:"";position:absolute;left:6px;top:21px;width:9px;height:9px;border-radius:50%;border:2px solid var(--violet)}
+.cn-close{margin-top:16px;font-size:14.5px;line-height:1.95;color:#2F3760}
+.preview-bar{position:relative;z-index:50;background:#FFF4D6;color:#6B4E00;font-size:12.5px;text-align:center;padding:6px 10px;border-bottom:1px solid #F0D58A}
+.preview-bar a{color:#6B4E00;font-weight:700}
 </style>
 </head>
 <body>
 <div id="progressWrap"><div id="progressBar"></div></div>
-<div id="progressCount" aria-live="polite"><small>回答済み</small><span id="progressNum">0</span> / 20<em id="progressLeft"></em></div>
+<div id="progressCount" aria-live="polite"><small>回答済み</small><span id="progressNum">0</span> / <span id="progressTotal">25</span><em id="progressLeft"></em></div>
 
 <header class="hero aurora">
   <div class="wrap hero-inner">
     <span class="brandbadge">LEVANCE｜AI CAREER DIAGNOSIS 3.0</span>
     <h1><span class="small">4タイプ別</span><span class="gt">AI</span>キャリア<br><span class="gt">タイプ</span>診断</h1>
     <p class="hero-tagline">AIを「使える」で終わらせない人の、進め方を知る。</p>
-    <p class="lead">同じAIスキルでも、キャリアが動く人と動かない人がいます。<br>分かれ目はスキルの差ではなく、<strong>自分に合った「進め方・決め方」</strong>で積み上げているかどうか。<br>20の質問で、あなたのタイプと、いちばん力が出る進め方を診断します。</p>
-    <div class="hero-chips"><span>全<b>20</b>問</span><span>約<b>3</b>分</span><span>結果はその場で表示</span></div>
+    <p class="lead">同じAIスキルでも、キャリアが動く人と動かない人がいます。<br>分かれ目はスキルの差ではなく、<strong>自分に合った「進め方」</strong>で積み上げているかどうか。<br>25の質問で、あなたのタイプと、いちばん力が出る進め方を診断します。</p>
+    <div class="hero-chips"><span>全<b>25</b>問</span><span>約<b>3</b>分</span></div>
   </div>
 </header>
 
@@ -471,7 +542,7 @@ footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
     <div class="learnbox">
       <h2>この診断で分かること</h2>
       <div class="learn-item"><span class="learn-num">1</span><div><b>あなたのキャリアタイプ</b><p>4タイプ別の強み・つまずきやすい点・いま必要な考え方</p></div></div>
-      <div class="learn-item"><span class="learn-num">2</span><div><b>あなたの傾向</b><p>判断の仕方・決め方・進め方など、6つの傾向と、そこから見える最短の進め方</p></div></div>
+      <div class="learn-item"><span class="learn-num">2</span><div><b>あなたの回答から見えること</b><p>判断の仕方・動機・進め方の傾向と、回答の組み合わせから読み取れる、いまのあなたの状態</p></div></div>
       <div class="learn-item"><span class="learn-num">3</span><div><b>相性の良いキャリアの道筋</b><p>7つの出口との相性トップ3と、90日で作る最初の実績</p></div></div>
     </div>
 
@@ -520,9 +591,10 @@ footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
           <p class="r-kicker">YOUR RESULT</p>
           <p class="r-name" id="rName"></p>
           <p class="r-typelabel">YOUR TYPE</p>
-          <p class="r-typename"><span class="gt" id="rTypeName"></span></p>
+          <p class="r-icon" id="rTypeIcon" aria-hidden="true"></p><p class="r-typename"><span class="gt" id="rTypeName"></span></p>
           <p class="r-typeen gt" id="rTypeEn"></p>
           <p class="r-typetag" id="rTypeTag"></p>
+          <p><span class="r-nick" id="rNick"></span></p>
           <p class="r-summary" id="rSummary"></p>
           <div class="r-lvbox">
             <div class="ringwrap">
@@ -548,25 +620,47 @@ footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
         </div>
       </div>
 
-      <div class="card">
-        <p class="card-kicker">YOUR TENDENCY</p>
-        <h3>あなたの6つの傾向</h3>
-        <p class="note">どちらが良い・悪いではありません。自分の傾向に合った進め方を選ぶほど、同じ努力で遠くまで届きます。</p>
-        <div class="tend" id="tendList"></div>
+      <div class="card char">
+        <p class="card-kicker">YOUR CHARACTER</p>
+        <h3 id="chTitle"></h3>
+        <div class="gline"></div>
+        <p class="ch-lead" id="chLead"></p>
+        <p class="ch-sub">こんなところ、ありませんか？</p>
+        <ul class="aru" id="chAru"></ul>
+        <div class="ch-flow">
+          <div class="ch-step good"><p class="ch-h">あなたの持ち味</p><p id="chGood"></p></div>
+          <div class="ch-step aspect"><p class="ch-h">こんな傾向も</p><p id="chAspect"></p></div>
+          <div class="ch-step more"><p class="ch-h">さらに力を伸ばすなら</p><p id="chMore"></p></div>
+        </div>
+        <p class="tg-axes">「動機の向き（攻め・守り）」と「進め方（自走・伴走）」の組み合わせで、4つのタイプに分かれます。</p>
+        <div class="type-grid" id="typeGrid"></div>
       </div>
 
       <div class="card">
-        <p class="card-kicker">YOUR TYPE</p>
-        <h3 id="tpTitle"></h3>
+        <p class="card-kicker">AT WORK</p>
+        <h3>仕事でのあなた</h3>
         <div class="gline"></div>
-        <p class="tg-axes">「動機の向き（攻め・守り）」と「進め方（自走・伴走）」の組み合わせで、4つのタイプに分かれます。</p>
-        <div class="type-grid" id="typeGrid"></div>
-        <p id="tpDesc" class="tp-desc"></p>
-        <div class="tp-block"><p class="tp-h">このタイプの強み</p><ul class="tp-list" id="tpStrengths"></ul></div>
-        <div class="tp-block"><p class="tp-h">つまずきやすいポイント</p><ul class="tp-list" id="tpStumbles"></ul></div>
-        <div class="tp-block"><p class="tp-h">いま必要な考え方</p><div id="tpMindset"></div></div>
-        <div class="detour" id="tpDetour"></div>
+        <p class="note" id="wkNote" style="display:none">いまお仕事を離れている方は、直近のお仕事や、これから目指す仕事に置き換えてお読みください。</p>
+        <p class="ch-lead" id="wkLead"></p>
+        <div class="tp-block"><p class="tp-h">仕事での強み</p><ul class="tp-list" id="tpStrengths"></ul></div>
+        <div class="tp-block"><p class="tp-h">こんな傾向も</p><p class="wk-p" id="wkAspect"></p></div>
+        <div class="ai-box"><p class="ai-h">AIと組み合わせると、こんなことができる</p><p id="wkAI"></p></div>
+        <div class="tp-block"><p class="tp-h">もっと活躍するために</p><div id="tpMindset"></div></div>
       </div>
+
+      <div class="card reading">
+        <p class="card-kicker">READING</p>
+        <h3 id="rdTitle">あなたの回答から見えたこと</h3>
+        <div id="rdBody"></div>
+      </div>
+
+      <div class="card">
+        <p class="card-kicker">YOUR TENDENCY</p>
+        <h3>あなたの3つの傾向</h3>
+        <p class="note">どちらが良い・悪いではありません。％は、どちらにどれだけ寄っているかの目安です。自分の傾向に合った進め方を選ぶほど、同じ努力で遠くまで届きます。</p>
+        <div class="tend" id="tendList"></div>
+      </div>
+
 
       <div class="card">
         <p class="card-kicker">CAREER PATHS</p>
@@ -582,9 +676,18 @@ footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
       <div class="card">
         <p class="card-kicker">90 DAYS ROADMAP</p>
         <h3>90日で「語れる実績」を1本作る</h3>
-        <p class="note">出口がどれであっても、最初の90日でやることは共通です。進め方だけ、タイプに合わせて変えます。</p>
+        <p class="note">出口がどれであっても、最初の90日でやることは、いまのAIレベルに合わせて決まります。</p>
         <div class="tl" id="roadmap"></div>
         <div class="road-extra" id="roadExtra"></div>
+      </div>
+
+      <div class="card concerns">
+        <p class="card-kicker">COMMON CONCERNS</p>
+        <h3 id="cnTitle"></h3>
+        <p class="note">面談で、このタイプの方からよく伺うお悩みです。</p>
+        <ul class="cn-list" id="cnList"></ul>
+        <div class="detour" id="tpDetour"></div>
+        <p class="cn-close">こうした悩みは、一人で抱えるより、自分のタイプに合った進め方を知ることで、ぐっと軽くなります。<b>AI特化・個別キャリアコーチング</b>では、あなたの悩みと現在地から、次の一歩を一緒に整理します。</p>
       </div>
 
       <div class="cta aurora deep">
@@ -598,12 +701,13 @@ footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
             <p class="d">自分やチームの業務フローのどこに、どうAIを組み込み、業務や組織にどんな成果をもたらしたか。ツールの使い方を覚えるだけでは、ここには届きません。</p>
           </div>
           <p class="cta-lead">そして、どの業務に、どう実装すれば目に見える成果になるかは、仕事の内容や組織の方針によって一人ひとり違います。この診断で分かった現在地とタイプを出発点に、そこを<b>一人ひとりに合わせて設計</b>し、進め方を整理するのが、レバンスのAI特化・個別キャリアコーチング（体験）です。</p>
-          <p class="cta-label">体験セッションで行うこと</p>
+          <p class="cta-label" id="ctaLabel">体験セッションで行うこと</p>
           <div class="cta-items">
-            <div class="cta-item"><span class="n">1</span><div><b>診断結果の読み解き</b><p>タイプと傾向をもとに、あなたに合う進め方・つまずきやすい点を一緒に確認します</p></div></div>
-            <div class="cta-item"><span class="n">2</span><div><b>現在地と業務の整理</b><p>あなたの業務の中で、最も評価につながるAI活用ポイントをその場で言語化します</p></div></div>
-            <div class="cta-item"><span class="n">3</span><div><b>あなた専用のAIキャリア設計図</b><p>90日で作る実績の輪郭と、積み上げる順番を「設計図」として持ち帰れます</p></div></div>
+            <div class="cta-item"><span class="n">1</span><div><b>診断結果の読み解き</b><p id="ctaItem1">タイプと傾向をもとに、あなたに合う進め方・つまずきやすい点を一緒に確認します</p></div></div>
+            <div class="cta-item"><span class="n">2</span><div><b>現在地と業務の整理</b><p id="ctaItem2">あなたの業務の中で、最も評価につながるAI活用ポイントをその場で言語化します</p></div></div>
+            <div class="cta-item"><span class="n">3</span><div><b>あなた専用のAIキャリア設計図</b><p id="ctaItem3">90日で作る実績の輪郭と、積み上げる順番を「設計図」として持ち帰れます</p></div></div>
           </div>
+          <p class="cta-personal" id="ctaPersonal" style="display:none"></p>
           <p class="cta-meta">約60分｜オンライン（Zoom）｜マンツーマン｜費用はかかりません</p>
           <div class="cta-anshin">担当するのは、現役で事業を動かしているコーチです。担当者が自分で一人ひとりを受け持つため、毎月お受けできる人数には限りがあります。</div>
           <p class="cta-fork">この転換期に実装力を持てるかどうかで、この先のキャリアは大きく分かれます。AIを使って役割と評価を上げていく側に回るか、AIに置き換えられ、その他大勢の一人になるか。</p>
@@ -611,7 +715,7 @@ footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
           <div class="cta-btnwrap">
             <p class="cta-call">次の一手を具体的にしたい方は、<span class="nb">こちらからお申し込みください。</span></p>
             <a class="cta-btn" href="https://sb.levance-inc.jp/page/DBM0LvBChW0C" target="_blank" rel="noopener"><span class="nb">AI特化・個別キャリアコーチングを</span><span class="nb">体験する</span></a>
-            <p class="cta-sub">「自分にできるか分からない」のままで大丈夫です。設計図はお持ち帰りいただき、判断はそれからで構いません。</p>
+            <p class="cta-sub" id="ctaSub">「自分にできるか分からない」のままで大丈夫です。設計図はお持ち帰りいただき、判断はそれからで構いません。</p>
           </div>
           <div class="cta-divider"></div>
           <!-- 公式LINEのURLが確定するまで非表示（確定後は style="display:none" を外し、LINE_URL を差し替える） -->
@@ -647,17 +751,33 @@ footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
 ========================================================= */
 
 var SECTIONS = [
-  {step:"STEP 1", title:"いまのあなた", desc:"現在地を確認します。会社員・フリーランス・経営者など、働き方は問いません"},
-  {step:"STEP 2", title:"ふだんの仕事の進め方", desc:"いちばん近いものを選んでください。正解はありません。「チーム」「周り」は、取引先や仕事仲間に読み替えて構いません"},
-  {step:"STEP 3", title:"これからの方向", desc:"どこへ向かいたいかを整理します"}
+  {step:"STEP 1", title:"今のあなたについて", desc:""},
+  {step:"STEP 2", title:"あなた自身のこと", desc:"それぞれの文が、ふだんのあなたにどのくらい当てはまるかを選んでください。深く考えず、直感で選ぶのがいちばん正確です"},
+  {step:"STEP 3", title:"仕事のなかのあなた", desc:"いちばん近いものを選んでください。正解はありません。「チーム」「周り」は、取引先や仕事仲間に読み替えて構いません"},
+  {step:"STEP 4", title:"これからのキャリア", desc:"いま感じていることと、これから向かいたい方向について"}
 ];
 
 /* none:true ＝「どれにも当てはまらない」系の選択肢（配点なし・控えめな見た目で表示） */
 var NONE_T = "どれにも当てはまらない";
 
+/* 自分自身の設問（5段階）。dir＝「そう思う」が軸のどちら向きか（+1/-1）。value＝回答の強さ（+2〜-2） */
+var LK_LABELS = ["とてもそう思う","ややそう思う","どちらとも言えない","あまりそう思わない","まったくそう思わない"];
+function LK(id, text, axis, dir){
+  var opts = [];
+  for (var i = 0; i < 5; i++) { var d = {}; d[axis] = (2 - i) * dir; opts.push({t:LK_LABELS[i], d:d, value:2 - i}); }
+  return {id:id, sec:1, title:text, likert:true, axis:axis, dir:dir, opts:opts};
+}
+/* AとBを比べる設問。A＝軸のプラス側 */
+function AB(id, axis, a, b){
+  var labels = ["Aに近い","ややAに近い","どちらとも言えない","ややBに近い","Bに近い"];
+  var opts = [];
+  for (var i = 0; i < 5; i++) { var d = {}; d[axis] = 2 - i; opts.push({t:labels[i] + (i < 2 ? "（" + a + "）" : i > 2 ? "（" + b + "）" : ""), d:d, value:2 - i}); }
+  return {id:id, sec:1, title:"ふだんのあなたは、どちらに近いですか？", likert:true, ab:{a:a, b:b}, axis:axis, dir:1, opts:opts};
+}
+
 var QUESTIONS = [
-  /* ---------- STEP 1 ---------- */
-  { id:"shokushu", sec:0, title:"現在の仕事内容に、いちばん近いものは？", hint:"いま働いていない方は、直近のお仕事で構いません", opts:[
+  /* ---------- STEP 1：今のあなたについて ---------- */
+  { id:"shokushu", sec:0, title:"現在の仕事内容に、いちばん近いものは？", hint:"いまお仕事をお休みしている方は、直近のお仕事で構いません", opts:[
     {t:"営業・販売・接客", d:{}, job:"営業・販売"},
     {t:"企画・マーケティング・広報", d:{}, job:"企画・マーケティング"},
     {t:"経営・事業企画・マネジメント", d:{}, job:"経営・企画"},
@@ -669,86 +789,83 @@ var QUESTIONS = [
     {t:"現場・技術・製造・物流", d:{}, job:"現場・技術"},
     {t:"その他・" + NONE_T, d:{}, job:"いま", none:true}
   ]},
+  /* away＝いまはお仕事を離れている（結果文で「直近のお仕事で」と書く） */
   { id:"tachiba", sec:0, title:"現在の働き方・立場に、いちばん近いものは？", opts:[
     {t:"会社員・公務員（一般・メンバー）", d:{}, pos:0},
     {t:"会社員・公務員（リーダー・主任）", d:{}, pos:1},
     {t:"会社員・公務員（管理職）", d:{}, pos:3, flag:"kanri"},
     {t:"経営者・役員", d:{}, pos:3, flag:"notEmployee", flag2:"selfEmp"},
     {t:"フリーランス・個人事業主", d:{}, pos:1, flag:"notEmployee", flag2:"selfEmp"},
-    {t:"パート・アルバイト・派遣・契約社員", d:{}, pos:0},
-    {t:"いまは働いていない（求職中・育休中・家事など）", d:{}, pos:0, flag:"notEmployee"},
+    {t:"パート・アルバイト", d:{}, pos:0},
+    {t:"派遣社員・契約社員", d:{}, pos:0},
+    {t:"休職中", d:{}, pos:0, away:true},
+    {t:"育休中", d:{}, pos:0, away:true},
+    {t:"求職中", d:{}, pos:0, flag:"notEmployee", away:true},
+    {t:"専業主婦・主夫", d:{}, pos:0, flag:"notEmployee", away:true},
     {t:"その他・" + NONE_T, d:{}, pos:0, flag:"notEmployee", none:true}
   ]},
-  { id:"katsuyo", sec:0, title:"AIとの現在の距離感は？", opts:[
-    {t:"ほとんど使ったことがない", d:{S2:0}},
-    {t:"調べ物や文章づくりで、たまに使う", d:{S2:1}},
-    {t:"資料作成・壁打ちなど、日常的に使っている", d:{S2:2}},
-    {t:"仕事の一部の流れ（業務フロー）に組み込んでいる", d:{S2:3}},
+  { id:"katsuyo", sec:0, title:"AIを普段どのくらい活用していますか？", hint:"ChatGPT・Gemini・Claude・Copilotなど、使っているツールは問いません", opts:[
+    {t:"まだほとんど使っていない", d:{S2:0}},
+    {t:"ときどき、調べ物や文章づくりに使う", d:{S2:1}},
+    {t:"ほぼ毎日、資料作成や壁打ちなどに使っている", d:{S2:2}},
+    {t:"決まった作業はAIに任せ、仕事の流れに組み込んでいる", d:{S2:3}},
     {t:"自動化・仕組み化まで作り込んでいる", d:{S2:4}}
   ]},
-  { id:"seika", sec:0, title:"AIで出せている変化に、いちばん近いものは？", opts:[
-    {t:"まだ変化はない", d:{S3:0}},
+  { id:"seika", sec:0, title:"AIを活用して、どんな変化がありましたか？", hint:"いちばん大きい変化を選んでください", opts:[
+    {t:"まだ変化は感じていない", d:{S3:0}},
     {t:"自分の作業が少し速くなった", d:{S3:1}},
     {t:"成果物の質が上がった", d:{S3:2}},
-    {t:"仕事の流れ（業務フロー）を1つ改善できた", d:{S3:3}},
-    {t:"チームやお客様など、自分以外の人の仕事まで変わった", d:{S3:4}},
+    {t:"仕事の流れ（業務フロー）を仕組み化して、改善できた", d:{S3:3}},
+    {t:"チームやお客様など、周りの人の仕事のやり方まで変わった", d:{S3:4}},
+    {t:"売上・コスト・時間など、数字で示せる成果が出た", d:{S3:4}},
+    {t:"AIを軸に、新しい役割や仕事、収入につながった", d:{S3:5}},
     {t:NONE_T, d:{S3:0}, none:true}
   ]},
-  { id:"jikan", sec:0, title:"学び・実践に使えそうな時間は？", opts:[
-    {t:"いまは、ほとんど時間が取れない", d:{H:1}},
-    {t:"1日15〜30分くらいなら作れそう", d:{H:1}},
-    {t:"1日30分〜1時間くらい", d:{H:2}},
-    {t:"週に5〜10時間（平日に少し＋週末など）", d:{H:3}},
-    {t:"週10時間以上", d:{H:4}}
+  { id:"ai_nayami", sec:0, title:"AIとキャリアについて、いま気になっていることに近いものは？", opts:[
+    {t:"AIを使っているのに、評価や収入にはつながっていない", d:{D:1}},
+    {t:"AIで速くなった分、別の仕事が増えただけになっている", d:{}},
+    {t:"自分のAI活用が、外でも通用するレベルなのか分からない", d:{}},
+    {t:"周りがAIを使いこなし始めていて、置いていかれそうで焦る", d:{}},
+    {t:"いまの仕事がAIに置き換えられないか、この先が心配", d:{D:-1}},
+    {t:"情報が多すぎて、何を学べばいいか決められない", d:{}},
+    {t:"特に気になっていることはない・" + NONE_T, d:{}, none:true}
+  ]},
+  { id:"tayorare", sec:0, title:"職場や周りの人から、AIについて聞かれることはありますか？", opts:[
+    {t:"よく聞かれる。気づけば相談役になっている", d:{}},
+    {t:"ときどき聞かれる", d:{}},
+    {t:"自分が聞く側のことが多い", d:{}},
+    {t:"AIの話をする相手が、周りにいない", d:{}}
   ]},
 
-  /* ---------- STEP 2: ふだんの仕事の場面（購入場面は使わない／会社員に限定しない） ---------- */
-  { id:"s_page", sec:1, title:"新しい仕事や役割を引き受けるとき、最初に知りたいのは？", opts:[
-    {t:"結局なにを達成すればいいか。ゴールと全体像", d:{A:2}},
-    {t:"なぜそれをやるのか。背景と理由", d:{A:-2}},
-    {t:"前にやった人や、周りの進め方", d:{A:-1}},
-    {t:"期限・条件・任される範囲", d:{A:1,B:-1}},
-    {t:NONE_T, d:{}, none:true}
-  ]},
-  { id:"s_explain", sec:1, title:"仕事で、人から説明や提案を受けるとき心地よいのは？", opts:[
-    {t:"先に要点を聞き、気になる点だけ質問する", d:{A:2}},
-    {t:"経緯から順を追って、丁寧に説明してもらう", d:{A:-2}},
-    {t:"まずこちらの考えを聞いてもらってから、話してほしい", d:{C:1,A:-1}},
-    {t:"資料をもらい、自分のペースで読んで考えたい", d:{B:-1,E:1}},
-    {t:NONE_T, d:{}, none:true}
-  ]},
-  { id:"s_decide", sec:1, title:"仕事で大きめの判断を求められたとき、ふだんは？", opts:[
-    {t:"必要だと思えば、その場で決めることが多い", d:{B:2}},
-    {t:"いったん持ち帰り、情報を集めてから決める", d:{B:-2}},
-    {t:"周りの意見を聞いてから決める", d:{B:-1}},
-    {t:"自分で期限を決めて、それまでに判断する", d:{}, hintDeadline:1},
-    {t:"内容や影響の大きさによって、決め方を変える", d:{}},
-    {t:NONE_T, d:{}, none:true}
-  ]},
-  { id:"s_open", sec:1, title:"仕事で関わる人に、困っていることや本音を口にするのは？", opts:[
-    {t:"わりと早い段階で、率直に話す", d:{C:2}},
-    {t:"信頼できる相手にだけ話す", d:{C:1}},
-    {t:"聞かれれば答えるが、自分からは言わない", d:{C:-1}},
-    {t:"そもそも、うまく言葉にできない", d:{C:-2}, flag:"lowVerbal"},
-    {t:NONE_T, d:{}, none:true}
-  ]},
-  { id:"s_result", sec:1, title:"仕事で思うように成果が出ないとき、まず頭に浮かぶのは？", opts:[
+  /* ---------- STEP 2：あなた自身のこと（タイプ判定の主な材料）----------
+     作り方は 2026-10-29_性格診断リサーチ.md を参照。
+     ・自分の行動を言い切る文に、どのくらい当てはまるかを5段階で答える（16Personalities・TIPI-J の形式）
+     ・1軸4問。両方向の文を混ぜる（何にでも「そう思う」と答える癖を打ち消す）＋AとBを比べる設問を1問（よく見せようとする回答を減らす）
+     ・軸の順番はばらして並べる
+     参考尺度：攻め↔守り＝制御焦点（GRFM／PPFS）、自走↔伴走＝援助要請スタイル（永井2013）・達成動機、結論先行↔納得重視＝REI・認知欲求・認知的完結欲求 */
+  LK("p_d1", "これから手に入れたいことや、なりたい姿を思い浮かべることがよくある", "D", 1),
+  LK("p_e1", "困ったことがあっても、まず自分で調べたり試したりしてから、人に聞く", "E", 1),
+  LK("p_a1", "迷ったときは、最初にピンときた方を選ぶことが多い", "A", 1),
+  LK("p_d2", "新しいことを始めるときは、うまくいったときより、うまくいかなかったときのことを先に考える", "D", -1),
+  LK("p_e2", "一人だと後回しにしがちなことも、誰かと約束すると進められる", "E", -1),
+  LK("p_a2", "理由が腹落ちしないまま動くのは、落ち着かない", "A", -1),
+  LK("p_d3", "大きく変えるより、いまあるものを守りながら少しずつ良くしていきたい", "D", -1),
+  LK("p_e3", "周りからは「マイペース」「一人でも平気そう」と言われることが多い", "E", 1),
+  LK("p_a3", "人の話は、経緯より先に、まず結論を聞きたい", "A", 1),
+  AB("p_d4", "D", "多少の不安があっても、伸びしろのある方を選びたい", "いまの暮らしや信頼を、崩さない方を選びたい"),
+  AB("p_e4", "E", "新しいことは、自分なりに手順やメモを作りながら覚える", "詳しい人に一度やって見せてもらう方が、早く身につく"),
+  AB("p_a4", "A", "段取りは、まず動いてみて、やりながら直す", "全体を見渡してから、動き出す"),
+
+  /* ---------- STEP 3: 仕事のなかのあなた（購入場面は使わない／会社員に限定しない） ---------- */
+  { id:"s_result", sec:2, title:"仕事で思うように成果が出ないとき、まず頭に浮かぶのは？", opts:[
     {t:"自分のやり方の、どこを変えるか", d:{F:2}},
     {t:"組織の方針や、取引先・市場などの環境に原因があると感じる", d:{F:-2}},
     {t:"時間や人手が足りないのだから仕方ない", d:{F:-1}},
-    {t:"誰かに相談して、原因を整理したい", d:{F:1,E:-1}},
-    {t:"原因を決めつけず、まず数字や事実を確かめる", d:{F:1,A:-1}},
+    {t:"誰かに相談して、原因を整理したい", d:{F:1}},
+    {t:"原因を決めつけず、まず数字や事実を確かめる", d:{F:1}},
     {t:NONE_T, d:{}, none:true}
   ]},
-  { id:"s_tool", sec:1, title:"チームや仕事仲間と使い始めた新しいツールや仕組みを、周りがなかなか使ってくれないとき", opts:[
-    {t:"自分がまず使い、成果で示す", d:{F:2,D:1}},
-    {t:"決める立場の人が動かない限り、広まらないと思う", d:{F:-2}},
-    {t:"使いやすい形に整えてから広める", d:{F:1,E:1}},
-    {t:"使わない理由を、まず周りに聞いてみる", d:{F:1,E:-1}},
-    {t:"無理に広めず、様子を見る", d:{F:-1,D:-1}},
-    {t:NONE_T, d:{}, none:true}
-  ]},
-  { id:"s_stop", sec:1, title:"新しい習慣や取り組みが途中で止まったとき、振り返ると原因は？", opts:[
+  { id:"s_stop", sec:2, title:"新しい習慣や取り組みが途中で止まったとき、振り返ると原因は？", opts:[
     {t:"自分で優先順位を下げてしまった", d:{F:1}},
     {t:"忙しくて時間が取れなかった", d:{F:-1}},
     {t:"何から手をつけるか、分からなくなった", d:{E:-1}, hintAnx:"judge"},
@@ -756,70 +873,55 @@ var QUESTIONS = [
     {t:"止まった経験は、あまりない", d:{E:2,F:1}},
     {t:NONE_T, d:{}, none:true}
   ]},
-  { id:"s_learn", sec:1, title:"新しいスキルを身につけるとき、いちばんうまくいくのは？", opts:[
-    {t:"自分で調べて、自分なりの型を作る", d:{E:2}},
-    {t:"道筋があれば、一人で進められる", d:{E:1}},
-    {t:"一緒に進める相手がいると続く", d:{E:-2}},
-    {t:"締切や約束があると動ける", d:{E:-1}, hintDeadline:1},
-    {t:"まず触ってみて、つまずいたら人に聞く", d:{}},
-    {t:NONE_T, d:{}, none:true}
-  ]},
-  { id:"s_why", sec:1, title:"AIをキャリアに活かしたい、いちばんの理由は？", opts:[
-    {t:"役割・評価・収入を上げたい", d:{D:2}},
-    {t:"新しいことに挑戦したい", d:{D:1}},
-    {t:"いざという時に困らないよう、備えたい", d:{D:-2}},
-    {t:"いまの仕事を楽に、長く続けやすくしたい", d:{D:-1}},
-    {t:"まだはっきりしていない・" + NONE_T, d:{}, none:true}
-  ]},
-  { id:"s_leader", sec:1, title:"もし明日、周囲から「AI活用の旗振り役をやってほしい」と言われたら？", opts:[
-    {t:"ぜひやりたい。むしろ待っていた", d:{D:2,F:1}},
-    {t:"範囲や条件を確認してから、引き受ける", d:{D:1,A:-1}},
-    {t:"正直、荷が重い。裏方で支える方が向いている", d:{D:-2}},
+  { id:"s_leader", sec:2, title:"もし明日、周囲から「AI活用の旗振り役をやってほしい」と言われたら？", opts:[
+    {t:"ぜひやりたい。むしろ待っていた", d:{D:1,F:1}},
+    {t:"範囲や条件を確認してから、引き受ける", d:{D:1}},
+    {t:"正直、荷が重い。裏方で支える方が向いている", d:{D:-1}},
     {t:"自分にできるか、という不安が先に立つ", d:{D:-1}, hintAnx:"confidence"},
     {t:NONE_T, d:{}, none:true}
   ]},
-
-  /* ---------- STEP 3 ---------- */
-  { id:"decision", sec:2, title:"仕事や学びに関わる大きめの決断は、ふだん誰と決めますか？", opts:[
-    {t:"自分で決める", d:{}, decision:"自分だけで決められる"},
-    {t:"家族・パートナーと相談して決める", d:{}, decision:"家族・パートナーに相談"},
-    {t:"職場・上司・取引先など、仕事関係者の判断が要る", d:{}, decision:"仕事関係者の判断が必要"},
-    {t:"内容による", d:{}, decision:"内容による"}
+  /* ---------- STEP 4：これからのキャリア ---------- */
+  { id:"career_nayami", sec:3, title:"いまの仕事やキャリアで、感じていることに近いものは？", opts:[
+    {t:"頑張っているわりに、評価や収入が上がらない", d:{}},
+    {t:"いまの仕事を、この先も続けていけるか不安がある", d:{}},
+    {t:"自分の強みや市場価値を、うまく言葉にできない", d:{}},
+    {t:"もっと力を発揮できる場所があるはず、と感じている", d:{}},
+    {t:"仕事と家庭の両立で、自分のことが後回しになっている", d:{}},
+    {t:"ブランクがあり、復帰や再スタートに不安がある", d:{}},
+    {t:"特に悩みはない・" + NONE_T, d:{}, none:true}
   ]},
-  { id:"anxiety", sec:2, title:"新しいことを始めるとき、最初に浮かぶのは？", opts:[
-    {t:"時間を作れるか・続けられるか", d:{}, anx:"時間（やり切れるか）"},
-    {t:"自分にできるか（自信）", d:{}, anx:"自信（自分にできるか）"},
-    {t:"成果につながるか（見返り）", d:{A:1}, anx:"見返り（成果につながるか）"},
-    {t:"何から始めればいいか（進め方）", d:{}, anx:"進め方（何から始めるか）"},
-    {t:"特に不安はない", d:{D:1}, anx:"特になし"},
-    {t:NONE_T, d:{}, anx:"その他（選択肢に該当なし）", none:true}
+  { id:"henka", sec:3, title:"いま、キャリアを変えたいと思っていますか？", opts:[
+    {t:"すぐにでも変えたい", d:{}, honki:0},
+    {t:"3ヶ月以内には動きたい", d:{}, honki:0},
+    {t:"変えたいが、時期はまだ決めていない", d:{}, honki:1},
+    {t:"いまの仕事を続けながら、選択肢を増やしておきたい", d:{}, honki:1},
+    {t:"変えるつもりはないが、このままでいいのかは気になる", d:{}, honki:1},
+    {t:"特に変えるつもりはない", d:{}, honki:1}
   ]},
-  { id:"kibo", sec:2, title:"今後の希望に、いちばん近いものは？", opts:[
-    {t:"いまの職場・組織で、評価や役割を上げたい", d:{}, dir:"shoshin"},
-    {t:"いまの職場・チームで、AI・DXを任される立場を作りたい", d:{}, dir:"dx"},
-    {t:"担当する仕事や職種を変えたい（異動・職種転換）", d:{}, dir:"idou"},
-    {t:"転職して市場価値を上げたい", d:{}, dir:"tenshoku"},
-    {t:"副業で収入の柱を増やしたい", d:{}, dir:"fukugyo"},
-    {t:"独立・起業したい／いまの自分の事業や単価を伸ばしたい", d:{}, dir:"dokuritsu"},
+  { id:"kibo", sec:3, title:"キャリアを動かすとしたら、いちばん近いものは？", hint:"まだ決まっていなくても、気持ちがいちばん近いものを選んでください", opts:[
+    {t:"いまの職場で、評価や役割を上げる", d:{}, dir:"shoshin"},
+    {t:"いまの職場で、AI・DXを任される立場になる", d:{}, dir:"dx"},
+    {t:"担当する仕事や職種を変える（異動・職種転換）", d:{}, dir:"idou"},
+    {t:"転職する", d:{}, dir:"tenshoku"},
+    {t:"副業を始める・増やす", d:{}, dir:"fukugyo"},
+    {t:"独立・起業する／いまの事業を伸ばす", d:{}, dir:"dokuritsu"},
+    {t:"新しいことを学び直す", d:{}, dir:""},
+    {t:"仕事に復帰する・再就職する", d:{}, dir:"tenshoku"},
     {t:"まだ決まっていない・" + NONE_T, d:{}, dir:"", none:true}
   ]},
-  { id:"honki", sec:2, title:"キャリアを動かすことへの、いまの温度感は？", opts:[
-    {t:"今すぐ動きたい", d:{}, honki:0},
-    {t:"1〜3ヶ月以内には動きたい", d:{}, honki:0},
-    {t:"半年以内には動きたい", d:{}, honki:1},
-    {t:"いずれは、と思っている", d:{}, honki:1},
-    {t:"まだ分からない", d:{}, honki:1, none:true}
-  ]},
-  { id:"deadline", sec:2, title:"直近で、キャリアに関わる動きはありますか？", hint:"周囲からの声かけ・異動・新しい案件やプロジェクト・契約の更新・年度の区切りなど", opts:[
-    {t:"ある。時期も決まっている", d:{}, deadline:"あり（時期確定）"},
-    {t:"ありそうだが、まだはっきりしない", d:{}, deadline:"ありそう（未確定）"},
-    {t:"特にない", d:{}, deadline:"特になし"}
+  { id:"anxiety", sec:3, title:"新しいことを始めるとき、最初に浮かぶのは？", opts:[
+    {t:"時間を作れるか・続けられるか", d:{}, anx:"時間（やり切れるか）"},
+    {t:"自分にできるか（自信）", d:{}, anx:"自信（自分にできるか）"},
+    {t:"成果につながるか（見返り）", d:{}, anx:"見返り（成果につながるか）"},
+    {t:"何から始めればいいか（進め方）", d:{}, anx:"進め方（何から始めるか）"},
+    {t:"特に不安はない", d:{}, anx:"特になし"},
+    {t:NONE_T, d:{}, anx:"その他（選択肢に該当なし）", none:true}
   ]}
 ];
 
 /* 軸の正規化スケールと両極ラベル */
 var AXES = [
-  {k:"A", name:"判断の仕方", en:"JUDGMENT", scale:4,
+  {k:"A", name:"判断の仕方", en:"JUDGMENT", scale:5,
    pos:"結論から知りたい", neg:"納得を積み上げたい",
    coachPos:"結論先行", coachNeg:"納得重視", coachMid:"場面による",
    readPos:"要点と結論を先に押さえるほど、動きやすくなる傾向です。詳細は、必要なところだけ確認する進め方が合っています。",
@@ -837,13 +939,13 @@ var AXES = [
    readPos:"初対面でも、悩みや本音を言葉にしやすい傾向です。話しながら整理するほど、次の一手が見えやすくなります。",
    readNeg:"信頼できると感じてから、少しずつ本音を出す傾向です。無理に言葉にしなくても、事実から整理していけば十分に進めます。",
    readMid:"相手や場面によって、本音の出し方を変えるタイプです。"},
-  {k:"D", name:"動機の向き", en:"MOTIVATION", scale:4,
+  {k:"D", name:"動機の向き", en:"MOTIVATION", scale:5,
    pos:"上を目指したい（攻め）", neg:"安心を確かにしたい（守り）",
    coachPos:"攻め（上昇・挑戦）", coachNeg:"守り（備え・安心）", coachMid:"両方",
    readPos:"役割・評価・挑戦が動機になるタイプです。目指す姿をはっきりさせるほど、行動の速さが上がります。",
    readNeg:"備え・安心・続けやすさが動機になるタイプです。大きく変えるより、いまの土台にAIを足していく進め方が合っています。",
    readMid:"上を目指す気持ちと、安心を確かにしたい気持ちの両方を持っているタイプです。"},
-  {k:"E", name:"進め方", en:"STYLE", scale:4,
+  {k:"E", name:"進め方", en:"STYLE", scale:6,
    pos:"自分で型を作る（自走）", neg:"相談相手と進める（伴走）",
    coachPos:"自走", coachNeg:"伴走", coachMid:"両方",
    readPos:"自分で調べ、自分で型を作って進めるタイプです。中身と順番が具体で見えていれば、一人でも走り切れます。",
@@ -870,14 +972,138 @@ var LEVELS = [
   {lv:5, name:"組織展開ステージ", phase:2, note:"チーム・組織にAI活用を広げられている段階です。推進実績をキャリアの言葉に変換して、狙う出口を取りにいく段階です。"}
 ];
 
+/* タイプの動物イラスト（2026-10-29 B案：グラデーションの塗りに決定。原本は 診断タイプ_イラスト候補.js） */
+var ANIMAL_SHAPES = {
+  driver: { /* ハヤブサ：とがった翼を後ろに流して、獲物へ向かう姿 */
+    tf: 'rotate(-10 60 60)',
+    body: [
+      '<path d="M54 46C40 38 22 32 3 29C11 35 17 41 21 47C30 52 42 58 56 62Z"/>',
+      '<path d="M66 46C80 38 98 32 117 29C109 35 103 41 99 47C90 52 78 58 64 62Z"/>',
+      '<path d="M60 19C67 19 71 26 71 35C71 49 68 63 65 78L55 78C52 63 49 49 49 35C49 26 53 19 60 19Z"/>',
+      '<path d="M54.5 76L65.5 76L71 96C64 100 56 100 49 96Z"/>'
+    ],
+    soft: [],
+    detail: [
+      '<path d="M13 33C25 39 39 47 51 53M107 33C95 39 81 47 69 53" fill="none" stroke-width="2.4" stroke-linecap="round"/>',
+      '<path d="M56.5 42L60 45L63.5 42M56 51L60 54L64 51M56.5 60L60 63L63.5 60" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>'
+    ]
+  },
+  leap: { /* イルカ：波から跳ねる姿 */
+    tf: '',
+    body: [
+      '<path d="M18 94C26 60 54 34 90 32C98 32 104 33 109 35L118 39L108 43C100 45 94 47 88 50C70 56 52 70 36 96Z"/>',
+      '<path d="M58 41C56 31 52 25 46 20C59 23 67 29 72 37Z"/>',
+      '<path d="M21 96L4 100C9 92 14 89 19 87Z"/>',
+      '<path d="M25 99L24 117C30 113 32 108 32 101Z"/>'
+    ],
+    soft: [],
+    detail: [
+      '<circle cx="97" cy="38.5" r="2.6"/>',
+      '<path d="M75 54C71 60 65 65 59 67C67 68 75 64 81 58Z"/>',
+      '<path d="M42 84C54 68 70 57 88 50" fill="none" stroke-width="2.4" stroke-linecap="round"/>'
+    ]
+  },
+  architect: { /* ビーバー：座った横向き。平たいしっぽと前歯 */
+    tf: '',
+    body: [
+      '<path d="M42 96C28 101 14 104 9 98C4 91 16 83 30 83C38 83 44 87 47 91Z"/>',
+      '<ellipse cx="62" cy="80" rx="30" ry="28"/>',
+      '<circle cx="82" cy="48" r="20"/>',
+      '<ellipse cx="98" cy="55" rx="11" ry="9"/>',
+      '<circle cx="71" cy="30" r="6"/>',
+      '<ellipse cx="72" cy="106" rx="15" ry="5"/>'
+    ],
+    soft: [],
+    detail: [
+      '<circle cx="88" cy="44" r="3"/>',
+      '<ellipse cx="107" cy="51" rx="3.6" ry="2.8"/>',
+      '<rect x="97" y="57" width="6" height="6.5" rx="1.5"/>',
+      '<path d="M15 92L38 88M17 97L40 93" fill="none" stroke-width="2" stroke-linecap="round"/>',
+      '<path d="M80 72C84 76 88 78 92 77" fill="none" stroke-width="2.4" stroke-linecap="round"/>'
+    ]
+  },
+  builder: { /* ペンギン：正面。お腹が白い */
+    tf: '',
+    body: [
+      '<path d="M60 14C82 14 92 36 92 62C92 88 80 106 60 106C40 106 28 88 28 62C28 36 38 14 60 14Z"/>',
+      '<path d="M30 56C22 66 20 80 24 88C28 80 32 70 35 62Z"/>',
+      '<path d="M90 56C98 66 100 80 96 88C92 80 88 70 85 62Z"/>',
+      '<ellipse cx="50" cy="107" rx="8" ry="3.5"/>',
+      '<ellipse cx="70" cy="107" rx="8" ry="3.5"/>'
+    ],
+    soft: [
+      '<path d="M60 47C72 47 80 59 80 75C80 91 72 101 60 101C48 101 40 91 40 75C40 59 48 47 60 47Z"/>'
+    ],
+    detail: [
+      '<circle cx="51" cy="33" r="3"/>',
+      '<circle cx="69" cy="33" r="3"/>',
+      '<path d="M55.5 40L64.5 40L60 47Z"/>'
+    ]
+  }
+};
+
+/* テイスト
+   badge：グラデーションの丸バッジに白いシルエット（アプリのアイコン風）
+   fill ：動物そのものをグラデーションで塗る（背景なし）
+   line ：線画（細い線・1色。色は周りの文字色に合わせる） */
+function animalSVG(key, style, size, uid){
+  var s = ANIMAL_SHAPES[key]; if (!s) return "";
+  size = size || 96; uid = uid || (key + "_" + style);
+  var g = 'g_' + uid;
+  var defs = '<defs><linearGradient id="' + g + '" x1="0" y1="0" x2="1" y2="1">' +
+             '<stop offset="0" stop-color="#2546F0"/><stop offset=".55" stop-color="#6A5BFF"/><stop offset="1" stop-color="#B46CFF"/></linearGradient></defs>';
+  var body = s.body.join(""), soft = s.soft.join(""), det = s.detail.join("");
+  var tf = s.tf ? ' transform="' + s.tf + '"' : '';
+  var out = '<svg class="animal animal-' + style + '" viewBox="0 0 120 120" width="' + size + '" height="' + size + '" aria-hidden="true">' + defs;
+  if (style === "badge") {
+    out += '<circle cx="60" cy="60" r="58" fill="url(#' + g + ')"/>' +
+           '<circle cx="60" cy="60" r="56.5" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="1.5"/>' +
+           '<g transform="translate(13 13) scale(.78)"><g' + tf + '>' +
+           '<g fill="#fff">' + body + '</g>' +
+           '<g fill="#5B5FEF" opacity=".18">' + soft + '</g>' +
+           '<g fill="#4A4FE6" stroke="#4A4FE6">' + det + '</g></g></g>';
+  } else if (style === "light") {  /* 濃い背景の上：明るいグラデーション */
+    out = out.replace('stop-color="#2546F0"', 'stop-color="#A9BBFF"').replace('stop-color="#6A5BFF"', 'stop-color="#C9BFFF"').replace('stop-color="#B46CFF"', 'stop-color="#F3DBFF"');
+    out += '<g' + tf + '><g fill="url(#' + g + ')">' + body + '</g>' +
+           '<g fill="#fff">' + soft + '</g>' +
+           '<g fill="#3B3FC8" stroke="#3B3FC8">' + det + '</g></g>';
+  } else if (style === "white") {
+    out += '<g' + tf + '><g fill="#fff">' + body + '</g>' +
+           '<g fill="#5B5FEF" opacity=".22">' + soft + '</g>' +
+           '<g fill="#5B5FEF" stroke="#5B5FEF">' + det + '</g></g>';
+  } else if (style === "fill") {
+    out += '<g' + tf + '><g fill="url(#' + g + ')">' + body + '</g>' +
+           '<g fill="#fff">' + soft + '</g>' +
+           '<g fill="#fff" stroke="#fff">' + det + '</g></g>';
+  } else {
+    out += '<g' + tf + ' fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">' + body + soft + '</g>' +
+           '<g' + tf + ' fill="currentColor" stroke="currentColor">' + det + '</g>';
+  }
+  return out + '</svg>';
+}
+
+/* タイプ文面はPDFレポート（AI診断v3_レポート管理ページ.html）で2026-09-10に書き直した版にそろえた。
+   v3.1で追加：nick（判断の仕方で分ける二つ名）／scenes（面談でよく聞く場面）／cta（体験セッションで扱うこと） */
 var TYPES = {
   driver: {
-    name:"戦略牽引型", en:"STRATEGIC DRIVER", tag:"自分で道筋を描き、成果で示すタイプ",
+    name:"狙いを定めるハヤブサ", animal:"ハヤブサ", en:"FALCON", tag:"自分で道筋を描き、成果で示すタイプ",
     d:"攻め", e:"自走",
-    summary:"目標も進め方も、自分で決めたい。求めているのは励ましではなく、判断材料と成果物です。",
-    desc:"上を目指す意欲があり、進め方も自分で設計できるタイプです。だからこそ、中身の見えないサービスや抽象的な励ましには動きません。必要なのは「何を、どの順で、どこまでやるか」が具体で見えること。そして、その成果が評価・役割・市場価値のどれに効くかを、自分で判断できる材料です。",
+    nick:{pos:"最短距離を引く設計者", neg:"根拠から組み立てる戦略家"},
+    nickNote:{pos:"ゴールが見えた瞬間に、逆算で道筋を引けるタイプ", neg:"理由まで押さえてから、ぶれない計画を組み立てるタイプ"},
+    summary:"目標も進め方も、自分で決めたいタイプ。抽象的な話より、具体的な材料があるほど前に進めます。",
+    desc:"上を目指す意欲があり、進め方も自分で設計できるタイプです。必要なのは「何を、どの順で、どこまでやるか」が具体で見えること。そして、その成果が評価・役割・市場価値のどれに効くのかを、自分で判断できる材料です。そこさえ揃えば、あとは自分の力で進んでいける方が多いタイプです。",
     strengths:["目標から逆算して動ける設計力","自分で調べ、自分で決める推進力","成果に対する基準の高さ"],
-    stumbles:["「中身が具体で見えない」と感じた瞬間に、関心が切れる","全部自分で検証しようとして、時間が足りなくなる","周囲との温度差に消耗する"],
+    stumbles:["全体像が見えないまま進めることに、時間を使いにくい","自分で全部検証しようとして、時間が足りなくなりやすい","周囲との温度差に、力を使わされることがある"],
+    scenes:[
+      "AIで仕事の質は上がった。でも、作業時間は思ったほど減っていない",
+      "人の仕事やお客様の仕組みは整えられるのに、自分のことはつい後回しになる",
+      "「それ、どうやってるんですか？」と聞かれて、自分のやり方をうまく説明できなかった",
+      "便利な仕組みを作っても、ルールや費用の都合で止まったことがある",
+      "情報を集めるほど、試したいことが増えていく"
+    ],
+    cta:["自分で進められる強みはそのままに、どこを任せ、どこに時間を使うかを整理します",
+         "あなたの業務の中で、成果が「外から見える形」になりやすいAI活用ポイントを特定します",
+         "90日で作る実績を、チームでも再現できる型として残すための設計図をお渡しします"],
     mindset:[
       {h:"自分の型を「再現できる形」で残す", t:"個人の成果で止めず、チームでも再現できる型として残す。それがそのまま推進実績・市場価値になります。"},
       {h:"検証は全部やらない。任せる部分を決める", t:"全部自分で触ると時間切れになります。判断が必要な部分だけ自分が持ち、それ以外は仕組みと人に任せる設計が結果を分けます。"},
@@ -887,12 +1113,24 @@ var TYPES = {
     road:"90日の実績を「チームでも再現できる型」として文書化してください。それが次の役割・次の交渉の材料になります。"
   },
   leap: {
-    name:"飛躍チャレンジ型", en:"LEAP CHALLENGER", tag:"高い目標を、相談相手と一緒に取りにいくタイプ",
+    name:"波に乗るイルカ", animal:"イルカ", en:"DOLPHIN", tag:"高い目標を、相談相手と一緒に取りにいくタイプ",
     d:"攻め", e:"伴走",
-    summary:"目指す姿ははっきりしている。あとは、迷ったときに戻れる相談相手と、進む順番があれば速い。",
-    desc:"上を目指す意欲が強く、挑戦を前向きに捉えるタイプです。一方で、選択肢が多いと迷い、独学だと途中で優先順位が下がりがちです。それは意欲の問題ではなく、進む順番と相談相手が設計されていないだけです。方向と順番が決まれば、このタイプはもっとも速く動けます。",
+    nick:{pos:"ゴールから駆け上がる挑戦者", neg:"腹落ちして加速する挑戦者"},
+    nickNote:{pos:"行き先が決まると、誰よりも速く動き出せるタイプ", neg:"「これだ」と納得できた瞬間に、一気に加速するタイプ"},
+    summary:"目指す姿は、すでにはっきりしている。あとは進む順番が決まれば、いちばん速く動けるタイプ。",
+    desc:"上を目指す意欲が強く、挑戦を前向きに捉えるタイプです。一方で、選択肢が多いと迷いやすく、優先順位が入れ替わりがちなところがあります。それは意欲の問題ではなく、進む順番がまだ決まっていないだけです。方向と順番が決まれば、このタイプはもっとも速く動けます。",
     strengths:["挑戦を楽しめる前向きさ","目指す姿を語れる意欲","人の力を借りて加速できる柔軟さ"],
-    stumbles:["選択肢が多いと迷い、着手が遅れる","独学だと、途中で優先順位が下がる","成果を急いで、土台が抜ける"],
+    stumbles:["選択肢が多いと迷いやすく、着手が遅れることがある","独学だと、途中で優先順位が下がりやすい","成果を急ぐと、土台の部分が抜けやすい"],
+    scenes:[
+      "AIで速くなった分、そこに別の仕事が乗ってくる",
+      "「AIってどう使えばいい？」と相談されることがある。でも、それを自分の強みとして言える言葉はまだない",
+      "年度や季節の区切りが来るたびに「今年こそ」と思う",
+      "AIに詳しい人の集まりにいると、自分はまだまだだと感じる",
+      "作ったものを、人に渡せる形にするところで手が止まる"
+    ],
+    cta:["選択肢が多い中で、何を基準に選ぶか。あなたの判断軸を言葉にします",
+         "いまの業務や、人から相談されていることの中から、評価につながるテーマを1つに絞ります",
+         "90日で進む順番と、迷ったときに戻る区切りを入れた設計図をお渡しします"],
     mindset:[
       {h:"迷ったら戻る場所を、先に決めておく", t:"相談相手と週次の区切りを先に置くと、迷いが「止まる時間」ではなく「決める時間」に変わります。"},
       {h:"順番を決めれば、速さは自然に出る", t:"あれもこれもではなく、90日で1本。順番が決まると、意欲がそのまま推進力になります。"},
@@ -902,41 +1140,275 @@ var TYPES = {
     road:"90日は「1つの業務・1つの成果」に絞ってください。絞るほど、次の挑戦の選択肢が増えます。"
   },
   architect: {
-    name:"堅実設計型", en:"STEADY ARCHITECT", tag:"納得してから、自分のペースで積み上げるタイプ",
+    name:"コツコツ築くビーバー", animal:"ビーバー", en:"BEAVER", tag:"納得してから、自分のペースで積み上げるタイプ",
     d:"守り", e:"自走",
-    summary:"大きく変えたいわけではない。ただ「このままでいいのか」は消えない。納得できれば、着実に進める人です。",
+    nick:{pos:"要点をつかむ実務家", neg:"理由まで確かめる職人肌"},
+    nickNote:{pos:"押さえるべき点を見極めて、無駄なく積み上げるタイプ", neg:"仕組みまで理解したことを、確実に自分のものにするタイプ"},
+    summary:"大きく変えたいわけではない。ただ「このままでいいのか」という問いは、ふとした時に戻ってくる。納得できたときに、着実に進むタイプ。",
     desc:"安定を大切にしながら、自分で考えて動けるタイプです。「いま困っていないが、この先が見えない」という静かな問いを持っている方が多く、勢いでは動きません。中身が具体で見え、得られるものを自分で想像できたとき、確実に前へ進めます。",
     strengths:["先を読んで備える視点","自分で調べ、判断できる堅実さ","長年の実務経験という土台"],
-    stumbles:["「きちんと理解してから」で、最初の一歩が遅れる","中身が見えないものには動かない","周りから少し評価されると、動く理由が薄れる"],
+    stumbles:["「きちんと理解してから」と考えるほど、最初の一歩が遅くなりやすい","中身が具体で見えないと、動き出しにくい","一人で調べる時間が長くなり、進め方の確認が後回しになりやすい"],
+    scenes:[
+      "時間をいちばん取られているのは、作業そのものより「探す・確かめる」時間",
+      "セミナーや動画ではできたのに、自分の仕事に戻すと手が止まる",
+      "有料のAIツールを使い始めたものの、どこから手をつけるか決めきれていない",
+      "周りに詳しい人がいなくて、気づけば自分がAIの担当のようになっている",
+      "仕事の場ではAIを使いにくく、家でだけ使い込んでいる"
+    ],
+    cta:["やること・順番・得られるものを具体にして、納得して動ける状態にします",
+         "「探す・確かめる」時間のように、AIで減らせる業務を一緒に洗い出します",
+         "いまの業務を土台にした、無理のない90日の設計図をお渡しします"],
     mindset:[
       {h:"学んでからではなく、自分の業務から始める", t:"毎日やっている業務を1つ選び、そこにAIを当てるのが最短です。理解は、動きながら深まります。"},
       {h:"「いざという時」を、いま作っておく", t:"備えは、必要になってからでは間に合いません。小さくても外に見せられる実績が、そのまま選択肢になります。"},
       {h:"判断材料は、具体で揃える", t:"何を、どの順で、どこまでやるか。具体で見えれば、このタイプは迷いなく進めます。"}
     ],
     detour:"このタイプが独学で進むと「調べて終わり」の期間が長くなりがちです。順番を先に設計してしまうのが近道です。",
-    road:"90日の実績1本を「いざという時の名刺」として残してください。小さくても、外に見せられる形が大切です。"
+    road:"90日で作る実績を、外に見せられる形で残してください。小さくてかまいません。それが、そのまま次の選択肢になります。"
   },
   builder: {
-    name:"安定積み上げ型", en:"STEADY BUILDER", tag:"安心できる環境で、一歩ずつ確実に進めるタイプ",
+    name:"寄りそって進むペンギン", animal:"ペンギン", en:"PENGUIN", tag:"安心できる環境で、一歩ずつ確実に進めるタイプ",
     d:"守り", e:"伴走",
-    summary:"大きな変化は望んでいない。ただ、いまの働き方を楽に、長く続けられる力は欲しい。一人より、誰かと一緒の方が続く人です。",
+    nick:{pos:"一歩目が速い積み上げ派", neg:"納得を力に変える積み上げ派"},
+    nickNote:{pos:"やることが決まれば、迷わず手を動かせるタイプ", neg:"腑に落ちたことは、長く続けられるタイプ"},
+    summary:"大きな変化は望んでいない。ただ、いまの働き方を楽に、長く続けられる力は欲しい。無理のないペースで、一歩ずつ積み上げていくタイプ。",
     desc:"安定と安心を大切にし、無理のないペースで積み上げたいタイプです。「自分にできるだろうか」という不安が先に立つことがありますが、これまで新しい仕事や資格を身につけたときも、最初は同じだったはずです。相談できる相手と続けられる環境があれば、確実に前へ進めます。",
     strengths:["続ける力、積み上げる力","実務で培った経験","無理をしない現実的な判断"],
-    stumbles:["「自分にできるか」で止まる","何から手をつけるかで迷う","相談相手がいないと、独学で遠回りする"],
+    stumbles:["「自分にできるだろうか」で、手が止まりやすい","何から手をつけるかで迷いやすい","相談相手がいないと、独学で遠回りしやすい"],
+    scenes:[
+      "自分のために使える時間は、夜、家のことが一段落してから",
+      "AIの案内やお知らせが来ても「まだ使いこなせていないから」と見送ったことがある",
+      "説明会や動画を見ても、結局どこから始めればいいかが分からなかった",
+      "メールやアプリについているAI機能を使って「これ、すごいな」と思ったことがある",
+      "引き継ぎや手順書がないまま、一人で回している仕事がある"
+    ],
+    cta:["「自分にできるか」を、いまできていることから一緒に整理します",
+         "毎日の業務の中から、まずAIで楽にできる1つを一緒に選びます",
+         "1日15分からでも続けられる、90日の設計図をお渡しします"],
     mindset:[
       {h:"不安なままで、始めていい", t:"不安は、このタイプのほぼ全員が持っています。始めてから消えていくものです。"},
-      {h:"1日15分で、十分に変わる", t:"まとまった時間は要りません。続けられる設計が、結果を分けます。"},
+      {h:"必要なのは、まとまった時間ではありません", t:"1日15分でも、90日続ければ20時間を超えます。差がつくのは1回の長さではなく、続けられる形にできたかどうかです。"},
       {h:"すでに持っている力に、AIを足す", t:"ゼロから学ぶのではなく、いまの業務・いまのスキルにAIを重ねる。それがいちばん確実です。"}
     ],
     detour:"このタイプが独学で進むと「調べたけれど不安が消えない」まま止まりがちです。相談相手と順番があれば、遠回りしません。",
     road:"90日は「いまの業務を1つ楽にする」から始めてください。その1つが、次の安心につながります。"
   }
 };
+/* 性格と仕事の言い当て（2026-10-29追加）。書き方は 2026-10-29_性格診断リサーチ.md の原理に沿う：
+   生活の一場面で言い当てる／いいところ→こんな一面も（すぐ強みに言い換える）→こうするともっと輝く */
+var CHARACTER = {
+  driver: {
+    lead:"ゴールが見えた瞬間、頭の中ではもう道筋が引かれている。ハヤブサが狙いを定めて一直線に向かうように、やると決めたときの集中力と速さは、周りが驚くほどです。",
+    aru:["旅行や予定は、行き先が決まると調べものが止まらなくなる",
+         "人の話を聞きながら、つい「で、結局どうしたいんだろう」と着地点を考えている",
+         "人に頼むより、自分でやった方が早いと思うことがよくある",
+         "やると決めたことは、誰に言われなくても最後までやり切る",
+         "あいまいな説明を受けると、あとで自分で調べ直してしまう"],
+    good:"決めたら迷わない。自分で考え、自分で動ける。周りからは「任せておけば大丈夫」と信頼される存在です。",
+    aspect:"目標に一直線なぶん、周りのペースとの差にもどかしさを感じることがあるかもしれません。でもそれは、それだけ先が見えているということです。",
+    more:"自分のやり方を言語化して周りに渡せるようになると、あなた一人の速さが、チーム全体の速さに変わります。個人として成果を出す人から、組織を動かす人へ。次のステージはそこにあります。",
+    work:"仕事では、目標から逆算して段取りを組み、成果で示すタイプ。指示を待つより、自分で道筋を描く方が力が出ます。",
+    workAspect:"全体像が見えないまま進めることには、抵抗を感じやすいかもしれません。でもそれは、ムダな動きをしない力の裏返し。最初に「何を、どの順で、どこまで」を押さえれば、誰より速く走り切れます。",
+    ai:"AIを、自分の段取りをまるごと任せられる相棒にできるタイプです。あなたのやり方をAIに載せて仕組みにすれば、チームの誰もが、あなたと同じ速さで動けるようになります。"
+  },
+  leap: {
+    lead:"新しいことに可能性を見いだし、気づけば周りも巻き込んでいる。イルカが群れで波に乗るように、人と一緒に動くときにいちばん推進力が出るタイプです。",
+    aru:["興味を持った話は、すぐ誰かに共有したくなる",
+         "一人だと後回しになることも、誰かと約束すると一気に進む",
+         "やってみたいことが次々に浮かび、メモがすぐ増えていく",
+         "年度や期の区切りが来ると、新しい目標を立てたくなる",
+         "周りから前向きな反応があると、もうひと押しできる"],
+    good:"前向きで、挑戦を楽しめる。あなたが加わると場が前に進み、周りも「やってみよう」と動き出します。",
+    aspect:"やりたいことが多いぶん、あれもこれもと気持ちが散ってしまうことがあるかもしれません。でもそれは、それだけたくさんの可能性に気づける力があるということです。",
+    more:"進む順番さえ決まれば、その推進力は誰よりも遠くまで届きます。テーマを1つに絞ったとき、周りを巻き込む力が、そのまま大きな成果になります。",
+    work:"仕事では、新しい企画や挑戦の場で力を発揮するタイプ。人と話しながらアイデアを広げ、チームの空気を前向きに動かせます。",
+    workAspect:"選択肢が多いと、迷って手が止まることもあるかもしれません。でもそれは、視野が広い証拠。判断の軸と区切りを先に決めておけば、迷う時間が「決める時間」に変わります。",
+    ai:"AIを「一緒に考える相棒」にすると、アイデアがすぐ形になるタイプです。壁打ちから企画書まで一気に進められるので、あなたの「やってみたい」が、提案や成果に変わるスピードが大きく上がります。"
+  },
+  architect: {
+    lead:"納得できたことを、自分のペースで、確実に積み上げていく。ビーバーが一本ずつ木を運んで丈夫なダムを築くように、時間をかけたものほど崩れないのが、あなたの強さです。",
+    aru:["新しいアプリや家電は、使い方を一通り確かめてから使い始める",
+         "「なんで？」が解決しないと、どうも落ち着かない",
+         "人に聞くより、まず自分で調べた方が早いと思っている",
+         "一度気に入ったお店や道具は、長く使い続ける",
+         "周りが盛り上がっていても、自分が納得するまでは様子を見る"],
+    good:"一度始めたことは、丁寧に、最後まで仕上げる。あなたの仕事には「この人がやったなら大丈夫」という安心感があります。",
+    aspect:"きちんと理解してから動きたいぶん、最初の一歩に時間がかかることがあるかもしれません。でもそれは、遠回りをしないための慎重さです。",
+    more:"完璧になる前に、小さく外に見せてみる。それだけで、あなたが積み上げてきたものが、一気に評価に変わり始めます。",
+    work:"仕事では、仕組みや手順を整えて、品質を守る要になるタイプ。地道な改善を重ねて、気づけば周りが頼る「土台」をつくっています。",
+    workAspect:"中身が見えないと、動き出しにくいこともあるかもしれません。でもそれは、判断を外さない力の裏返し。やること・順番・得られるものを先に具体にすれば、迷いなく進めます。",
+    ai:"AIで、あなたの「調べる・確かめる」時間を一気に短くできるタイプです。丁寧さはそのままに仕上がりまでが速くなるので、積み上げられる量そのものが増えていきます。"
+  },
+  builder: {
+    lead:"周りと足並みをそろえながら、一歩ずつ、着実に前へ進む。ペンギンが群れで寄りそって厳しい環境を乗り越えるように、あなたがいる場所には安心と信頼が生まれます。",
+    aru:["困っている人がいると、自分の仕事より先に手を貸してしまう",
+         "自分のための時間は、仕事や家のことが一段落してから",
+         "新しいことは、詳しい人に一度見せてもらうと安心して進められる",
+         "大きな変化より、いまの環境を少しずつ良くしていきたい",
+         "「助かった」と言われることが、いちばんの原動力になる"],
+    good:"人の状況に気づける細やかさと、誠実さ。あなたのまわりは自然とまとまり、それぞれが安心して力を出せる場になります。",
+    aspect:"周りを優先するぶん、自分のことが後回しになったり、「自分にできるかな」と立ち止まったりすることがあるかもしれません。でもそれは、それだけ人を大切にしてきたということです。",
+    more:"相談できる相手と、続けられるペースがあれば、着実に積み上げられる人です。小さな成果を重ねた先で、自分でも想像しなかった位置に立っています。",
+    work:"仕事では、チームを支え、人と人をつなぐ存在。決められたことを丁寧に、確実に回せるので、周りからの信頼が厚いタイプです。",
+    workAspect:"何から始めるかで迷うこともあるかもしれません。でもそれは、一つひとつを大切にしているから。最初の一歩を一緒に決める相手がいれば、そこからは着実に進めます。",
+    ai:"AIを、毎日の作業を引き受けてくれる「頼れる助手」にできるタイプです。手間のかかっていた作業が軽くなるほど、あなたが得意な「人を支える仕事」に、時間を使えるようになります。"
+  }
+};
+
+/* AIレベルで出し分ける文章（2026-10-29）
+   early＝Lv1〜2（使い始め）／adv＝Lv3〜5（仕事の流れに組み込めている）。
+   ここに無い項目は TYPES の文面をそのまま使う（TYPES の既定文は、ハヤブサ・イルカの一部＝adv向け、ビーバー・ペンギン＝early向け） */
+var LEVEL_TEXT = {
+  driver: {
+    early: {
+      mindset:[
+        {h:"最初の1本は、自分の業務から選ぶ", t:"ツールを広く試すより、毎日の業務を1つ選んでAIを当てる方が、あなたの逆算力が活きます。最初の成果が見えれば、そこから先は自分で走れます。"},
+        {h:"検証は全部やらない。試す範囲を決める", t:"気になるものを全部自分で確かめると、時間が足りなくなります。90日で試す範囲を先に決めると、成果までの距離が最短になります。"},
+        {h:"判断材料は、走り出す前に集める", t:"「何が得られるか」「どう評価に効くか」を具体で押さえてから動くと、途中で迷いません。"}
+      ],
+      scenes:[
+        "AIが気になってはいるが、どの業務に使えば成果になるのかが見えていない",
+        "やるなら成果につなげたいので、中途半端には始めたくない",
+        "自分で調べて進めたいのに、調べる時間そのものが取れない",
+        "人の仕事やお客様の仕組みは整えられるのに、自分のことはつい後回しになる",
+        "情報を集めるほど、試したいことが増えていく"
+      ],
+      detour:"このタイプが独学で進むと、気になるツールを一通り試しているうちに時間が過ぎがちです。どの業務で成果を出すかを先に決めるのが近道です。",
+      road:"90日で、成果を数字で語れる業務を1つ作ってください。最初の1本ができれば、そこから先の道筋は自分で引けます。",
+      cta:["自分で進められる強みはそのままに、どの業務から始めると成果が最短かを整理します",
+           "あなたの業務の中で、成果が「外から見える形」になりやすいAI活用ポイントを特定します",
+           "90日で最初の実績を作るための設計図をお渡しします"]
+    },
+    adv: {
+      mindset:[
+        {h:"自分の型を「再現できる形」で残す", t:"個人の成果で止めず、チームでも再現できる型として残す。それがそのまま推進実績・市場価値になります。"},
+        {h:"検証は全部やらない。任せる部分を決める", t:"全部自分で触ると時間切れになります。判断が必要な部分だけ自分が持ち、それ以外は仕組みと人に任せる設計が結果を分けます。"},
+        {h:"成果を、評価や役割の言葉に変える", t:"「どの業務を、どれくらい改善したか」を数字で語れる形にしておくと、次の役割や交渉の材料になります。"}
+      ]
+    }
+  },
+  leap: {
+    early: {
+      scenes:[
+        "やってみたいことは多いのに、どれから手をつけるか決めきれない",
+        "動画や記事で学んだことを、自分の仕事でどう使うかがつながらない",
+        "一緒に進める相手がいれば、もっと続けられるのにと思う",
+        "年度や季節の区切りが来るたびに「今年こそ」と思う",
+        "AIに詳しい人の集まりにいると、自分はまだまだだと感じる"
+      ]
+    },
+    adv: {
+      scenes:[
+        "AIで速くなった分、そこに別の仕事が乗ってくる",
+        "「AIってどう使えばいい？」と相談されることがある。でも、それを自分の強みとして言える言葉はまだない",
+        "作ったものを、人に渡せる形にするところで手が止まる",
+        "やりたいテーマが増えすぎて、どれを成果として仕上げるか決めきれない",
+        "年度や期の区切りが来るたびに、次の目標を立て直している"
+      ],
+      mindset:[
+        {h:"テーマを1本に絞り、実績として仕上げる", t:"AIを使える場面が多いほど、やりたいことは広がります。評価につながるテーマを1つに絞り、成果まで仕上げ切ることが次の一歩です。"},
+        {h:"巻き込む力を、推進役の実績に変える", t:"人を巻き込めるのは大きな強みです。チームでのAI活用をあなたが旗を振って進めれば、それがそのまま推進役としての実績になります。"},
+        {h:"迷ったら戻る場所を、先に決めておく", t:"相談相手と週次の区切りを先に置くと、迷いが「止まる時間」ではなく「決める時間」に変わります。"}
+      ]
+    }
+  },
+  architect: {
+    adv: {
+      mindset:[
+        {h:"積み上げた仕組みを、外から見える形にする", t:"あなたが整えてきた仕組みは、周りからは見えにくいものです。手順と効果を資料にまとめて共有すると、それがそのまま評価の材料になります。"},
+        {h:"完璧を待たずに、周りに渡してみる", t:"細部まで仕上げてから出したい気持ちは強みでもあります。ただ、7割の段階で周りに使ってもらう方が、改善も評価も早く進みます。"},
+        {h:"「いざという時」を、いま作っておく", t:"備えは、必要になってからでは間に合いません。外に見せられる実績が、そのまま次の選択肢になります。"}
+      ],
+      scenes:[
+        "周りに詳しい人がいなくて、気づけば自分がAIの担当のようになっている",
+        "作った仕組みを、自分以外の人が使える形にまとめる時間がない",
+        "改善した成果を、数字で説明できる形で残せていない",
+        "自分が整えた仕組みの価値が、周りに十分伝わっていない気がする",
+        "職場や取引先のルールの都合で、AIを思うように使えない場面がある"
+      ],
+      detour:"このタイプが一人で進むと、仕組みは整っているのに、その価値が周りに伝わらないまま時間が経ちがちです。成果を見せる形を先に決めるのが近道です。",
+      road:"90日で、あなたが整えた仕組みを、周りが使える形にまとめてください。それが、そのまま次の役割の材料になります。",
+      cta:["積み上げてきた仕組みと成果を棚卸しし、強みとして言葉にします",
+           "あなたが整えた仕組みを、周りに広げられるテーマを一緒に選びます",
+           "その仕組みを評価や次の役割につなげる、90日の設計図をお渡しします"]
+    }
+  },
+  builder: {
+    adv: {
+      mindset:[
+        {h:"あなたの使い方を、チームの「当たり前」にする", t:"すでにAIを仕事に組み込めているのは大きな強みです。周りの人も同じように使えるよう手順を共有すると、チームに欠かせない支え役になります。"},
+        {h:"できていることを、数字で数える", t:"AIで短くなった時間や、減ったミスを記録してみてください。自分では当たり前になっていることほど、周りから見ると大きな成果です。"},
+        {h:"相談できる相手と、次の目標を決める", t:"一人だと、いまのやり方を守ることに意識が向きがちです。相談できる相手と次の目標を決めると、積み上げてきたものを次の役割につなげられます。"}
+      ],
+      scenes:[
+        "AIで楽になったぶん、ほかの人の仕事まで引き受けている",
+        "周りから使い方を聞かれるが、教え方には自信がない",
+        "自分の工夫が、評価にどうつながっているのかが見えない",
+        "引き継ぎや手順書がないまま、一人で回している仕事がある",
+        "この先も、いまのやり方で大丈夫だろうかと、ふと考える"
+      ],
+      detour:"このタイプが一人で進むと、周りを支えることに時間を使い、自分の成果を形にするのが後回しになりがちです。相談相手と次の目標を決めておけば、遠回りしません。",
+      workAspect:"いまのやり方を守ることに、意識が向きやすいかもしれません。でもそれは、周りが安心して働ける環境を大切にしているから。次の目標を一緒に決める相手がいれば、そこから一段上に進めます。",
+      road:"90日で、あなたのAIの使い方をチームに1つ広げてください。周りの仕事が楽になった分だけ、あなたの評価が積み上がります。",
+      cta:["すでにできていることを棚卸しし、あなたの強みとして言葉にします",
+           "あなたのAIの使い方を、チームに広げられる業務を一緒に選びます",
+           "支える力を評価や次の役割につなげる、90日の設計図をお渡しします"]
+    }
+  }
+};
+/* 仕事×AI の一文（Lv3以上）。Lv1〜2は CHARACTER の ai を使う */
+var AI_ADV = {
+  driver:"すでにAIを仕事の流れに組み込めているあなたは、その仕組みをチームに広げられる段階です。あなたのやり方を型にして渡せば、チームの誰もが、あなたと同じ速さで動けるようになります。",
+  leap:"すでにAIを使いこなせているあなたは、そのアイデアを周りと一緒に形にできる段階です。チームでの活用をあなたが旗を振って進めると、提案や成果に変わるスピードがさらに上がります。",
+  architect:"すでにAIで「調べる・確かめる」時間を減らせているあなたは、その仕組みを周りに広げられる段階です。あなたが整えた手順は、チーム全体の品質とスピードを同時に引き上げます。",
+  builder:"すでにAIを日々の仕事に取り入れているあなたは、その使い方をチームに広げられる段階です。周りの作業まで軽くできると、チームに欠かせない支え役になります。"
+};
+/* いまお仕事を離れている方（休職・育休・求職・専業主婦／主夫）向けの言い換え */
+function ctxText(r, s){
+  if (!r.flags || !r.flags.away || typeof s !== "string") return s;
+  return s.replace(/毎日やっている業務/g, "直近のお仕事や身近な作業")
+          .replace(/毎日の業務フロー/g, "仕事の流れ")
+          .replace(/毎日の業務/g, "身近な作業")
+          .replace(/自分の業務/g, "身近な作業")
+          .replace(/いまの業務/g, "直近のお仕事")
+          .replace(/あなたの業務/g, "直近のお仕事やこれからの仕事");
+}
+var AWAY_CTA = ["これまでの経験とタイプから、あなたに合う進め方を一緒に確認します",
+                "直近のお仕事や、これから目指す仕事の中から、AIで実績を作りやすいテーマを選びます",
+                "再スタートに向けて、90日で作る実績の設計図をお渡しします"];
+function lvTier(r){ return r.lv >= 3 ? "adv" : "early"; }
+function lvPick(r, field){
+  var o = LEVEL_TEXT[r.typeKey] && LEVEL_TEXT[r.typeKey][lvTier(r)];
+  var v = (o && o[field]) || TYPES[r.typeKey][field];
+  if (typeof v === "string") return ctxText(r, v);
+  return v.map(function(x){ return typeof x === "string" ? ctxText(r, x) : {h:ctxText(r, x.h), t:ctxText(r, x.t)}; });
+}
+/* 90日の道筋（Lv1〜2／Lv3／Lv4〜5） */
+function roadmapSteps(r){
+  var jobLabel = r.job === "いま" ? "いまの" : r.job + "の";
+  if (r.flags.away) return [
+    ["再スタート後の仕事を想定して、テーマを1つ決める", "直近のお仕事や、これから目指す仕事を想定して、AIで改善できそうなテーマを1つ選びます。家のことや地域の活動など、身近な作業で試すところからでも構いません。"],
+    ["実際に試して、変化を記録する", "作業時間や仕上がりがどう変わったかを記録します。この記録が、あとで実績の材料になります。"],
+    ["成果を「伝わる言葉」に変換する", "「何を、どれくらい改善したか」を、職務経歴書・面接・復帰後の面談で語れる1本の実績に仕上げます。"]];
+  if (r.lv <= 2) return [
+    ["対象業務を1つ決めて、小さく実装する", jobLabel + "業務の中から、AIで改善しやすいテーマを1つ選びます。ツールの勉強からではなく、毎日やっている業務から選ぶのがポイントです。"],
+    ["業務フローを再設計して、変化を記録する", "作業時間・品質・アウトプット量のどれが、どう変わったかを記録します。この記録が、あとで実績の材料になります。"],
+    ["成果を「評価される言葉」に変換する", "「どの業務を、どれくらい改善したか」を、評価面談・職務経歴書・提案や商談の場で語れる1本の実績に仕上げます。"]];
+  if (r.lv === 3) return [
+    ["AIを入れた業務の効果を、数字で記録する", "すでにAIを組み込んでいる業務で、作業時間・品質・量がどう変わったかを記録します。ここが実績の土台になります。"],
+    ["やり方を、再現できる手順にまとめる", "プロンプトや手順を、自分以外の人でも再現できる形にまとめます。個人の工夫が「型」に変わります。"],
+    ["成果を「評価される言葉」に変換する", "「どの業務を、どれくらい改善したか」を、評価面談・職務経歴書・提案や商談の場で語れる1本の実績に仕上げます。"]];
+  return [
+    ["自分の仕組みを棚卸しし、広げるテーマを選ぶ", "これまで作った仕組みを見直し、チームや周囲に広げたときに効果が大きいテーマを1つ選びます。"],
+    ["周りに広げて、効果を数字で記録する", "チームや関係者が使える形にして導入し、組織として何が変わったかを記録します。"],
+    ["推進実績を、キャリアの言葉に変換する", "「どの業務を、どれくらい改善し、何人に広げたか」を、評価面談・職務経歴書・提案や商談の場で語れる実績に仕上げます。"]];
+}
+
 var TYPE_ORDER = ["driver","leap","architect","builder"];
 
 var EXITS = [
   {id:"shoshin", name:"昇進・昇給", group:"いまの組織で動く", dir:"shoshin", inner:true,
-   text:{high:"AIの成果を評価の言葉に変換できれば、いまの会社で評価と役割を上げるのが最短ルートです。次の評価面談を目標に、語れる実績を仕上げてください。",
+   text:{high:"AIの成果を評価の言葉に変換できれば、いまの職場で評価と役割を上げるのが最短ルートです。次の評価面談を目標に、語れる実績を仕上げてください。",
          mid:"昇進の土台はあります。あとは、AIで出した成果を「どの業務を、どれくらい改善したか」の形で語れるようにするだけです。",
          low:"まず、いまの業務でAIを使った改善実績を1つ作るところからです。小さくても、数字で語れる1本が評価を動かし始めます。"}},
   {id:"dx", name:"社内DXポジション確立", group:"いまの組織で動く", dir:"dx", inner:true,
@@ -947,11 +1419,14 @@ var EXITS = [
    text:{high:"AIを軸に職種を移れる素地があります。移りたい先で通用する成果を1つ見せられれば、話が動きます。",
          mid:"異動・職種転換は十分狙えます。いまの職種で作った実績を、移りたい職種でも再現できる形で言語化してください。",
          low:"まず、いまの職種でAIの実績を作り、「他の業務でも再現できる」と示せる材料を揃えるのが先です。"}},
-  {id:"tenshoku", name:"転職", group:"外に出る", dir:"tenshoku", inner:false,
+  {id:"tenshoku", name:"転職", nameAway:"再就職・転職", group:"外に出る", dir:"tenshoku", inner:false,
    text:{high:"職務経歴書に書けるAI実績を整えれば、市場価値の高いポジションを狙える状態です。",
          mid:"転職市場で戦える素地はあります。「どの業務を、どれくらい改善したか」を書ける実績を、あと1本作ってください。",
          low:"いきなり動くより、まず90日で職務経歴書に書ける実績を作るのが現実的です。それが、いちばんの準備になります。"}},
-  {id:"venture", name:"ベンチャー・新規事業の幹部参画", group:"外に出る", dir:null, inner:false,
+  {id:"venture", name:"ベンチャー・新規事業の幹部参画", nameSelf:"新規事業・協業の推進", group:"外に出る", dir:null, inner:false,
+   textSelf:{high:"AIを軸に、事業そのものを一段大きく動かせる状態です。新規事業や他社との協業など、影響範囲を広げる場に挑めます。",
+         mid:"事業を広げる素地はあります。AIで出した成果を、チームや取引先にも広げた実績にしてください。",
+         low:"まず自分の事業の中でAIの成果を1つ作り、それを広げられる形にするところからです。"},
    text:{high:"影響範囲と成果が揃いつつあります。事業を一段大きく動かす場に挑む準備を始められる状態です。",
          mid:"幹部参画の芽はあります。チーム規模の成果と、人を動かした実績を重ねてください。",
          low:"まず自分の影響範囲を広げて、チーム単位で成果を出す経験を積むのが先です。"}},
@@ -959,6 +1434,10 @@ var EXITS = [
    text:{high:"AIスキルを社外に展開できる状態です。小さな案件から始めて、外での実績を作っていけます。",
          mid:"副業の可能性はあります。まず本業のAI実績を、社外の人にも伝わる形に整えるところからです。",
          low:"副業に広げる前に、本業で語れるAI実績と、外で通用する型を作るのが現実的な順番です。"},
+   /* いまお仕事を離れている方向け（本業がない前提） */
+   textAway:{high:"AIスキルを、仕事として外に出せる状態です。小さな案件から始めて、実績と収入の柱を作っていけます。",
+         mid:"在宅の仕事や副業につなげられる可能性はあります。まず、AIで作った成果を、初めての相手にも伝わる形に整えるところからです。",
+         low:"仕事にする前に、AIを使った小さな実績を1つ作り、外で通用する型を身につけるのが現実的な順番です。"},
    /* 経営者・フリーランスの方向け（すでに自分の事業がある前提の言い回し） */
    textSelf:{high:"AIスキルを、新しいサービスや案件に展開できる状態です。小さく始めて、もう1本の収入の柱に育てていけます。",
          mid:"収入の柱を増やせる可能性はあります。まず、いまの仕事のAI実績を、初めての相手にも伝わる形に整えるところからです。",
@@ -967,6 +1446,9 @@ var EXITS = [
    text:{high:"独立を視野に入れられる土台があります。案件で再現できる実績と、値付けの根拠を積み上げてください。",
          mid:"将来的に独立は狙えます。まず副業で小さく試して、外で売れる実績を作ってください。",
          low:"独立は、これからの選択肢です。まず本業と小さな副業で、外で通用する実績を作るところから始めてください。"},
+   textAway:{high:"独立を視野に入れられる土台があります。小さな案件で実績を作り、値付けの根拠を積み上げてください。",
+         mid:"将来的に独立は狙えます。まず小さな仕事で試して、外で通用する実績を作ってください。",
+         low:"独立は、これからの選択肢です。まずAIを使った小さな実績を作り、外で通用する形にするところから始めてください。"},
    textSelf:{high:"いまの事業にAIを組み込み、単価と提供価値を上げられる状態です。案件で再現できる実績と、値付けの根拠を積み上げてください。",
          mid:"事業を伸ばす素地はあります。AIで出した成果を「何を、どれくらい改善したか」の形にして、提案や単価の根拠に変えてください。",
          low:"まず、自分の仕事でAIの実績を1つ作るところからです。その1本が、提案の説得力と単価を動かし始めます。"}}
@@ -982,7 +1464,7 @@ var html = "";
 var qNo = 0;
 for (var s = 0; s < SECTIONS.length; s++) {
   html += '<div class="section-head"><span class="section-step">' + SECTIONS[s].step + '</span>' +
-          '<h2>' + SECTIONS[s].title + '</h2><p>' + SECTIONS[s].desc + '</p></div>';
+          '<h2>' + SECTIONS[s].title + '</h2>' + (SECTIONS[s].desc ? '<p>' + SECTIONS[s].desc + '</p>' : '') + '</div>';
   for (var i = 0; i < QUESTIONS.length; i++) {
     var q = QUESTIONS[i];
     if (q.sec !== s) continue;
@@ -991,6 +1473,15 @@ for (var s = 0; s < SECTIONS.length; s++) {
             (SECTIONS[s].scene ? '<span class="q-scene">SCENE</span>' : '') + '</p>' +
             '<p class="q-title">' + q.title + '</p>' +
             (q.hint ? '<p class="q-hint">' + q.hint + '</p>' : '');
+    if (q.likert) {
+      if (q.ab) html += '<div class="ab"><p><b>A</b>' + q.ab.a + '</p><p><b>B</b>' + q.ab.b + '</p></div>';
+      html += '<div class="lk">';
+      for (var j = 0; j < q.opts.length; j++) {
+        html += '<label class="lk-' + j + '" title="' + q.opts[j].t + '"><input type="radio" name="' + q.id + '" value="' + j + '" aria-label="' + q.opts[j].t + '"><span class="dot"></span></label>';
+      }
+      html += '</div><div class="lk-ends"><span>' + (q.ab ? "Aに近い" : "そう思う") + '</span><span>' + (q.ab ? "Bに近い" : "そう思わない") + '</span></div></div>';
+      continue;
+    }
     for (var j = 0; j < q.opts.length; j++) {
       html += '<label class="opt' + (q.opts[j].none ? ' none' : '') + '"><input type="radio" name="' + q.id + '" value="' + j + '">' +
               '<span class="opt-in">' + q.opts[j].t + '</span></label>';
@@ -1034,7 +1525,7 @@ function getAnswers(){
 function clamp(v, lo, hi){ return Math.max(lo, Math.min(hi, v)); }
 
 function compute(ans){
-  var raw = {A:0,B:0,C:0,D:0,E:0,F:0,S2:0,S3:0,H:1};
+  var raw = {A:0,B:0,C:0,D:0,E:0,F:0,S2:0,S3:0,H:2};   /* 時間の設問はv3.2で削除。到達目安は中間値で計算 */
   var flags = {};
   var dir = null, honki = 1, job = "いま", pos = 0;
   var decision = "", anx = "", deadline = "", hopeText = "", honkiText = "";
@@ -1047,6 +1538,7 @@ function compute(ans){
     for (var k in opt.d) raw[k] += opt.d[k];
     if (opt.flag) flags[opt.flag] = true;
     if (opt.flag2) flags[opt.flag2] = true;
+    if (opt.away) flags.away = true;
     if (typeof opt.dir === "string") { dir = opt.dir || null; hopeText = opt.t; }
     if (typeof opt.honki === "number") { honki = opt.honki; honkiText = opt.t; }
     if (opt.job) job = opt.job;
@@ -1066,21 +1558,22 @@ function compute(ans){
     ax[key] = Math.round(clamp(raw[key] / AXES[a].scale, -1, 1) * 100) / 100;
   }
 
-  /* AIレベル（Q3を主軸、Q4で底上げ） */
-  var lv = raw.S2 + 1;
+  /* AIレベル：使い方（Q3）で土台を決め、出ている変化（Q4）で引き上げる。
+     Lv5（組織展開）は「仕事の流れに組み込み済み」かつ「周りの仕事・数字・新しい役割に効いている」ときだけ */
+  var lv = [1,2,2,3,4][raw.S2] || 1;
   if (raw.S3 >= 2) lv = Math.max(lv, 2);
   if (raw.S3 >= 3) lv = Math.max(lv, 3);
-  if (raw.S3 >= 4) lv = Math.max(lv, 4);
-  if (raw.S2 >= 4 && raw.S3 >= 4) lv = 5;
+  if (raw.S3 >= 4 && raw.S2 >= 2) lv = Math.max(lv, 4);
+  if (raw.S3 >= 4 && raw.S2 >= 3) lv = 5;
   lv = clamp(lv, 1, 5);
 
   /* タイプ判定（D×E。同点は希望・学び方で補う） */
   var attack = ax.D > 0 ? true : ax.D < 0 ? false :
                (dir === "tenshoku" || dir === "fukugyo" || dir === "dokuritsu" || dir === "dx");
-  var self = ax.E > 0 ? true : ax.E < 0 ? false : (ans["s_learn"] !== null && ans["s_learn"] <= 1);
+  var self = ax.E > 0 ? true : ax.E < 0 ? false : (ans["p_e1"] !== null && ans["p_e1"] <= 1);
   var typeKey = attack ? (self ? "driver" : "leap") : (self ? "architect" : "builder");
 
-  return {ax:ax, raw:raw, flags:flags, dir:dir, honki:honki, job:job, pos:pos, lv:lv, typeKey:typeKey,
+  return {ans:ans, ax:ax, raw:raw, flags:flags, dir:dir, honki:honki, job:job, pos:pos, lv:lv, typeKey:typeKey,
           decision:decision, anx:anx, deadline:deadline, hopeText:hopeText, honkiText:honkiText,
           hintDecision:hintDecision, hintAnx:hintAnx, deadlineSelf:deadlineSelf,
           isEmployee:!flags.notEmployee};
@@ -1108,6 +1601,7 @@ function evaluateExits(r){
     var score = 1.0, notes = [];
     var dirMatch = (r.dir && ex.dir === r.dir);
     if (dirMatch) score += 2.0;
+    if (ex.id === "tenshoku" && r.flags.selfEmp && r.pos >= 3 && !dirMatch) score -= 1.0;
 
     if (ex.inner) {
       score += r.isEmployee ? 0.8 : -1.5;
@@ -1130,14 +1624,16 @@ function evaluateExits(r){
     }
 
     /* 到達目安（現状の準備度: AIレベル・時間・希望の一致） */
-    var ready = (r.lv - 1) / 4 * 2 + (H - 1) / 3 * 1 + (dirMatch ? 1 : 0);
-    var curTier = strictTier(ready), levTier = softTier(ready);
-    if ((ex.id === "fukugyo" || ex.id === "freelance") && H <= 1) { curTier = Math.min(3, curTier + 1); levTier = Math.min(3, levTier + 1); }
+    /* 到達目安はAIレベルで決める（説明文と同じ基準。時間の設問は削除済み） */
+    var curTier = r.lv >= 4 ? 0 : r.lv === 3 ? 1 : r.lv === 2 ? 2 : 3;
+    if (!dirMatch && curTier < 3 && r.lv < 5) curTier = curTier + 1 > 3 ? 3 : curTier + 1;
+    if ((ex.id === "fukugyo" || ex.id === "freelance") && r.isEmployee && r.lv < 3) curTier = Math.min(3, curTier + 1);
+    var levTier = Math.max(0, curTier - 2);
     if (ex.id === "venture" && r.pos < 2) curTier = Math.min(3, curTier + 1);
     levTier = Math.min(levTier, curTier);
 
-    var band = score >= 3.0 ? "high" : (score >= 2.0 ? "mid" : "low");
-    out.push({ex:ex, score:score, band:band, curTier:curTier, levTier:levTier, notes:notes, selfEmp:!!r.flags.selfEmp});
+    var band = r.lv >= 4 ? "high" : (r.lv === 3 ? "mid" : "low");
+    out.push({ex:ex, score:score, band:band, curTier:curTier, levTier:levTier, notes:notes, selfEmp:!!r.flags.selfEmp, awayNE:!!(r.flags.away && r.flags.notEmployee), away:!!r.flags.away});
   }
   out.sort(function(a,b){ return b.score - a.score; });
   return out;
@@ -1164,11 +1660,9 @@ function buildPayload(ans, r){
     axisLabels[AXES[a].k] = axisCoachLabel(AXES[a], r.ax[AXES[a].k]);
     axes[AXES[a].k] = r.ax[AXES[a].k];
   }
-  var decision = r.decision;
-  if (r.hintDecision === "family" && decision === "自分だけで決められる") decision += "（決め方では「身近な人に相談」を選択）";
   var t = TYPES[r.typeKey];
   return {
-    v: 3,
+    v: 4,
     name: document.getElementById("userName").value.trim(),
     age: getAgeBand(),
     email: document.getElementById("userEmail").value.trim(),
@@ -1179,8 +1673,9 @@ function buildPayload(ans, r){
     typeAxes: t.d + "×" + t.e,
     axes: axes,
     axisLabels: axisLabels,
-    decision: decision,
-    deadline: r.deadline + (r.deadlineSelf ? "／自分で期限を切る傾向あり" : ""),
+    work: txtOf(r, "tachiba"),
+    aiConcern: txtOf(r, "ai_nayami"),
+    careerConcern: txtOf(r, "career_nayami"),
     anxiety: r.anx + (r.flags.lowVerbal ? "／言語化に不慣れ" : ""),
     hope: r.hopeText,
     honki: r.honkiText,
@@ -1190,6 +1685,7 @@ function buildPayload(ans, r){
 }
 
 function sendResult(ans, r){
+  if (typeof PREVIEW !== "undefined" && PREVIEW) return;   /* 確認用ファイルでは送信しない */
   try {
     var payload = buildPayload(ans, r);
     fetch(COLLECT_URL, {
@@ -1212,11 +1708,13 @@ function exitCardHTML(item, rank){
   var h = '<div class="exit-card' + (first ? " first" : "") + '">';
   h += '<div class="exit-top">';
   if (rank) h += '<span class="rankb">' + (first ? "BEST MATCH" : rank + "位") + '</span>';
-  h += '<span class="exit-name">' + esc(ex.name) + '</span>';
+  h += '<span class="exit-name">' + esc((item.awayNE && ex.nameAway) || (item.selfEmp && ex.nameSelf) || ex.name) + '</span>';
   h += '<span class="exit-group">' + ex.group + '</span></div>';
   h += '<div class="tier-row"><span class="chip cur">いまのまま：' + CUR_LABELS[item.curTier] + '</span>' +
-       '<span class="chip lev">伴走すると：' + LEV_LABELS[item.levTier] + '</span></div>';
-  h += '<p class="exit-text">' + ((item.selfEmp && ex.textSelf) ? ex.textSelf[item.band] : ex.text[item.band]) + '</p>';
+       '<span class="chip lev">伴走すると：' + (item.curTier === 0 ? "1〜3ヶ月で射程" : LEV_LABELS[item.levTier]) + '</span></div>';
+  var et = (item.awayNE && ex.textAway) ? ex.textAway[item.band] : (item.selfEmp && ex.textSelf) ? ex.textSelf[item.band] : ex.text[item.band];
+  if (item.away) et = et.replace(/いまの業務/g, "直近のお仕事").replace(/自分の業務/g, "直近のお仕事");
+  h += '<p class="exit-text">' + et + '</p>';
   for (var i = 0; i < item.notes.length; i++) h += '<p class="exit-note">' + item.notes[i] + '</p>';
   h += '</div>';
   return h;
@@ -1226,19 +1724,32 @@ function renderTendency(r){
   var out = "";
   for (var a = 0; a < AXES.length; a++) {
     var axis = AXES[a];
+    if (PUBLIC_AXES.indexOf(axis.k) < 0) continue;   /* 決め方・本音の出し方・課題の捉え方はコーチ欄のみ */
     var v = r.ax[axis.k];
     var pct = 50 + v * 50;
     var left = v >= 0 ? 50 : pct;
     var width = Math.abs(v) * 50;
+    var side = axisSide(v);
+    var lean = Math.round(50 + Math.abs(v) * 50);
+    var leanLabel = (v >= 0 ? axis.pos : axis.neg).replace(/（.*?）/g, "");
+    var pctTag = v === 0 ? '<span class="tend-lean">ちょうど中間</span>' : '<span class="tend-lean">' + leanLabel + '<b>' + lean + '%</b></span>';
+    var negTxt = side === "neg" ? "<b>" + axis.neg + "</b>" : axis.neg;
+    var posTxt = side === "pos" ? "<b>" + axis.pos + "</b>" : axis.pos;
     out += '<div class="tend-row">' +
-      '<p class="tend-name">' + axis.name + '<span class="en">' + axis.en + '</span></p>' +
+      '<p class="tend-name"><span>' + axis.name + '<span class="en">' + axis.en + '</span></span>' + pctTag + '</p>' +
       '<div class="tend-track"><div class="tend-fill ' + (v >= 0 ? "pos" : "neg") + '" style="left:' + left + '%;width:' + width + '%"></div>' +
       '<div class="tend-dot" style="left:' + pct + '%"></div></div>' +
-      '<div class="tend-poles"><span>' + (axisSide(v) === "neg" ? "<b>" + axis.neg + "</b>" : axis.neg) + '</span>' +
-      '<span>' + (axisSide(v) === "pos" ? "<b>" + axis.pos + "</b>" : axis.pos) + '</span></div>' +
+      '<div class="tend-poles"><span>' + negTxt + '</span>' +
+      '<span>' + posTxt + '</span></div>' +
       '<p class="tend-read">' + esc(axisReadText(axis, v)) + '</p></div>';
   }
   document.getElementById("tendList").innerHTML = out;
+}
+
+/* 「特徴＋動物」の名前は、特徴と動物のあいだでだけ改行する */
+function typeNameHTML(t){
+  if (!t.animal || t.name.slice(-t.animal.length) !== t.animal) return esc(t.name);
+  return '<span class="tn">' + esc(t.name.slice(0, -t.animal.length)) + '<wbr>' + esc(t.animal) + '</span>';
 }
 
 function renderResult(r){
@@ -1246,17 +1757,21 @@ function renderResult(r){
   document.getElementById("rName").textContent = name ? name + " さんの診断結果" : "";
 
   var t = TYPES[r.typeKey];
-  document.getElementById("rTypeName").textContent = t.name;
+  document.getElementById("rTypeName").innerHTML = typeNameHTML(t);
+  document.getElementById("rTypeIcon").innerHTML = animalSVG(r.typeKey, "light", 104, "hero");
   document.getElementById("rTypeEn").textContent = t.en;
   document.getElementById("rTypeTag").textContent = t.tag;
   document.getElementById("rSummary").textContent = t.summary;
+  document.getElementById("rNick").textContent = t.nick[subSide(r)];
+  document.getElementById("rdTitle").textContent = name ? name + "さんの回答から見えたこと" : "あなたの回答から見えたこと";
+  document.getElementById("rdBody").innerHTML = buildReading(r);
 
   var lvData = LEVELS[r.lv - 1];
   document.getElementById("rLvNum").textContent = r.lv;
   document.getElementById("rLvName").textContent = lvData.name;
   document.getElementById("rPhase").textContent = PHASES[lvData.phase].en;
   document.getElementById("rPhaseJa").textContent = PHASES[lvData.phase].ja + "段階";
-  document.getElementById("rLvNote").textContent = lvData.note;
+  document.getElementById("rLvNote").textContent = ctxText(r, lvData.note);
   var C = 232.5;
   var ring = document.getElementById("ringProg");
   ring.style.strokeDashoffset = C;
@@ -1264,26 +1779,44 @@ function renderResult(r){
 
   renderTendency(r);
 
-  document.getElementById("tpTitle").textContent = t.name + "のあなたへ";
+  var c = CHARACTER[r.typeKey];
+  var nm0 = document.getElementById("userName").value.trim();
+  document.getElementById("chTitle").textContent = (nm0 ? nm0 + "さん" : "あなた") + "の人物像";
+  document.getElementById("chLead").textContent = c.lead;
+  var aru = "";
+  for (var ai = 0; ai < c.aru.length; ai++) aru += "<li>" + esc(c.aru[ai]) + "</li>";
+  document.getElementById("chAru").innerHTML = aru;
+  document.getElementById("chGood").textContent = c.good;
+  document.getElementById("chAspect").textContent = c.aspect;
+  document.getElementById("chMore").textContent = c.more;
   var tg = "";
   for (var tk = 0; tk < TYPE_ORDER.length; tk++) {
     var key = TYPE_ORDER[tk];
     var on = key === r.typeKey;
     tg += '<div class="tg-cell' + (on ? " on" : "") + '">' + (on ? '<span class="tg-badge">YOU</span>' : "") +
-          '<p class="n">' + TYPES[key].name + '</p><p class="t">' + TYPES[key].d + "×" + TYPES[key].e + "｜" + TYPES[key].tag + '</p></div>';
+          '<p class="n">' + '<span class="tg-icon">' + animalSVG(key, on ? "white" : "fill", 52, "tg" + key) + '</span>' + typeNameHTML(TYPES[key]) + '</p><p class="t">' + TYPES[key].d + "×" + TYPES[key].e + "｜" + TYPES[key].tag + '</p></div>';
   }
   document.getElementById("typeGrid").innerHTML = tg;
-  document.getElementById("tpDesc").textContent = t.desc;
-  var st = "", sm = "", md = "";
+  document.getElementById("wkNote").style.display = r.flags.away ? "block" : "none";
+  document.getElementById("wkLead").textContent = c.work;
+  var la = LEVEL_TEXT[r.typeKey] && LEVEL_TEXT[r.typeKey][lvTier(r)];
+  document.getElementById("wkAspect").textContent = (la && la.workAspect) || c.workAspect;
+  document.getElementById("wkAI").textContent = ctxText(r, lvTier(r) === "adv" ? AI_ADV[r.typeKey] : c.ai);
+  var st = "", md = "";
   for (var x = 0; x < t.strengths.length; x++) st += "<li>" + esc(t.strengths[x]) + "</li>";
-  for (var y = 0; y < t.stumbles.length; y++) sm += "<li>" + esc(t.stumbles[y]) + "</li>";
-  for (var z = 0; z < t.mindset.length; z++) {
-    md += '<div class="mind"><p class="m-h" data-n="0' + (z + 1) + '">' + esc(t.mindset[z].h) + '</p><p>' + esc(t.mindset[z].t) + '</p></div>';
+  var mset = lvPick(r, "mindset");
+  for (var z = 0; z < mset.length; z++) {
+    md += '<div class="mind"><p class="m-h" data-n="0' + (z + 1) + '">' + esc(mset[z].h) + '</p><p>' + esc(mset[z].t) + '</p></div>';
   }
   document.getElementById("tpStrengths").innerHTML = st;
-  document.getElementById("tpStumbles").innerHTML = sm;
   document.getElementById("tpMindset").innerHTML = md;
-  document.getElementById("tpDetour").textContent = t.detour;
+  /* 最後に：このタイプに多い悩み（チェックは付けない） */
+  document.getElementById("cnTitle").innerHTML = typeNameHTML(t) + "の方に<wbr>多い悩み";
+  var cn = "";
+  var scs = lvPick(r, "scenes");
+  for (var ci = 0; ci < scs.length; ci++) cn += "<li>" + esc(scs[ci]) + "</li>";
+  document.getElementById("cnList").innerHTML = cn;
+  document.getElementById("tpDetour").textContent = lvPick(r, "detour");
 
   var evals = evaluateExits(r);
   var top3 = "", all = "";
@@ -1294,21 +1827,262 @@ function renderResult(r){
   document.getElementById("exitTop3").innerHTML = top3;
   document.getElementById("exitAll").innerHTML = all;
 
-  var jobLabel = r.job === "いま" ? "いまの" : r.job + "の";
-  document.getElementById("roadmap").innerHTML =
-    '<div class="tl-item"><div class="tl-node"><span class="m">MONTH</span><span class="d">1</span></div>' +
-    '<b>対象業務を1つ決めて、小さく実装する</b><p>' + esc(jobLabel) + '業務の中から、AIで改善しやすいテーマを1つ選びます。ツールの勉強からではなく、毎日やっている業務から選ぶのがポイントです。</p></div>' +
-    '<div class="tl-item"><div class="tl-node"><span class="m">MONTH</span><span class="d">2</span></div>' +
-    '<b>業務フローを再設計して、変化を記録する</b><p>作業時間・品質・アウトプット量のどれが、どう変わったかを記録します。この記録が、あとで実績の材料になります。</p></div>' +
-    '<div class="tl-item"><div class="tl-node"><span class="m">MONTH</span><span class="d">3</span></div>' +
-    '<b>成果を「評価される言葉」に変換する</b><p>「どの業務を、どれくらい改善したか」を、評価面談・職務経歴書・提案や商談の場で語れる1本の実績に仕上げます。</p></div>';
-  document.getElementById("roadExtra").textContent = t.road;
+  var steps = roadmapSteps(r), rm = "";
+  if (r.flags.selfEmp) steps = steps.map(function(s){ return [s[0], s[1].replace("評価面談・職務経歴書・提案や商談の場", "提案や商談、発信の場")]; });
+  for (var si = 0; si < steps.length; si++) {
+    rm += '<div class="tl-item"><div class="tl-node"><span class="m">MONTH</span><span class="d">' + (si + 1) + '</span></div>' +
+          '<b>' + esc(steps[si][0]) + '</b><p>' + esc(steps[si][1]) + '</p></div>';
+  }
+  document.getElementById("roadmap").innerHTML = rm;
+  document.getElementById("roadExtra").textContent = lvPick(r, "road");
 
   document.getElementById("ctaHonki").textContent = r.honki === 0
     ? "動き出すなら、勢いのあるいまがいちばんです。まず60分で、あなた専用の設計図を手に入れてください。"
     : "いきなり大きく動く必要はありません。ただ、方向だけ先に決めておくと、動きたくなったときに迷いません。";
+  renderPersonalCTA(r);
 
   document.getElementById("result").style.display = "block";
+}
+
+/* =========================================================
+   v3.1 言い当て：回答の組み合わせから、その人だけの文章を組み立てる
+   - 受診者に見せるのは本人の役に立つ内容だけ（決め方・本音の出し方・課題の捉え方はコーチ欄のみ。9/10 FB）
+   - ネガティブな決めつけはしない。事実の反射＋問いかけ＋前向きな言い換え（9/8 FB）
+========================================================= */
+var PREVIEW = false;   /* 本番：回答を送信する（確認用ファイルでは true） */
+var PUBLIC_AXES = ["A","D","E"];
+
+var QMAP = {};
+for (var qi = 0; qi < QUESTIONS.length; qi++) QMAP[QUESTIONS[qi].id] = QUESTIONS[qi];
+
+function optOf(r, id){ var q = QMAP[id]; var i = r.ans[id]; return (q && i !== null && i !== undefined) ? q.opts[i] : null; }
+function idxOf(r, id){ var i = r.ans[id]; return (i === null || i === undefined) ? -1 : i; }
+function noneOf(r, id){ var o = optOf(r, id); return !o || !!o.none; }
+function txtOf(r, id){ var o = optOf(r, id); return o ? o.t : ""; }
+function qt(s){ return '<span class="qt">「' + esc(s) + '」</span>'; }
+function inSet(v, arr){ return arr.indexOf(v) >= 0; }
+
+/* 自分自身の設問の回答の強さ（+2〜-2）と、引用用の文 */
+function lkv(r, id){ var o = optOf(r, id); return (o && typeof o.value === "number") ? o.value : 0; }
+function st(r, id){ var q = QMAP[id]; return q ? q.title : ""; }
+function lkQuote(r, id){
+  var q = QMAP[id], o = optOf(r, id);
+  if (!q || !o) return "";
+  if (q.ab) return qt(o.value > 0 ? q.ab.a : q.ab.b) + "に近い";
+  return qt(q.title) + "に" + qt(o.t);
+}
+
+function subSide(r){
+  var s = axisSide(r.ax.A);
+  if (s !== "mid") return s;
+  var v = lkv(r,"p_a3") - lkv(r,"p_a2");
+  if (v !== 0) return v > 0 ? "pos" : "neg";
+  return r.ax.A >= 0 ? "pos" : "neg";
+}
+
+/* 二面性・言い当てのルール。上から順に判定し、当てはまったものを最大2つ使う。skip＝先に使われていたら出さない（同じ話の重複を防ぐ） */
+var GAP_RULES = [
+  { id:"confidence_gap",
+    when:function(r){ return (r.lv >= 3 || inSet(idxOf(r,"tayorare"), [0,1])) && (idxOf(r,"anxiety") === 1 || idxOf(r,"ai_nayami") === 2); },
+    text:function(r){
+      var first = inSet(idxOf(r,"tayorare"), [0,1])
+        ? "周りからAIについて" + qt(txtOf(r,"tayorare")) + "と答えています。周りからは、もう「使える側」に見えています"
+        : "ここまでAIを使えているなら、周りからは、もう十分に「使える側」に見えています";
+      var second = idxOf(r,"ai_nayami") === 2
+        ? "それでも、いま気になっているのは" + qt(txtOf(r,"ai_nayami"))
+        : "それでも、新しいことを始めるときに最初に浮かぶのは" + qt("自分にできるか");
+      return first + "。" + second + "。できていることを、自分ではまだ「できている」と数えていないのかもしれません。"; } },
+  { id:"use_vs_result",
+    when:function(r){ return idxOf(r,"katsuyo") >= 2 && (inSet(idxOf(r,"ai_nayami"), [0,1]) || idxOf(r,"seika") <= 1 || noneOf(r,"seika")); },
+    text:function(r){
+      var head = inSet(idxOf(r,"ai_nayami"), [0,1])
+        ? "ふだんからAIを使っているのに、気になっているのは" + qt(txtOf(r,"ai_nayami")) + "。"
+        : "ふだんからAIを使っているのに、変化はまだ自分の手元にとどまっている。";
+      return head + "使っている量と、周りから見える成果のあいだに、段差がある状態です。AIの使い方が足りないのではなく、成果を「周りに見える形」にする一手がまだ入っていないだけではないでしょうか。"; } },
+  { id:"worry_vs_strength", skip:["confidence_gap"],
+    when:function(r){ return idxOf(r,"career_nayami") === 2 && ((idxOf(r,"seika") >= 2 && !noneOf(r,"seika")) || inSet(idxOf(r,"tayorare"), [0,1])); },
+    text:function(r){
+      var evidence = (idxOf(r,"seika") >= 2 && !noneOf(r,"seika"))
+        ? "AIを使った変化は、もう出ています"
+        : "周りからAIについて" + qt(txtOf(r,"tayorare")) + "と答えています";
+      return "いまのキャリアで感じているのは" + qt(txtOf(r,"career_nayami")) + "。一方で、" + evidence + "。強みがないのではなく、もう出ている成果を、まだ強みとして言葉にしていないだけかもしれません。"; } },
+  { id:"effort_vs_reward", skip:["use_vs_result"],
+    when:function(r){ return idxOf(r,"career_nayami") === 0 && idxOf(r,"katsuyo") >= 1; },
+    text:function(r){ return "いまのキャリアで感じているのは" + qt(txtOf(r,"career_nayami")) + "。AIも、ふだんから仕事に取り入れています。頑張りが足りないのではなく、頑張った中身が、評価する側に届く形になっていないのではないでしょうか。"; } },
+  { id:"blank_restart",
+    when:function(r){ var o = optOf(r,"tachiba"); return ((o && o.away) || idxOf(r,"career_nayami") === 5) && idxOf(r,"katsuyo") >= 1; },
+    text:function(r){
+      var o = optOf(r,"tachiba");
+      var head = (o && o.away) ? "いまは" + qt(o.t) + "。それでも、AIを使う手は止まっていません" : "ブランクへの不安がある一方で、AIを使う手は止まっていません";
+      return head + "。仕事を離れている間にも、AIを使う感覚は積み上がっています。再スタートは、ゼロからではなく、その続きから始められます。"; } },
+  { id:"behind_but_started",
+    when:function(r){ return inSet(idxOf(r,"ai_nayami"), [3,4]) && idxOf(r,"katsuyo") >= 1; },
+    text:function(r){ return "いま気になっているのは" + qt(txtOf(r,"ai_nayami")) + "。" + (r.lv >= 3 ? "でも、AIはすでに仕事の流れに組み込めています。置いていかれるどころか、周りより先を進んでいる側です。" : "でも、AIはもう使い始めています。ゼロからのスタートではありません。") + "焦りの正体は、遅れそのものより、どこに向かって積み上げればいいかが見えていないことではないでしょうか。"; } },
+  { id:"selfrun_but_stop", group:"self",
+    when:function(r){ return lkv(r,"p_e1") >= 1 && inSet(idxOf(r,"s_stop"), [2,3]); },
+    text:function(r){ return lkQuote(r,"p_e1") + "と答えています。一人で進める力はある。それでも、取り組みが止まったときを振り返ると" + qt(txtOf(r,"s_stop")) + "。止まる理由は力不足ではなく、道筋や区切りがなかったことにありそうです。"; } },
+  { id:"quiet_influence",
+    when:function(r){ return idxOf(r,"s_leader") === 2 && (idxOf(r,"seika") >= 3 && !noneOf(r,"seika") || idxOf(r,"tayorare") === 0); },
+    text:function(r){
+      var ev = (idxOf(r,"seika") >= 3 && !noneOf(r,"seika"))
+        ? "AIで出せている変化は、もう自分の作業の外にまで届いています"
+        : "周りからAIについて" + qt(txtOf(r,"tayorare")) + "と答えています";
+      return "旗振り役を頼まれたら" + qt(txtOf(r,"s_leader")) + "と答えています。でも、" + ev + "。前に立っていなくても、すでに周りの仕事を動かしている側です。"; } },
+  { id:"ambition_and_caution", skip:["confidence_gap"],
+    when:function(r){ return (inSet(idxOf(r,"career_nayami"), [0,3]) || inSet(idxOf(r,"henka"), [0,1])) && (idxOf(r,"s_leader") === 3 || idxOf(r,"anxiety") === 1); },
+    text:function(r){
+      var first = inSet(idxOf(r,"career_nayami"), [0,3])
+        ? "いまのキャリアで感じているのは" + qt(txtOf(r,"career_nayami"))
+        : "キャリアについては" + qt(txtOf(r,"henka"));
+      var second = idxOf(r,"s_leader") === 3
+        ? "旗振り役を頼まれたら" + qt(txtOf(r,"s_leader"))
+        : "新しいことを始めるときに最初に浮かぶのは" + qt("自分にできるか");
+      return first + "。上を目指す気持ちは、はっきりあります。一方で、" + second + "。前に進みたい気持ちと、慎重さが同居しています。この両方を持っている人は、勢いだけで動いて遠回りすることが少ないタイプです。"; } },
+  { id:"already_leading", group:"self",
+    when:function(r){ return lkv(r,"p_d1") >= 1 && lkv(r,"p_e1") >= 1 && idxOf(r,"s_leader") === 0; },
+    text:function(r){ return "なりたい姿を思い浮かべることがよくあり、困ったときもまず自分で動く。旗振り役を頼まれたら" + qt(txtOf(r,"s_leader")) + "。もう、周りを引っ張る側の動き方をしています。あとは、その動きを評価や役割につながる言葉にできるかどうかです。"; } },
+  { id:"direction_without_timing",
+    when:function(r){ return idxOf(r,"kibo") >= 2 && !noneOf(r,"kibo") && inSet(idxOf(r,"henka"), [2,3,4]); },
+    text:function(r){ return "キャリアを動かすとしたら" + qt(txtOf(r,"kibo")) + "。方向は、もう見えています。ただ、いまの気持ちは" + qt(txtOf(r,"henka")) + "。決まっていないのは方向ではなく、時期と最初の一歩だけかもしれません。"; } },
+  { id:"will_vs_time",
+    when:function(r){ return inSet(idxOf(r,"henka"), [0,1]) && (idxOf(r,"career_nayami") === 4 || idxOf(r,"anxiety") === 0); },
+    text:function(r){
+      var t = idxOf(r,"career_nayami") === 4 ? qt(txtOf(r,"career_nayami")) : "新しいことを始めるときに最初に浮かぶのは" + qt("時間を作れるか・続けられるか");
+      return "キャリアについては" + qt(txtOf(r,"henka")) + "。気持ちは前に出ているのに、" + t + "。いちばんもどかしいのは、意欲と時間の差ではないでしょうか。だからこそ、時間を増やすより、使う場所を絞る進め方が合っています。"; } },
+  { id:"steady_but_invisible", skip:["use_vs_result","effort_vs_reward"],
+    when:function(r){ return idxOf(r,"s_stop") === 4 && (idxOf(r,"seika") <= 2 || noneOf(r,"seika")); },
+    text:function(r){ return "取り組みが止まった経験は" + qt("あまりない") + "。続ける力は十分にあります。それでもAIの変化が、まだ周りから見える形になっていないとしたら、足りないのは努力の量ではなく、成果を「外から見える形」にする設計ではないでしょうか。"; } },
+  { id:"quiet_but_ready", group:"self",
+    when:function(r){ return (lkv(r,"p_d3") >= 1 || lkv(r,"p_d4") <= -1) && idxOf(r,"s_leader") === 0; },
+    text:function(r){
+      var q = lkv(r,"p_d3") >= 1 ? lkQuote(r,"p_d3") : lkQuote(r,"p_d4");
+      return q + "と答えています。それでも、旗振り役を頼まれたら" + qt(txtOf(r,"s_leader")) + "。ふだんはいまあるものを大切にしていても、任されると力が出るタイプです。その力は、まだ周りに知られていないだけかもしれません。"; } },
+  { id:"self_and_promise", group:"self",
+    when:function(r){ return lkv(r,"p_e1") >= 1 && lkv(r,"p_e2") >= 1; },
+    text:function(r){ return "困ったときは" + qt("まず自分で調べたり試したりしてから、人に聞く") + "。それなのに、" + qt("一人だと後回しにしがちなことも、誰かと約束すると進められる") + "にも、そう思うと答えています。自分で進める力と、約束があると加速する力の両方を持っている。一人で考える時間と、一緒に進める相手。その両方がそろったときに、いちばん力が出るタイプです。"; } },
+  { id:"intuition_and_caution", group:"self",
+    when:function(r){ return lkv(r,"p_a1") >= 1 && lkv(r,"p_d2") >= 1; },
+    text:function(r){ return "迷ったときは" + qt("最初にピンときた方を選ぶ") + "。一方で、新しいことを始めるときは" + qt("うまくいかなかったときのことを先に考える") + "。直感で選びながら、リスクの確認も欠かさない。その組み合わせは、動き出したあとに大きく外すことが少ない強みです。"; } },
+  { id:"dream_and_guard", group:"self",
+    when:function(r){ return lkv(r,"p_d1") >= 1 && lkv(r,"p_d3") >= 1; },
+    text:function(r){ return qt("なりたい姿を思い浮かべることがよくある") + "一方で、" + qt("いまあるものを守りながら少しずつ良くしていきたい") + "とも答えています。上を目指す気持ちと、いまを大切にする気持ちの両方がある。だからこそ、いまの土台を活かしながら一段上がる道筋が合っています。"; } },
+  { id:"why_before_move", group:"self",
+    when:function(r){ return lkv(r,"p_a2") >= 1 && lkv(r,"p_a4") >= 1; },
+    text:function(r){ return qt("理由が腹落ちしないまま動くのは、落ち着かない") + "。それでいて、段取りは" + qt("まず動いてみて、やりながら直す") + "に近い。理由さえ納得できれば、そこからの動き出しは速いタイプです。最初に「なぜやるのか」を押さえる時間が、いちばんの近道になります。"; } },
+  { id:"talk_to_think", group:"self",
+    when:function(r){ return idxOf(r,"s_result") === 3 || (lkv(r,"p_e2") >= 1 && lkv(r,"p_e4") <= -1); },
+    text:function(r){
+      var t = idxOf(r,"s_result") === 3 ? "うまくいかないときは" + qt(txtOf(r,"s_result")) + "と答えています" : "新しいことは" + qt("詳しい人に一度やって見せてもらう方が、早く身につく") + "に近いと答えています";
+      return t + "。一人で考え込むより、人と話しながら整理した方が、答えが早く出るタイプです。"; } }
+];
+
+/* 面談で4人に共通していた二面性。ルールが1つ以下しか当てはまらないときに使う */
+var GAP_UNIVERSAL = "人から頼られたり、相談されたりすることはあるのに、自分の強みを一言で言おうとすると少し迷う。そんな感覚はありませんか。仕事で頼られている人ほど、この「できているのに、言葉になっていない」状態にいることが多いです。";
+
+function strengthText(r, t){
+  if (idxOf(r,"s_result") === 0) return "うまくいかないとき、まず" + qt("自分のやり方の、どこを変えるか") + "を考えられること。これは、AIの成果を「再現できる実績」に変えるときに、いちばん効く力です。";
+  if (idxOf(r,"s_result") === 4) return "原因を決めつけず、まず数字や事実を確かめられること。AIをどの業務に入れるべきかを外さない力です。";
+  if (lkv(r,"p_a2") === 2) return "背景と理由を押さえてから動けること。業務にAIを組み込むとき、どこに使うべきかを外さない力です。";
+  if (idxOf(r,"s_stop") === 4) return "一度始めたことを、止めずに続けられること。成果は、続けた人のところにしか残りません。";
+  if (lkv(r,"p_e1") === 2) return "困ったとき、まず自分で調べて試せること。AIを業務に組み込むとき、いちばん差がつく力です。";
+  if (lkv(r,"p_d2") === 2) return "うまくいかなかったときのことを、先に考えられること。新しいことを、大きく外さずに進められる力です。";
+  if (lkv(r,"p_e2") === 2) return "人と一緒に進めると、力が出ること。相談できる相手を持てる人は、一人で抱え込む人より遠くまで進めます。";
+  return qt(t.strengths[0]) + "。このタイプの方が、自分では当たり前だと思っていることが多い強みです。";
+}
+
+function buildReading(r){
+  var t = TYPES[r.typeKey];
+  var side = subSide(r);
+  var out = "";
+
+  /* 1. 二つ名の説明 */
+  var p1 = esc(t.name) + "の中でも、" + qt(t.nick[side]) + "。" + esc(t.nickNote[side]) + "です。";
+  var want = {D: t.d === "攻め" ? 1 : -1, E: t.e === "自走" ? 1 : -1};
+  var picks = [];
+  for (var pi = 0; pi < QUESTIONS.length && picks.length < 2; pi++) {
+    var pq = QUESTIONS[pi];
+    if (!pq.likert || !want[pq.axis]) continue;
+    var pv = lkv(r, pq.id) * pq.dir;
+    if (pv === 2 * want[pq.axis] && !(picks.length && QMAP[picks[0]].axis === pq.axis)) picks.push(pq.id);
+  }
+  if (picks.length) {
+    p1 += "とくに、" + lkQuote(r, picks[0]) + (picks[1] ? "、" + lkQuote(r, picks[1]) : "") + "と答えているところに、このタイプらしさがはっきり出ています。";
+  }
+  out += '<p class="rd"><span class="rd-h">あなたのタイプ</span>' + p1 + "</p>";
+
+  /* 2. 現在地の反射 */
+  var jobO = optOf(r,"shokushu");
+  var tb = optOf(r,"tachiba");
+  var notWorking = !!(tb && tb.away);
+  var jobPhrase = (!jobO || jobO.none) ? (notWorking ? "直近のお仕事で" : "いまのお仕事で")
+                : (notWorking ? "直近の" : "") + esc(jobO.t.replace(/（.*?）/g, "")) + "のお仕事で";
+  var lvNext = r.lv === 1 ? "まずは、毎日の業務のどこか1か所でAIを使ってみるところからです。使い方を広く学ぶより、1つの業務で試す方が、早く手応えが出ます。"
+             : r.lv === 2 ? "ここから先は、使う量を増やすより、毎日の業務のどこに組み込むかで差がつく段階です。"
+             : r.lv === 3 ? "使いこなす段階は越えています。次に問われるのは、その成果をどう見せるかです。"
+             : "使う側から、仕組みを作る側に入っています。あとは、それをキャリアの言葉に変えられるかどうかです。";
+  var p2 = jobPhrase + "、AIの使い方は" + qt(txtOf(r,"katsuyo")) + "。";
+  if (!noneOf(r,"seika") && idxOf(r,"seika") > 0) p2 += "AIを活用して出ている変化は" + qt(txtOf(r,"seika")) + "。";
+  p2 += ctxText(r, lvNext);
+  out += '<p class="rd"><span class="rd-h">いまの現在地</span>' + p2 + "</p>";
+
+  /* 3. 回答の組み合わせ（二面性） */
+  /* AI・キャリアの回答から1つ、自分自身の回答から1つ。片方が無ければもう片方から2つ */
+  var hits = {career:[], self:[]};
+  for (var i = 0; i < GAP_RULES.length; i++) {
+    var rule = GAP_RULES[i];
+    var all = hits.career.concat(hits.self), skipped = false;
+    if (rule.skip) for (var s2 = 0; s2 < rule.skip.length; s2++) if (all.indexOf(rule.skip[s2]) >= 0) skipped = true;
+    if (!skipped && rule.when(r)) hits[rule.group || "career"].push(rule.id);
+  }
+  var used = hits.career.slice(0, 1).concat(hits.self.slice(0, 1));
+  var rest = hits.career.slice(1).concat(hits.self.slice(1));
+  while (used.length < 2 && rest.length) used.push(rest.shift());
+  var gaps = [];
+  for (var g = 0; g < GAP_RULES.length; g++) if (used.indexOf(GAP_RULES[g].id) >= 0) gaps.push(GAP_RULES[g].text(r));
+  if (gaps.length < 2) gaps.push(GAP_UNIVERSAL);
+  for (var k = 0; k < gaps.length; k++) {
+    out += '<p class="rd">' + (k === 0 ? '<span class="rd-h">回答の組み合わせから</span>' : "") + gaps[k] + "</p>";
+  }
+
+  /* 4. 気づきにくい強み */
+  out += '<div class="rd-strength"><p class="rd"><span class="rd-h">自分では気づきにくい強み</span>' + strengthText(r, t) + "</p></div>";
+
+  r.readingRules = used;
+  return out;
+}
+
+var CTA_SUB = {
+  0:"時間が取れるか不安な方も、いま使える時間に合わせて設計します。設計図はお持ち帰りいただき、判断はそれからで構いません。",
+  1:"「自分にできるか分からない」のままで大丈夫です。設計図はお持ち帰りいただき、判断はそれからで構いません。",
+  2:"成果につながるかどうかを、あなたの業務に当てはめて確かめる時間です。設計図はお持ち帰りいただき、判断はそれからで構いません。",
+  3:"何から始めればいいかは、その場で一緒に決めます。設計図はお持ち帰りいただき、判断はそれからで構いません。"
+};
+
+function renderPersonalCTA(r){
+  var t = TYPES[r.typeKey];
+  var nm = document.getElementById("userName").value.trim();
+  document.getElementById("ctaLabel").textContent = "体験セッションで" + (nm ? "、" + nm + "さんと" : "") + "行うこと（" + t.name + "の場合）";
+  var ctas = r.flags.away ? AWAY_CTA : lvPick(r, "cta");
+  document.getElementById("ctaItem1").textContent = ctas[0];
+  document.getElementById("ctaItem2").textContent = ctas[1];
+  document.getElementById("ctaItem3").textContent = ctas[2];
+  var a = idxOf(r,"anxiety");
+  document.getElementById("ctaSub").textContent = CTA_SUB[a] || "設計図はお持ち帰りいただき、判断はそれからで構いません。";
+}
+
+/* 確認用：?demo=1 で回答をランダムに入れて結果を表示（「どれにも当てはまらない」は選ばない） */
+function runDemo(){
+  for (var i = 0; i < QUESTIONS.length; i++) {
+    var q = QUESTIONS[i], c = [];
+    for (var j = 0; j < q.opts.length; j++) if (!q.opts[j].none) c.push(j);
+    var pick = c[Math.floor(Math.random() * c.length)];
+    var el = document.querySelector('input[name="' + q.id + '"][value="' + pick + '"]');
+    if (el) el.checked = true;
+  }
+  document.getElementById("userName").value = "山田";
+  document.getElementById("userEmail").value = "demo@example.com";
+  var ag = document.querySelector('input[name="ageBand"][value="40代"]'); if (ag) ag.checked = true;
+  document.getElementById("diagnoseBtn").click();
 }
 
 /* =========================================================
@@ -1392,6 +2166,7 @@ document.getElementById("retakeBtn").addEventListener("click", function(){
   updateProgress();
   window.scrollTo({top:0, behavior:"smooth"});
 });
+
 </script>
 </body>
 </html>

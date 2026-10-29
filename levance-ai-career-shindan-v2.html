@@ -113,6 +113,15 @@ h1,h2,h3,.q-title,.nc-title,.tl-item b,.mind .m-h,.hero-tagline{text-wrap:balanc
   border-radius:999px;padding:5px 13px;
 }
 .hero-chips b{font-family:var(--en);font-size:15px;font-weight:700;margin:0 2px}
+/* ヒーローの4タイプ（動物イラスト） */
+.hero-types{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:26px;max-width:460px}
+.ht-cell{display:flex;flex-direction:column;align-items:center;text-align:center;min-width:0}
+.ht-icon{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;margin-bottom:8px;
+  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.32);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 8px 22px rgba(12,16,90,.22)}
+.ht-icon svg{width:52px;height:52px;display:block}
+.ht-mod{font-size:10.5px;font-weight:500;line-height:1.35;color:rgba(255,255,255,.82);white-space:nowrap;letter-spacing:.02em}
+.ht-name{font-size:13px;font-weight:900;line-height:1.4;color:#fff;letter-spacing:.06em}
 
 /* ---------- learn box ---------- */
 .learnbox{
@@ -416,6 +425,10 @@ footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
   .hero-chips{margin-top:16px;gap:6px}
   .hero-chips span{font-size:12px;padding:4px 11px}
   .learnbox{padding:24px 18px 16px}
+  .hero-types{gap:4px}
+  .ht-icon{width:60px;height:60px}
+  .ht-icon svg{width:46px;height:46px}
+  .ht-mod{font-size:10px}
   .section-head{margin-top:40px}
   .section-head h2{font-size:20px}
   .q{padding:20px 16px}
@@ -533,6 +546,7 @@ footer p{font-size:12px;color:var(--sub);line-height:1.9;text-align:center}
     <p class="hero-tagline">AIを「使える」で終わらせない人の、進め方を知る。</p>
     <p class="lead">同じAIスキルでも、キャリアが動く人と動かない人がいます。<br>分かれ目はスキルの差ではなく、<strong>自分に合った「進め方」</strong>で積み上げているかどうか。<br>25の質問で、あなたのタイプと、いちばん力が出る進め方を診断します。</p>
     <div class="hero-chips"><span>全<b>25</b>問</span><span>約<b>3</b>分</span></div>
+    <div class="hero-types" id="heroTypes" aria-label="診断で分かる4つのタイプ"></div>
   </div>
 </header>
 
@@ -2166,6 +2180,18 @@ document.getElementById("retakeBtn").addEventListener("click", function(){
   updateProgress();
   window.scrollTo({top:0, behavior:"smooth"});
 });
+
+/* ヒーローに4タイプの動物を並べる */
+(function(){
+  var el = document.getElementById("heroTypes"); if (!el) return;
+  var h = "";
+  for (var i = 0; i < TYPE_ORDER.length; i++) {
+    var k = TYPE_ORDER[i], t = TYPES[k];
+    h += '<div class="ht-cell"><span class="ht-icon">' + animalSVG(k, "light", 52, "ht" + k) + '</span>' +
+         '<span class="ht-mod">' + t.name.replace(t.animal, "") + '</span><span class="ht-name">' + t.animal + '</span></div>';
+  }
+  el.innerHTML = h;
+})();
 
 </script>
 </body>
